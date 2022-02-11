@@ -5,6 +5,12 @@
 	"author": "FranchuFranchu, 3meraldK",
 	"description": "Colors meganations on the map and more",
 
+	"browser_specific_settings": {
+		"gecko": {
+		  "id": "fff999abc999@users.noreply.github.com"
+		}
+	  },
+
 	"icons": {
 		"48": "48.png",
 		"256": "256.png"
