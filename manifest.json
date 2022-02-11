@@ -1,0 +1,23 @@
+{
+	"manifest_version": 2,
+	"name": "EarthMC DynmapColor",
+	"version": "1.1",
+	"author": "FranchuFranchu, 3meraldK",
+	"description": "Colors meganations on the map and more",
+
+	"icons": {
+		"48": "48.png",
+		"256": "256.png"
+	  },
+
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": true
+	},
+
+	"permissions": [
+		"*://earthmc.net/map",
+		"webRequest",
+		"webRequestBlocking"
+	]
+}
