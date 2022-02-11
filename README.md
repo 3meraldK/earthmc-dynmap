@@ -1,5 +1,5 @@
 # earthmc-dynmapcolor
-Colors meganations on the map and more. This project is a remake of https://github.com/FranchuFranchu/emc-dynmap-colors, but removes all star markers, modifies the towns descriptions and solidifies the towns' strokes. Right now it's supported only on Mozilla Firefox.
+Colors meganations on the map and more. This project is a remake of https://github.com/FranchuFranchu/emc-dynmap-colors, but removes all star markers and solidifies the towns' strokes. Right now it's supported only on Mozilla Firefox.
 
 # Download and use
 1. Download 'extension.zip' file on the local machine. It can be done by entering https://github.com/3meraldK/earthmc-dynmapcolor/blob/main/extension.zip and clicking 'View raw' or the download button.
