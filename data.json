@@ -24,7 +24,7 @@
 	
 	{"name": "Oniyama Shogunate", "nations": ["Grasberg", "Pulau_Japen", "Lützow-holm_bay", "Amazonas", "Kepulauan_Aru"], "color": ["#41F226"]},
 	{"name": "Third Victorian Empire", "nations": ["Long_Bay", "Ulimaroa", "Oceania", "Huron", "Kemet", "NorthAustralia", "Cape_York", "SouthAustralia", "Nicaragua"], "color": ["#003FA3"]},
-	{"name": "Fourth Australian Empire", "nations": ["Australia", "SouthTasmania", "Peel", "Straya", "Kimberley", "WesternAustralia", "Neale", "Papua"], "color": ["#FF8800"]},
+	{"name": "Fourth Australian Empire", "nations": ["Australia", "SouthTasmania", "Peel", "Straya", "Kimberley", "WesternAustralia", "Neale", "Papua", "West_Papua"], "color": ["#FF8800"]},
 	{"name": "New_Zealand", "nations": ["New_Zealand", "South_Island"], "color": ["#F5281C"]},
 	
 	{"name": "Second Nubian Empire", "nations": ["Nubia", "Kasai", "Nejd", "Namibia", "Molodezhnaya", "Bura", "Songhai", "Cote_Divoire", "Algeria", "Cameroon", "South_Sudan", "Fezzan", "Tripolitania", "Ghana", "Comoros", "Libya", "Senegal", "Ifriqiya", "Dzata", "Mauritania", "Rhodesia", "SADR", "Gabon", "Cape", "Zanzibar", "Katanga", "Cape_Verde", "Zimbabwe", "Riodeoro"], "color": ["#7F3300"]},
