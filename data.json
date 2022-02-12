@@ -4,13 +4,13 @@
 	{"name": "Greater Roman Empire", "nations": ["SPQR", "Italia", "Romania", "Greater_Romania"], "color": ["#B200FF"]},
 	{"name": "Spanish Empire", "nations": ["Iberian_Angola", "Spain", "Spanish_Antilles", "Guinea", "Canarias", "Uruguay", "Argentina", "Peru", "Chile", "Paraguay", "Portugal", "Bolivia", "Colombia", "Patagonia"], "color": ["#FFD800"]},
 	{"name": "Kingdom of France", "nations": ["Francia", "Yavanarajya", "center_africa", "Nepal", "India", "Liverpool", "Swedish_Empire", "Maurya_Dynasty"], "color": ["#0F1D6E"]},
-	{"name": "German Confederation", "nations": ["Mexican-Empire", "San_Luis_Potosi", "Chihuahua", "Austria", "Belgium", "Saxony", "Barinas", "Germany", "H.R.E.", "Olmec", "South-Pole", "EUM", "Preußen"], "color": ["#FFE97F"]},
+	{"name": "German Confederation", "nations": ["Mexican-Empire", "San_Luis_Potosi", "Chihuahua", "Austria", "Belgium", "Saxony", "Barinas", "Germany", "H.R.E.", "Olmec", "South-Pole", "EUM", "Preußen"], "color": ["#E7FF47"]},
 	{"name": "Caucasus Empire", "nations": ["Greater-Armenia", "Sakartvelo"], "color": ["#A5FF7F"]},
-	{"name": "Second Finnish Empire", "nations": ["Lapland", "Suomi", "Tavastia"], "color": ["#93D2FF"]},
-	{"name": "Estonian Empire", "nations": ["Estonia", "Finnmark", "Kievan_Rus"], "color": ["#5FBFBF"]},
+	{"name": "Second Finnish Empire", "nations": ["Lapland", "Suomi", "Tavastia"], "color": ["#FFFFFF"]},
+	{"name": "Estonian Empire", "nations": ["Estonia", "Finnmark", "Kievan_Rus"], "color": ["#00FFFF"]},
 	
-	{"name": "True Russia", "nations": ["CCCP", "Yakutia", "SovietUnion", "Far_East", "Northern_Russia", "USSR", "Republic_of_Komi", "Russian_Dominion", "Sibirya", "Yamalia", "Contact_a_staff", "tomsk", "Karelia", "Verkhoyansk", "Siberian_Empire"], "color": ["#FF6A00"]},
-	{"name": "Russia", "nations": ["East_Russia", "Tzarist_Ukraine", "Russia", "Russian_Empire", "South_Russia", "Taymyria", "Northern_Russia", "Asia", "Republic_of_Rus", "Wrangel", "Sibir", "Far", "Hungary", "Yuzhny", "West_Russia", "Greater_Russia", "rule4.1", "Khabarovsk", "Pakistan"], "color": ["#FFB27F"]},
+	{"name": "True Russia", "nations": ["CCCP", "Yakutia", "SovietUnion", "Far_East", "USSR", "Republic_of_Komi", "Russian_Dominion", "Sibirya", "Yamalia", "Contact_a_staff", "tomsk", "Karelia", "Verkhoyansk", "Siberian_Empire"], "color": ["#D18915"]},
+	{"name": "Russia", "nations": ["East_Russia", "Tzarist_Ukraine", "Russia", "Russian_Empire", "South_Russia", "Taymyria", "Northern_Russia", "Asia", "Republic_of_Rus", "Wrangel", "Sibir", "Far", "Hungary", "Yuzhny", "West_Russia", "Greater_Russia", "rule4.1", "Khabarovsk", "Pakistan"], "color": ["#FFD894"]},
 	{"name": "Israel", "nations": ["Israel", "Himyar", "Qatar", "Europe", "Egypt"], "color": ["#0038B8"]},
 	{"name": "Japanese Empire", "nations": ["Japan", "Japan_North", "Korea", "Shimazu", "Toban", "Prince_George", "Yamato", "Ooka", "Koyuk", "xiongnu", "Tugur", "yokuso", "Chumikan", "Ayano_Mainsky", "Bokkai", "Dai"], "color": ["#BC002D"]},
 	{"name": "Joseon", "nations": ["Joseon", "Manchukuo"], "color": ["#FFCB0A"]},
@@ -47,6 +47,6 @@
 	{"name": "Columbian Empire", "nations": ["Columbia", "Sahtu", "October_Island"], "color": ["#0000CC"]},
 	{"name": "Alaskan Tsardom", "nations": ["Kodiak", "Anchorage", "Bering_Strait", "Yukon"], "color": ["#011DC1"]},
 	{"name": "Republic of Cascadia", "nations": ["Bhutan", "Cascadia", "Colorado", "Queen_Charlotte", "Slave_Lake", "Tlingit", "Victoria_Island", "Wyoming"], "color": ["#002200"]},
-	{"name": "Grand Maritime Federation", "nations": ["Woodland_Cree", "Angola", "Bermuda", "North_America", "Labrador", "Acadia", "Avalon", "Western_Sahara", "Keewatin", "North_Ontario"], "color": ["#003865"]}
+	{"name": "Grand Maritime Federation", "nations": ["Woodland_Cree", "Angola", "Bermuda", "North_America", "Labrador", "Acadia", "Avalon", "Western_Sahara", "Keewatin", "North_Ontario"], "color": ["#D46D00"]}
 	
 ]
