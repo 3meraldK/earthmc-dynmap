@@ -1,3 +1,5 @@
+![Release](https://img.shields.io/github/v/release/3meraldK/earthmc-dynmapcolor) ![Repo size](https://img.shields.io/github/repo-size/3meraldK/earthmc-dynmapcolor) ![Downloads](https://img.shields.io/github/downloads/3meraldK/earthmc-dynmapcolor/total)
+
 # earthmc-dynmapcolor
 This Mozilla Firefox add-on enriches the EarthMC dynmap with a meganation support, i.e. now colors entire meganation the same color, and more.
 
@@ -10,3 +12,10 @@ This plugin is supported only on Mozilla Firefox due to Chromium limitations, ho
     1. Search "about:config", accept the prompt and search for 'xpinstall.signatures.required' and toggle the value to false.
     2. Restart the browser.
     3. Search "about:addons" and import the add-on from the file.
+
+## Bugs
+1. The dynmap clears everything to the default state rarely.
+
+# Screenshots
+![image](https://user-images.githubusercontent.com/48335651/153918902-67f8741d-323e-422e-ae39-fda503359b21.png)
+![image](https://user-images.githubusercontent.com/48335651/153919033-70b78831-7d3a-4172-87d8-a5b774968c50.png)
