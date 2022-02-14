@@ -1,16 +1,11 @@
 const dataURL = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json';
 const markerURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json';
 
-// Get meganations when extension starts.
+// Get meganations when extension starts and each 5 minutes.
+function fetchMeganations() { fetch(dataURL).then(response => response.json()).then(data => meganations = data).catch(() => meganations = []) };
 var meganations;
-fetch(dataURL)
-	.then(response => response.json())
-	.then(data => meganations = data);
-setInterval(() => {
-	fetch(dataURL)
-		.then(response => response.json())
-		.then(data => meganations = data);
-}, 1000*60*5);
+fetchMeganations();
+setInterval(() => fetchMeganations(), 1000*60*5);
 
 // Listens for request sending.
 browser.webRequest.onBeforeRequest.addListener(
@@ -22,13 +17,13 @@ browser.webRequest.onBeforeRequest.addListener(
 // Function is fired when the request is sent.
 function onMapUpdate(details) {
 
-	// Decoding/encoding utilizations, and StreamFilter object.
-	let decoder = new TextDecoder('utf-8');
-	let encoder = new TextEncoder();
-	var filter = browser.webRequest.filterResponseData(details.requestId);
+	// Decoding/encoding utilizations and StreamFilter object.
+	const decoder = new TextDecoder('utf-8');
+	const encoder = new TextEncoder();
+	const filter = browser.webRequest.filterResponseData(details.requestId);
 
 	// Get the response.
-	let arrayBuffer = [];
+	const arrayBuffer = [];
 	filter.ondata = event => arrayBuffer.push(decoder.decode(event.data, {stream: true}));
 
 	// Fired when response is sent.
@@ -36,13 +31,11 @@ function onMapUpdate(details) {
 
 		// Decode the response.
 		arrayBuffer.push(decoder.decode());
-		let string = arrayBuffer.join('');
-		let data = JSON.parse(string);
+		const string = arrayBuffer.join('');
+		const data = JSON.parse(string);
 
-		// Check if response is undefined.
+		// Check if response is undefined and delete star icons.
 		if (data.sets === undefined) return;
-
-		// Delete star icons.
 		delete data.sets["townyPlugin.markerset"].markers;
 
 		// Iterate through every town.
@@ -53,7 +46,7 @@ function onMapUpdate(details) {
 			town.opacity = 1;
 
 			// Check if a town contains any (<text>) in their description.
-			let townTitle = town.desc.match(/\([^ ]+\)/g);
+			const townTitle = town.desc.match(/\([^ ]+\)/g);
 			if (townTitle === null || townTitle === undefined || townTitle.length < 1) return;
 
 			// Remove (Shop) from the description if existent.
@@ -69,8 +62,7 @@ function onMapUpdate(details) {
 			};
 
 			// Get rid of that array and brackets.
-			let nation = townTitle[0];
-			nation = nation.replace(/[()]/g, '');
+			const nation = townTitle[0].replace(/[()]/g, '');
 
 			// Check if town's nation is in any meganation, if yes then apply colors and add a description.
 			meganations.forEach(meganation => {
@@ -85,10 +77,8 @@ function onMapUpdate(details) {
 
 		});
 
-		// Send the modified response
+		// Send the modified response and close the filter.
 		filter.write(encoder.encode(JSON.stringify(data)));
-
-		// Close the filter
 		filter.close();
 	};
 }
