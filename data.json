@@ -29,7 +29,7 @@
 	
 	{"name": "Second Nubian Empire", "nations": ["Nubia", "Kasai", "Nejd", "Namibia", "Molodezhnaya", "Bura", "Songhai", "Cote_Divoire", "Algeria", "Cameroon", "South_Sudan", "Fezzan", "Tripolitania", "Ghana", "Comoros", "Libya", "Senegal", "Ifriqiya", "Dzata", "Mauritania", "Rhodesia", "SADR", "Gabon", "Cape", "Zanzibar", "Katanga", "Cape_Verde", "Zimbabwe", "Riodeoro"], "color": "#7F3300"},
 	{"name": "Federation of the Indian Ocean", "nations": ["Ancient_Egypt", "Somalia", "Congo_FreeState", "Egypte_Federe", "North_Sudan", "Oman", "Kemet"], "color": "#45818E"},
-	{"name": "Tanzanian Empire", "nations": ["Tanzania", "Azande", "Lake_Nyasa", "UAE", "Uganda", "Sudan", "Syria", "New_Angola", "Djibouti", "Ethiopia", "Madeira", "Agadez", "New_Caledonia", "South_Tanzania", "Suedia"], "color": "#1EB53A"},
+	{"name": "Tanzanian Empire", "nations": ["Tanzania", "Azande", "Lake_Nyasa", "UAE", "Uganda", "Sudan", "Syria", "New_Angola", "Djibouti", "Ethiopia", "Madeira", "Agadez", "New_Caledonia", "South_Tanzania", "Suedia", "DRC"], "color": "#1EB53A"},
 	
 	{"name": "Republic of Brazil", "nations": ["Brazil", "Peru-Bolivia", "Manabi"], "color": "#009F3A"},
 	
