@@ -1,20 +1,14 @@
 {
 	"manifest_version": 2,
-	"name": "EarthMC DynmapColor",
-	"version": "1.1",
-	"author": "FranchuFranchu, 3meraldK",
-	"description": "Colors meganations on the map and more",
-
-	"browser_specific_settings": {
-		"gecko": {
-		  "id": "fff999abc999@users.noreply.github.com"
-		}
-	},
+	"name": "EarthMC Dynmap+",
+	"version": "1.2",
+	"author": "3meraldK",
+	"description": "Meganation coloring and much more",
 
 	"icons": {
 		"48": "48.png",
 		"256": "256.png"
-	  },
+	},
 
 	"background": {
 		"scripts": ["background.js"],
@@ -22,8 +16,8 @@
 	},
 
 	"permissions": [
-		"*://earthmc.net/map",
 		"webRequest",
-		"webRequestBlocking"
+		"webRequestBlocking",
+		"https://earthmc.net/map/*"
 	]
 }
