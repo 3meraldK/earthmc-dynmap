@@ -1,25 +1,21 @@
-const dataURL = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json';
-const markerURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json';
+const encoder = new TextEncoder();
+const decoder = new TextDecoder('utf-8');
 
 // Get meganations when extension starts and each 5 minutes.
-function fetchMeganations() { fetch(dataURL).then(response => response.json()).then(data => meganations = data).catch(() => meganations = []) };
+function fetchMeganations() { fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json').then(response => response.json()).then(data => meganations = data).catch(() => meganations = []) };
 var meganations;
 fetchMeganations();
 setInterval(() => fetchMeganations(), 1000*60*5);
 
-// Listens for request sending.
+// Listens for requests.
 browser.webRequest.onBeforeRequest.addListener(
-	onMapUpdate, 
-	{urls: [markerURL]}, 
+	function listener(details) { details.url.includes('up/world/earth/') ? onPlayerUpdate(details) : onMapUpdate(details); }, 
+	{urls: ['https://earthmc.net/map/tiles/_markers_/marker_earth.json', 'https://earthmc.net/map/up/world/earth/*']}, 
 	['blocking']
 );
 
-// Function is fired when the request is sent.
+// Function is fired when the marker_earth request is sent.
 function onMapUpdate(details) {
-
-	// Decoding/encoding utilizations and StreamFilter object.
-	const decoder = new TextDecoder('utf-8');
-	const encoder = new TextEncoder();
 	const filter = browser.webRequest.filterResponseData(details.requestId);
 
 	// Get the response.
@@ -31,8 +27,7 @@ function onMapUpdate(details) {
 
 		// Decode the response.
 		arrayBuffer.push(decoder.decode());
-		const string = arrayBuffer.join('');
-		const data = JSON.parse(string);
+		const data = JSON.parse(arrayBuffer.join(''));
 
 		// Check if response is undefined and delete star icons.
 		if (data.sets === undefined) return;
@@ -61,7 +56,7 @@ function onMapUpdate(details) {
 				return;
 			};
 
-			// Get rid of that array and brackets.
+			// Get rid of an array and brackets.
 			const nation = townTitle[0].replace(/[()]/g, '');
 
 			// Check if town's nation is in any meganation, if yes then apply colors and add a description.
@@ -74,11 +69,29 @@ function onMapUpdate(details) {
 					'<span style=\"font-size:80%\">Part of</span> ' + 
 					'<span style=\"font-size:90%\"><b>' + meganation.name + '</b></span><br />');
 			});
-
 		});
 
 		// Send the modified response and close the filter.
 		filter.write(encoder.encode(JSON.stringify(data)));
+		filter.close();
+	};
+}
+
+// Fired each ~1 second when the update request is sent.
+function onPlayerUpdate(details) {
+	const filter = browser.webRequest.filterResponseData(details.requestId);
+	const arrayBuffer = [];
+	filter.ondata = event => arrayBuffer.push(decoder.decode(event.data, {stream: true}));
+
+	filter.onstop = () => {
+		arrayBuffer.push(decoder.decode());
+		const string = arrayBuffer.join('');
+		const data = JSON.parse(string);
+
+		// If response's length > 32 kB then trigger onMapUpdate(), otherwise write data to the filter
+		if (data.currentcount === undefined) return;
+		if (string.length < 32768) filter.write(encoder.encode(JSON.stringify(data)));
+		else onMapUpdate(details);
 		filter.close();
 	};
 }

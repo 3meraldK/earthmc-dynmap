@@ -4,5 +4,5 @@ const interval = setInterval(() => {
 		document.getElementsByClassName('largeclock timeofday')[0].remove();
 		document.getElementsByClassName('leaflet-bottom leaflet-right')[0].remove();
 		clearInterval(interval);
-	} 
+	}
 }, 1000);
