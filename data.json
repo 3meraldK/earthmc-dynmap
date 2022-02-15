@@ -43,10 +43,8 @@
 	{"name": "Illinois Empire", "nations": ["Illinois", "Indiana", "United_States", "Missouri", "West_Jersey", "South_Carolina", "West_Virginia", "kingsport", "Iowa"], "color": "#00F6FF"},
 	{"name": "United States of America", "nations": ["New_Jersey", "New_York", "Ohio", "America", "Pennsylvania", "Hawaii", "Empire_State", "Tibet", "Yemen", "CSA", "Alabama", "Georgia", "USA", "Guam", "Minnesota", "Wisconsin"], "color": "#0052FF"},
 	{"name": "Third Canadian Empire", "nations": ["Quebec", "Baffin", "Hall", "Canada", "Ellesmere", "Avannaa", "Saskatchewan", "HBC", "Hollis", "ContactStaff4.1", "Disko_Bay", "Arctic_Islands", "Cumberland", "Klondike", "Iroquois", "Nouvelle-France", "Maine"], "color": "#CC3F4F"},
-	{"name": "Salish Confederation", "nations": ["Canadian_Rockies", "British_Columbia", "Nez_Perce", "Keewatin"], "color": "#FFFFFF"},
-	{"name": "Columbian Empire", "nations": ["Columbia", "Sahtu", "October_Island"], "color": "#0000CC"},
+	{"name": "Evergreen Republic", "nations": ["Canadian_Rockies", "British_Columbia", "Nez_Perce", "Keewatin", "Columbia", "Sahtu", "October_Island", "Columbia_River", "Bhutan", "Cascadia", "Colorado", "Queen_Charlotte", "Slave_Lake", "Tlingit", "Victoria_Island", "Wyoming"], "color": "#002200"}, 
 	{"name": "Alaskan Tsardom", "nations": ["Kodiak", "Anchorage", "Bering_Strait", "Yukon"], "color": "#011DC1"},
-	{"name": "Republic of Cascadia", "nations": ["Bhutan", "Cascadia", "Colorado", "Queen_Charlotte", "Slave_Lake", "Tlingit", "Victoria_Island", "Wyoming"], "color": "#002200"},
 	{"name": "Grand Maritime Federation", "nations": ["Woodland_Cree", "Angola", "Bermuda", "North_America", "Labrador", "Acadia", "Avalon", "Western_Sahara", "Keewatin", "North_Ontario"], "color": "#D46D00"}
 	
 ]
