@@ -7,12 +7,12 @@
 	{"name": "German Confederation", "nations": ["Mexican-Empire", "San_Luis_Potosi", "Chihuahua", "Austria", "Belgium", "Saxony", "Barinas", "Germany", "H.R.E.", "Olmec", "South-Pole", "EUM", "Preußen"], "color": "#E7FF47"},
 	{"name": "Caucasus Empire", "nations": ["Greater-Armenia", "Sakartvelo"], "color": "#A5FF7F"},
 	{"name": "Second Finnish Empire", "nations": ["Lapland", "Suomi", "Tavastia"], "color": "#FFFFFF"},
-	{"name": "Estonian Empire", "nations": ["Estonia", "Finnmark"], "color": "#00FFFF"},
+	{"name": "Estonian Empire", "nations": ["Estonia", "Finnmark", "Kalmar_Union"], "color": "#00FFFF"},
 	
 	{"name": "True Russia", "nations": ["CCCP", "Yakutia", "SovietUnion", "Far_East", "USSR", "Republic_of_Komi", "Russian_Dominion", "Sibirya", "Yamalia", "Contact_a_staff", "tomsk", "Karelia", "Verkhoyansk", "Siberian_Empire"], "color": "#D18915"},
-	{"name": "Russia", "nations": ["East_Russia", "Tzarist_Ukraine", "Russia", "Russian_Empire", "South_Russia", "Taymyria", "Northern_Russia", "Asia", "Republic_of_Rus", "Wrangel", "Sibir", "Far", "Hungary", "Yuzhny", "West_Russia", "Greater_Russia", "rule4.1", "Khabarovsk", "Pakistan", "Kievan_Rus", "Perm_Krai"], "color": "#FFD894"},
+	{"name": "Russia", "nations": ["East_Russia", "Tzarist_Ukraine", "Russia", "Russian_Empire", "South_Russia", "Taymyria", "Northern_Russia", "Asia", "Republic_of_Rus", "Wrangel", "Sibir", "Far", "Hungary", "Yuzhny", "West_Russia", "Greater_Russia", "rule4.1", "Khabarovsk", "Pakistan", "Kievan_Rus", "Perm_Krai", "Nenets"], "color": "#FFD894"},
 	{"name": "Israel", "nations": ["Israel", "Himyar", "Qatar", "Europe", "Egypt"], "color": "#0038B8"},
-	{"name": "Japanese Empire", "nations": ["Japan", "Japan_North", "Korea", "Shimazu", "Toban", "Prince_George", "Yamato", "Ooka", "Koyuk", "xiongnu", "Tugur", "yokuso", "Chumikan", "Ayano_Mainsky", "Bokkai", "Dai"], "color": "#BC002D"},
+	{"name": "Japanese Empire", "nations": ["Japan", "Japan_North", "Korea", "Shimazu", "Toban", "Prince_George", "Yamato", "Ooka", "Koyuk", "xiongnu", "Tugur", "yokuso", "Chumikan", "Ayano_Mainsky", "Bokkai", "Dai", "Xixia", "Yan"], "color": "#BC002D"},
 	{"name": "Joseon", "nations": ["Joseon", "Manchukuo"], "color": "#FFCB0A"},
 	{"name": "People's Republic of China", "nations": ["PRC", "Northeast_China", "PRC_XinJiang", "PRC_Fujian", "PRC_Jilin", "northPRC", "west_PRC", "Shu"], "color": "#FF4C00"},
 	{"name": "Han Dynasty", "nations": ["Han", "Hong_Kong", "Chu", "South_Sea", "Iceland", "Bei_qi", "Cape_Dorset"], "color": "#282828"},
@@ -23,13 +23,13 @@
 	{"name": "Taiwan", "nations": ["Taiwan", "Takasago"], "color": "#7FFFFF"},
 	
 	{"name": "Oniyama Shogunate", "nations": ["Grasberg", "Pulau_Japen", "Lützow-holm_bay", "Amazonas", "Kepulauan_Aru"], "color": "#41F226"},
-	{"name": "Third Victorian Empire", "nations": ["Long_Bay", "Ulimaroa", "Oceania", "Huron", "Kemet", "NorthAustralia", "Cape_York", "SouthAustralia", "Nicaragua"], "color": "#003FA3"},
+	{"name": "Third Victorian Empire", "nations": ["Long_Bay", "Ulimaroa", "Oceania", "Huron", "NorthAustralia", "Cape_York", "SouthAustralia", "Nicaragua"], "color": "#003FA3"},
 	{"name": "Fourth Australian Empire", "nations": ["Australia", "SouthTasmania", "TerraAustralis", "Straya", "Kimberley", "WesternAustralia", "Neale", "Papua", "West_Papua"], "color": "#FF8800"},
 	{"name": "New_Zealand", "nations": ["New_Zealand", "South_Island"], "color": "#F5281C"},
 	
-	{"name": "Second Nubian Empire", "nations": ["Nubia", "Kasai", "Nejd", "Namibia", "Molodezhnaya", "Bura", "Songhai", "Cote_Divoire", "Algeria", "Cameroon", "South_Sudan", "Fezzan", "Tripolitania", "Ghana", "Comoros", "Libya", "Senegal", "Ifriqiya", "Dzata", "Mauritania", "Rhodesia", "SADR", "Gabon", "Cape", "Zanzibar", "Katanga", "Cape_Verde", "Zimbabwe", "Riodeoro"], "color": "#7F3300"},
+	{"name": "Second Nubian Empire", "nations": ["Nubia", "Kasai", "Nejd", "Namibia", "Molodezhnaya", "Bura", "Songhai", "Cote_Divoire", "Algeria", "Cameroon", "South_Sudan", "Fezzan", "Tripolitania", "Ghana", "Comoros", "Libya", "Senegal", "Ifriqiya", "Dzata", "Mauritania", "Rhodesia", "SADR", "Gabon", "Cape", "Zanzibar", "Katanga", "Cape_Verde", "Zimbabwe", "Riodeoro", "Angola", "Numidia"], "color": "#7F3300"},
 	{"name": "Federation of the Indian Ocean", "nations": ["Ancient_Egypt", "Somalia", "Congo_FreeState", "Egypte_Federe", "North_Sudan", "Oman", "Kemet", "Cyrene"], "color": "#45818E"},
-	{"name": "Tanzanian Empire", "nations": ["Tanzania", "Azande", "Lake_Nyasa", "UAE", "Uganda", "Sudan", "Syria", "New_Angola", "Djibouti", "Ethiopia", "Madeira", "Agadez", "New_Caledonia", "South_Tanzania", "Suedia", "DRC"], "color": "#1EB53A"},
+	{"name": "Tanzanian Empire", "nations": ["Tanzania", "Azande", "Lake_Nyasa", "UAE", "Uganda", "Sudan", "Syria", "New_Angola", "Djibouti", "Ethiopia", "Madeira", "Agadez", "New_Caledonia", "South_Tanzania", "DRC"], "color": "#1EB53A"},
 	
 	{"name": "Republic of Brazil", "nations": ["Brazil", "Peru-Bolivia", "Manabi"], "color": "#009F3A"},
 	
@@ -38,13 +38,13 @@
 	
 	{"name": "Cuban Empire", "nations": ["Cuba", "Haiti", "New_Granada", "Cordoba", "Yucatan", "Dominican", "Miami", "Costa_Rica", "Panama", "Nicaragua"], "color": "#CC0001"},
 	{"name": "Republic of Rio Grande", "nations": ["Rio_Grande", "Lone_Star", "New_Mexico"], "color": "#000000"},
-	{"name": "Texico Empire", "nations": ["Texas_Republic", "Pueblo", "Zapotec"], "color": "#002868"},
+	{"name": "Texico Empire", "nations": ["Texas_Republic", "Pueblo", "Zapotec", "Vanuatu"], "color": "#002868"},
 	{"name": "State of Jefferson", "nations": ["Jefferson", "RoughAndReady", "Utah", "Oregon", "Deseret", "California", "Baja", "Nevada", "Navajo"], "color": "#009900"},
 	{"name": "Illinois Empire", "nations": ["Illinois", "Indiana", "United_States", "Missouri", "West_Jersey", "South_Carolina", "West_Virginia", "kingsport", "Iowa"], "color": "#00F6FF"},
 	{"name": "United States of America", "nations": ["New_Jersey", "New_York", "Ohio", "America", "Pennsylvania", "Hawaii", "Empire_State", "Tibet", "Yemen", "CSA", "Alabama", "Georgia", "USA", "Guam", "Minnesota", "Wisconsin"], "color": "#0052FF"},
 	{"name": "Third Canadian Empire", "nations": ["Quebec", "Baffin", "Hall", "Canada", "Ellesmere", "Avannaa", "Saskatchewan", "HBC", "Hollis", "ContactStaff4.1", "Disko_Bay", "Arctic_Islands", "Cumberland", "Klondike", "Iroquois", "Nouvelle-France", "Maine"], "color": "#CC3F4F"},
-	{"name": "Evergreen Republic", "nations": ["Canadian_Rockies", "British_Columbia", "Nez_Perce", "Keewatin", "Columbia", "Sahtu", "October_Island", "Columbia_River", "Bhutan", "Cascadia", "Colorado", "Queen_Charlotte", "Slave_Lake", "Tlingit", "Victoria_Island", "Wyoming"], "color": "#002200"}, 
+	{"name": "The Federal Republic of Evergreen", "nations": ["British_Columbia", "Bhutan", "Canadian_Rockies", "Cascadia", "Colorado", "Columbia", "Columbia_River", "Greenland", "Keewatin", "Maldives", "October_Island", "Queen_Charlotte", "Slave_Lake", "Sahtu", "Tlingit", "Victoria_Island", "Wyoming"], "color": "#002200"}, 
 	{"name": "Alaskan Tsardom", "nations": ["Kodiak", "Anchorage", "Bering_Strait", "Yukon"], "color": "#011DC1"},
-	{"name": "Grand Maritime Federation", "nations": ["Woodland_Cree", "Angola", "Bermuda", "North_America", "Labrador", "Acadia", "Avalon", "Western_Sahara", "Keewatin", "North_Ontario"], "color": "#D46D00"}
+	{"name": "Grand Maritime Federation", "nations": ["Woodland_Cree", "Bermuda", "North_America", "Labrador", "Acadia", "Avalon", "Western_Sahara", "Keewatin", "North_Ontario", "Cumania", "Arctic_Alaska", "Buckland", "Manitoba"], "color": "#D46D00"}
 	
 ]
