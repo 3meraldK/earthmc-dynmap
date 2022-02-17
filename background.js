@@ -57,7 +57,7 @@ function onMapUpdate(details) {
 			};
 
 			// Get rid of an array and brackets.
-			const nation = townTitle[0].replace(/[()]/g, '').toLowerCase();
+			const nation = townTitle[0].toLowerCase().replace(/[()]/g, '');
 
 			// Check if town's nation is in any meganation, if yes then apply colors and add a description.
 			meganations.forEach(meganation => {
