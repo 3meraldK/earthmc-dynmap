@@ -30,13 +30,13 @@
 	{"name": "Federation of the Indian Ocean", "nations": ["ancient_egypt", "somalia", "congo_freestate", "egypte_federe", "north_sudan", "oman", "kemet", "cyrene"], "color": "#45818E"},
 	{"name": "Tanzanian Empire", "nations": ["tanzania", "azande", "lake_nyasa", "uae", "uganda", "sudan", "syria", "new_angola", "djibouti", "ethiopia", "madeira", "agadez", "new_caledonia", "south_tanzania", "drc"], "color": "#1EB53A"},
 	
-	{"name": "Republic of Brazil", "nations": ["brazil", "peru-bolivia", "manabi"], "color": "#009F3A"},
+	{"name": "Republic of Brazil", "nations": ["brazil", "peru-bolivia", "manabi"], "color": "#FFC0CB"},
 	
 	{"name": "Theocratic Confederacy of Antarctica", "nations": ["ssrbv", "amery", "antarctic_empire", "antarctic", "seljuk_empire", "victoria_land"], "color": "#7FFFFF"},
 	{"name": "Egalitarist People's Republic of Antarctica", "nations": ["casey", "sandwich_islands", "marie_byrd_land", "antarctica"], "color": "#FED700"},
 	
 	{"name": "Cuban Empire", "nations": ["cuba", "haiti", "new_granada", "cordoba", "yucatan", "dominican", "miami", "costa_rica", "panama", "nicaragua"], "color": "#CC0001"},
-	{"name": "Republic of Rio Grande", "nations": ["rio_grande", "lone_star", "new_mexico"], "color": "#000000"},
+	{"name": "Republic of Rio Grande", "nations": ["rio_grande", "lone_star", "new_mexico"], "color": "#FFFFFF"},
 	{"name": "Texico Empire", "nations": ["texas_republic", "pueblo", "zapotec", "vanuatu", "south_island"], "color": "#002868"},
 	{"name": "State of Jefferson", "nations": ["jefferson", "roughandready", "utah", "oregon", "deseret", "california", "baja", "nevada", "navajo"], "color": "#009900"},
 	{"name": "Illinois Empire", "nations": ["illinois", "indiana", "united_states", "missouri", "west_jersey", "south_carolina", "west_virginia", "kingsport", "iowa"], "color": "#00F6FF"},
