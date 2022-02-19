@@ -1,13 +1,13 @@
 [
-	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania"], "color": "#9F0807"},
-	{"name": "Angevin Empire", "nations": ["france", "switzerland", "hannover", "prussia", "monaco", "britain", "scotland", "norway", "sweden"], "color": "#DC281E"},
+	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania", "kalmar_union", "prussia"], "color": "#9F0807"},
+	{"name": "Angevin Empire", "nations": ["britain", "scotland", "norway", "sweden"], "color": "#DC281E"},
 	{"name": "Greater Roman Empire", "nations": ["spqr", "italia", "romania", "greater_romania"], "color": "#B200FF"},
 	{"name": "Spanish Empire", "nations": ["iberian_angola", "spain", "spanish_antilles", "guinea", "canarias", "uruguay", "argentina", "peru", "chile", "paraguay", "portugal", "bolivia", "colombia", "patagonia", "acre"], "color": "#FFD800"},
-	{"name": "Kingdom of France", "nations": ["francia", "yavanarajya", "center_africa", "nepal", "india", "liverpool", "swedish_empire", "maurya_dynasty"], "color": "#0F1D6E"},
+	{"name": "Kingdom of France", "nations": ["francia", "yavanarajya", "center_africa", "nepal", "india", "liverpool", "swedish_empire", "maurya_dynasty", "france", "monaco"], "color": "#0F1D6E"},
 	{"name": "German Confederation", "nations": ["mexican-empire", "san_luis_potosi", "chihuahua", "austria", "belgium", "saxony", "barinas", "germany", "h.r.e.", "olmec", "south-pole", "eum", "preußen"], "color": "#E7FF47"},
 	{"name": "Caucasus Empire", "nations": ["greater-armenia", "sakartvelo"], "color": "#A5FF7F"},
 	{"name": "Second Finnish Empire", "nations": ["lapland", "suomi", "tavastia"], "color": "#FFFFFF"},
-	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "kalmar_union"], "color": "#00FFFF"},
+	{"name": "Estonian Empire", "nations": ["estonia", "finnmark"], "color": "#00FFFF"},
 	
 	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia"], "color": "#D18915"},
 	{"name": "Russia", "nations": ["east_russia", "tzarist_ukraine", "russia", "russian_empire", "south_russia", "taymyria", "northern_russia", "republic_of_rus", "wrangel", "sibir", "far", "hungary", "yuzhny", "west_russia", "greater_russia", "rule4.1", "khabarovsk", "pakistan", "kievan_rus", "perm_krai", "nenets"], "color": "#FFD894"},
