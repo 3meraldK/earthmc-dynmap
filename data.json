@@ -1,6 +1,6 @@
 [
 	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania", "kalmar_union", "prussia"], "color": "#9F0807"},
-	{"name": "Angevin Empire", "nations": ["britain", "scotland", "norway", "sweden"], "color": "#DC281E"},
+	{"name": "Angevin Empire", "nations": ["britain", "scotland", "norway", "sweden", "switzerland"], "color": "#DC281E"},
 	{"name": "Greater Roman Empire", "nations": ["spqr", "italia", "romania", "greater_romania", "turkey"], "color": "#B200FF"},
 	{"name": "Spanish Empire", "nations": ["iberian_angola", "spain", "spanish_antilles", "guinea", "canarias", "uruguay", "argentina", "peru", "chile", "paraguay", "portugal", "bolivia", "colombia", "patagonia", "acre"], "color": "#FFD800"},
 	{"name": "Kingdom of France", "nations": ["francia", "yavanarajya", "center_africa", "nepal", "india", "liverpool", "swedish_empire", "maurya_dynasty", "france", "monaco"], "color": "#0F1D6E"},
