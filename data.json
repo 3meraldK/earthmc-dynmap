@@ -6,7 +6,7 @@
 	{"name": "Kingdom of France", "nations": ["francia", "yavanarajya", "center_africa", "nepal", "india", "liverpool", "maurya_dynasty", "france", "monaco"], "color": ["#0F1D6E"]},
 	{"name": "German Confederation", "nations": ["mexican-empire", "san_luis_potosi", "chihuahua", "austria", "belgium", "saxony", "barinas", "germany", "h.r.e.", "olmec", "south-pole", "eum", "preußen"], "color": ["#E7FF47"]},
 	{"name": "Caucasus Empire", "nations": ["greater-armenia", "sakartvelo"], "color": ["#A5FF7F"]},
-	{"name": "Estonian Empire", "nations": ["estonia", "finnmark"], "color": ["#00FFFF"]},
+	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia"], "color": ["#00FFFF"]},
 	{"name": "Greater Finnish Empire", "nations": ["lapland", "suomi", "tavastia"], "color": ["#FFFFFF"]},
 	
 	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia", "asgard"], "color": ["#D18915"]},
