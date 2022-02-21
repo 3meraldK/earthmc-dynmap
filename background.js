@@ -59,15 +59,20 @@ function onMapUpdate(details) {
 			// Get rid of an array and brackets.
 			const nation = townTitle[0].toLowerCase().replace(/[()]/g, '');
 
-			// Check if town's nation is in any meganation, if yes then apply colors and add a description.
+			// Check if town's nation is in any meganation.
 			meganations.forEach(meganation => {
-
+			
 				if (!meganation.nations.includes(nation)) return;
-				town.color = meganation.color;
-				town.fillcolor = meganation.color;
+				// If yes, apply description, fill color (and stroke color if defined).
 				town.desc = town.desc.replace(')</span><br />', ')</span><br /> ' + 
 					'<span style=\"font-size:80%\">Part of</span> ' + 
 					'<span style=\"font-size:90%\"><b>' + meganation.name + '</b></span><br />');
+
+				const fillColor = meganation.color[0];
+				var strokeColor = fillColor;
+				if (meganation.color.length == 2) strokeColor = meganation.color[1];
+				town.color = strokeColor;
+				town.fillcolor = fillColor;
 			});
 		});
 
