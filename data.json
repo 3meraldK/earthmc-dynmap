@@ -1,5 +1,5 @@
 [
-	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania", "kalmar_union", "prussia"], "color": "#9F0807"},
+	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania", "kalmar_union"], "color": "#9F0807"},
 	{"name": "Angevin Empire", "nations": ["britain", "scotland", "norway", "sweden", "switzerland"], "color": "#DC281E"},
 	{"name": "Greater Roman Empire", "nations": ["spqr", "italia", "romania", "greater_romania", "turkey"], "color": "#B200FF"},
 	{"name": "Spanish Empire", "nations": ["iberian_angola", "spain", "spanish_antilles", "guinea", "canarias", "uruguay", "argentina", "peru", "chile", "paraguay", "portugal", "bolivia", "colombia", "patagonia", "acre"], "color": "#FFD800"},
@@ -7,9 +7,10 @@
 	{"name": "German Confederation", "nations": ["mexican-empire", "san_luis_potosi", "chihuahua", "austria", "belgium", "saxony", "barinas", "germany", "h.r.e.", "olmec", "south-pole", "eum", "preußen"], "color": "#E7FF47"},
 	{"name": "Caucasus Empire", "nations": ["greater-armenia", "sakartvelo"], "color": "#A5FF7F"},
 	{"name": "Estonian Empire", "nations": ["estonia", "finnmark"], "color": "#00FFFF"},
+	{"name": "Greater Finnish Empire", "nations": ["lapland", "suomi", "tavastia"], "color": "#FFFFFF"},
 	
-	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia", "lapland", "suomi", "tavastia"], "color": "#D18915"},
-	{"name": "Russia", "nations": ["east_russia", "tzarist_ukraine", "russia", "russian_empire", "south_russia", "taymyria", "northern_russia", "republic_of_rus", "wrangel", "sibir", "far", "hungary", "yuzhny", "west_russia", "greater_russia", "rule4.1", "khabarovsk", "pakistan", "kievan_rus", "perm_krai", "nenets"], "color": "#FFD894"},
+	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia"], "color": "#D18915"},
+	{"name": "Russia", "nations": ["east_russia", "tzarist_ukraine", "russia", "russian_empire", "south_russia", "taymyria", "northern_russia", "republic_of_rus", "wrangel", "sibir", "far", "hungary", "yuzhny", "west_russia", "greater_russia", "rule4.1", "khabarovsk", "pakistan", "kievan_rus", "perm_krai", "nenets", "astrakhan"], "color": "#FFD894"},
 	{"name": "Israel", "nations": ["israel", "himyar", "qatar", "egypt"], "color": "#0038B8"},
 	{"name": "Japanese Empire", "nations": ["japan", "japan_north", "korea", "shimazu", "toban", "prince_george", "yamato", "ooka", "koyuk", "xiongnu", "tugur", "yokuso", "chumikan", "ayano_mainsky", "bokkai", "dai", "xixia", "yan"], "color": "#BC002D"},
 	{"name": "Joseon", "nations": ["joseon", "manchukuo"], "color": "#FFCB0A"},
