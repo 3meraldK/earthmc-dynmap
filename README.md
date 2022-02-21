@@ -8,6 +8,7 @@ Meganation data should be maintained regularly, however if data is incorrect or 
 
 ### to-do
 1. Alliances and organizations
+2. Two different colors for fill and stroke
 
 # Download and use
 This plugin is supported only on Mozilla Firefox due to Chromium limitations, however you may use [this userscript](https://github.com/32Vache/emc-map-colors) on Chromium browsers (MS Edge, Chrome, Opera, Brave).
