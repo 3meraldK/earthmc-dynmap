@@ -4,11 +4,10 @@
 This Mozilla Firefox add-on enriches the EarthMC dynmap with the meganation support, i.e. now colors entire meganations the same color, and more. 
 
 ## Updates
-Meganation data should be maintained regularly, however if data is incorrect or is missing, please open an issue/pull a request.
+Meganation data should be maintained regularly. If you are a meganation governor which wants to add a custom outline color for their meganation, or, if you have spotted any incorrect or missing data, please open an issue or a pull request.
 
 ### to-do
 1. Alliances and organizations
-2. Two different colors for fill and stroke
 
 # Download and use
 This plugin is supported only on Mozilla Firefox due to Chromium limitations, however you may use [this userscript](https://github.com/32Vache/emc-map-colors) on Chromium browsers (MS Edge, Chrome, Opera, Brave).
