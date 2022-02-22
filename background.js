@@ -58,22 +58,28 @@ function onMapUpdate(details) {
 
 			// Get rid of an array and brackets.
 			const nation = townTitle[0].toLowerCase().replace(/[()]/g, '');
+			var meganationList = '';
 
 			// Check if town's nation is in any meganation.
 			meganations.forEach(meganation => {
 			
+				// Nation controlled by multiple meganations support.
 				if (!meganation.nations.includes(nation)) return;
-				// If yes, apply description, fill color (and stroke color if defined).
-				town.desc = town.desc.replace(')</span><br />', ')</span><br /> ' + 
-					'<span style=\"font-size:80%\">Part of</span> ' + 
-					'<span style=\"font-size:90%\"><b>' + meganation.name + '</b></span><br />');
+				if (meganationList.length < 1) meganationList += meganation.name;
+				else meganationList += ', ' + meganation.name;
 
+				// If yes, apply fill color (and stroke color if defined).
 				const fillColor = meganation.color[0];
 				var strokeColor = fillColor;
 				if (meganation.color.length == 2) strokeColor = meganation.color[1];
 				town.color = strokeColor;
 				town.fillcolor = fillColor;
 			});
+				
+			// Apply description.
+			if (meganationList.length > 0) town.desc = town.desc.replace(')</span><br />', ')</span><br /> ' + 
+				'<span style=\"font-size:80%\">Part of</span> ' + 
+				'<span style=\"font-size:90%\"><b>' + meganationList + '</b></span><br />');
 		});
 
 		// Send the modified response and close the filter.
