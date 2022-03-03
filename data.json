@@ -1,34 +1,34 @@
 [
 	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania", "kalmar_union"], "color": ["#9F0807"]},
-	{"name": "Angevin Empire", "nations": ["britain", "scotland", "norway", "sweden", "switzerland"], "color": ["#DC281E"]},
+	{"name": "Angevin Empire", "nations": ["britain", "scotland", "misr", "slave_lake", "norway", "sweden", "switzerland"], "color": ["#DC281E"]},
 	{"name": "Greater Roman Empire", "nations": ["spqr", "italia", "romania", "greater_romania", "turkey"], "color": ["#B200FF"]},
 	{"name": "Spanish Empire", "nations": ["iberian_angola", "spain", "spanish_antilles", "guinea", "canarias", "uruguay", "argentina", "peru", "chile", "paraguay", "portugal", "bolivia", "colombia", "patagonia", "acre"], "color": ["#FFD800"]},
-	{"name": "Kingdom of France", "nations": ["francia", "yavanarajya", "nepal", "india", "liverpool", "maurya_dynasty", "france", "monaco"], "color": ["#0F1D6E"]},
+	{"name": "Kingdom of France", "nations": ["francia", "france", "carthage", "india", "liverpool", "maurya_dynasty", "nepal", "bharat", "kievan_rus"], "color": ["#0F1D6E"]},
 	{"name": "German Confederation", "nations": ["mexican-empire", "san_luis_potosi", "chihuahua", "austria", "belgium", "saxony", "barinas", "germany", "h.r.e.", "olmec", "south-pole", "eum", "preußen"], "color": ["#E7FF47"]},
 	{"name": "Caucasus Empire", "nations": ["greater-armenia", "sakartvelo"], "color": ["#A5FF7F"]},
 	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia", "nordaustlandet"], "color": ["#00FFFF"]},
 	
 	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia", "krasnoyarsk"], "color": ["#D18915"]},
-	{"name": "Russia", "nations": ["east_russia", "tzarist_ukraine", "russia", "russian_empire", "south_russia", "taymyria", "northern_russia", "republic_of_rus", "wrangel", "sibir", "far", "hungary", "yuzhny", "west_russia", "greater_russia", "rule4.1", "khabarovsk", "pakistan", "kievan_rus", "perm_krai", "nenets", "astrakhan"], "color": ["#FFD894"]},
+	{"name": "Russia", "nations": ["russian_empire", "russia", "tzarist_ukraine", "northern_russia", "south_russia", "taymyria", "republic_of_rus", "yuzhny", "rule4.1", "joseon", "manchukuo", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "kievan_rus", "nenets", "north_yakutia", "astrakhan", "russian_state", "wrangel", "sibir", "far", "hungary"], "color": ["#FFD894"]},
 	{"name": "Israel", "nations": ["israel", "himyar", "qatar", "egypt"], "color": ["#0038B8"]},
 	{"name": "Japanese Empire", "nations": ["japan", "japan_north", "korea", "shimazu", "toban", "prince_george", "yamato", "ooka", "koyuk", "xiongnu", "tugur", "yokuso", "chumikan", "ayano_mainsky", "bokkai", "dai", "xixia", "yan", "roc"], "color": ["#BC002D"]},
-	{"name": "Joseon", "nations": ["joseon", "manchukuo"], "color": ["#FFCB0A"]},
 	{"name": "People's Republic of China", "nations": ["prc", "northeast_china", "prc_xinjiang", "prc_fujian", "prc_jilin", "northprc", "west_prc", "shu"], "color": ["#FF4C00"]},
 	{"name": "Han Dynasty", "nations": ["han", "hong_kong", "chu", "south_sea", "iceland", "bei_qi", "cape_dorset"], "color": ["#282828"]},
 	{"name": "Liao", "nations": ["liao", "great_liao"], "color": ["#01315A"]},
 	{"name": "Federation of the East", "nations": ["philippines", "mcmurdo", "mindanao", "mozambique", "roc"], "color": ["#0038A8"]},
 	{"name": "Indochina", "nations": ["indochina", "sumatra", "vietnam"], "color": ["#FFFFFF"]},
 	{"name": "Majapahit Empire", "nations": ["majapahit", "dutch_indies", "sulawesi", "sarawak", "maluku"], "color": ["#FFDF3F"]},
-	{"name": "Taiwan", "nations": ["taiwan", "takasago"], "color": ["#7FFFFF"]},
+	{"name": "The Formosa Realm", "nations": ["taiwan", "takasago"], "color": ["#7FFFFF"]},
 	
 	{"name": "Oniyama Shogunate", "nations": ["grasberg", "pulau_japen", "lützow-holm_bay", "amazonas", "kepulauan_aru"], "color": ["#41F226"]},
 	{"name": "Third Victorian Empire", "nations": ["long_bay", "ulimaroa", "oceania", "huron", "northaustralia", "cape_york", "southaustralia", "nicaragua"], "color": ["#003FA3"]},
-	{"name": "Fourth Australian Empire", "nations": ["australia", "southtasmania", "terraaustralis", "straya", "kimberley", "westernaustralia", "neale", "papua", "west_papua"], "color": ["#FF8800"]},
+	{"name": "Fourth Australian Empire", "nations": ["australia", "westernaustralia", "kimberley", "neale", "terraaustralis", "straya", "papua", "west_papua"], "color": ["#FF8800"]},
 	
-	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "cote_divoire", "algeria", "cameroon", "south_sudan", "fezzan", "tripolitania", "ghana", "comoros", "libya", "senegal", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "zanzibar", "cape_verde", "zimbabwe", "riodeoro", "angola", "numidia"], "color": ["#7F3300"]},
-	{"name": "Federation of the Indian Ocean", "nations": ["ancient_egypt", "somalia", "congo_freestate", "egypte_federe", "north_sudan", "kemet", "cyrene"], "color": ["#45818E"]},
-	{"name": "Tanzanian Empire", "nations": ["tanzania", "azande", "lake_nyasa", "uae", "uganda", "sudan", "syria", "djibouti", "ethiopia", "madeira", "agadez", "new_caledonia", "south_tanzania", "drc", "katanga", "europe", "swedish_empire", "songhai", "center_africa", "oman", "lapland", "suomi", "tavastia"], "color": ["#1EB53A"]},
-	
+	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "cote_divoire", "algeria", "mozambique", "cameroon", "east_africa", "ghana", "comoros", "senegal", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "zanzibar", "cape_verde", "angola", "numidia", "pomene", "fezzan", "tripolitania", "riodeoro"], "color": ["#7F3300"]},
+	{"name": "Federation of the Indian Ocean", "nations": ["ancient_egypt", "kemet", "cyrene", "egypt_federe", "congo_freestate", "somalia", "north_sudan"], "color": ["#45818E"]},
+	{"name": "Tanzanian Empire", "nations": ["azande", "tanzania", "lake_nyasa", "uganda", "sudan", "djibouti", "ethiopia", "songhai", "drc", "agadez", "4.1maketicket", "katanga", "center_africa", "maravi", "uae", "syria", "europe", "swedish_empire", "madeira", "tavastia", "suomi", "lapland", "normandie", "new_caledonia"], "color": ["#1EB53A"]},
+	{"name": "Madagascar", "nations": ["madagascar", "samoa"], "color": ["#237542" ,"#FFBB00"]},
+
 	{"name": "Republic of Brazil", "nations": ["brazil", "peru-bolivia", "manabi"], "color": ["#FFC0CB"]},
 	
 	{"name": "Theocratic Confederacy of Antarctica", "nations": ["ssrbv", "amery", "antarctic_empire", "antarctic", "seljuk_empire", "victoria_land"], "color": ["#7FFFFF"]},
@@ -41,7 +41,7 @@
 	{"name": "Illinois Empire", "nations": ["illinois", "indiana", "united_states", "missouri", "west_jersey", "south_carolina", "west_virginia", "kingsport", "iowa"], "color": ["#00F6FF"]},
 	{"name": "United States of America", "nations": ["new_jersey", "new_york", "ohio", "america", "pennsylvania", "hawaii", "empire_state", "tibet", "yemen", "csa", "alabama", "georgia", "usa", "guam", "minnesota", "wisconsin"], "color": ["#0052FF"]},
 	{"name": "Third Canadian Empire", "nations": ["quebec", "baffin", "hall", "canada", "ellesmere", "avannaa", "saskatchewan", "hbc", "hollis", "contactstaff4.1", "disko_bay", "arctic_islands", "cumberland", "klondike", "iroquois", "nouvelle-france", "maine"], "color": ["#CC3F4F"]},
-	{"name": "The Federal Republic of Evergreen", "nations": ["british_columbia", "bhutan", "canadian_rockies", "cascadia", "colorado", "columbia", "columbia_river", "greenland", "keewatin", "maldives", "october_island", "queen_charlotte", "slave_lake", "sahtu", "tlingit", "victoria_island", "wyoming", "washington", "nez_perce"], "color": ["#002200"]}, 
+	{"name": "The Federal Republic of Evergreen", "nations": ["british_columbia", "bhutan", "canadian_rockies", "cascadia", "colorado", "columbia", "columbia_river", "greenland", "keewatin", "maldives", "nez_perce", "october_island", "queen_charlotte", "russian_alaska", "sahtu", "tlingit", "victoria_island", "wyoming", "washington"], "color": ["#002200"]}, 
 	{"name": "Alaskan Tsardom", "nations": ["kodiak", "anchorage", "bering_strait", "yukon"], "color": ["#011DC1"]},
-	{"name": "Grand Maritime Federation", "nations": ["woodland_cree", "bermuda", "north_america", "labrador", "acadia", "avalon", "western_sahara", "keewatin", "north_ontario", "cumania", "arctic_alaska", "buckland", "manitoba"], "color": ["#D46D00"]}
+	{"name": "Grand Maritime Federation", "nations": ["acadia", "keewatin", "cumania", "fiji", "western_sahara", "avalon", "labrador", "bermuda", "north_america", "woodland_cree", "manitoba", "north_ontario", "arctic_alaska", "buckland"], "color": ["#D46D00"]}
 ]
