@@ -40,24 +40,20 @@ function onMapUpdate(details) {
 			town.weight = 1.6;
 			town.opacity = 1;
 
-			// Check if a town contains any (<text>) in their description.
-			const townTitle = town.desc.match(/\([^ ]+\)/g);
-			if (townTitle === null || townTitle === undefined || townTitle.length < 1) return;
-
-			// Remove (Shop) from the description if existent.
-			if (townTitle.indexOf('(Shop)') > -1) townTitle.splice(townTitle.indexOf('(Shop)'), 1);
+			townTitle = town.desc.split('<br \/>')[0];
+			townTitle = townTitle.replace(/\(Shop\)$/g, '').replaceAll(/[()]/g, '').split(' ');
+			const nation = townTitle[2].toLowerCase().replace('</span>', '');
 
 			// Set every town's color to default.
 			town.color = '#3FB4FF';
 			town.fillcolor = '#3FB4FF';
-			if (townTitle === null || townTitle === undefined || townTitle.length < 1) {
+			if (nation.length < 1) {
 				town.color = '#89C500';
 				town.fillcolor = '#89C500';
 				return;
 			};
 
 			// Get rid of an array and brackets.
-			const nation = townTitle[0].toLowerCase().replace(/[()]/g, '');
 			var meganationList = '';
 
 			// Check if town's nation is in any meganation.
