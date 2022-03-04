@@ -1,12 +1,12 @@
 [
-	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania", "kalmar_union"], "color": ["#9F0807"]},
+	{"name": "Lechian Empire", "nations": ["poland", "galicia", "tasmania", "croatia", "bulgaria", "lithuania"], "color": ["#9F0807"]},
 	{"name": "Angevin Empire", "nations": ["britain", "scotland", "misr", "slave_lake", "norway", "sweden", "switzerland"], "color": ["#DC281E"]},
 	{"name": "Greater Roman Empire", "nations": ["spqr", "italia", "romania", "greater_romania", "turkey"], "color": ["#B200FF"]},
 	{"name": "Spanish Empire", "nations": ["iberian_angola", "spain", "spanish_antilles", "guinea", "canarias", "uruguay", "argentina", "peru", "chile", "paraguay", "portugal", "bolivia", "colombia", "patagonia", "acre"], "color": ["#FFD800"]},
 	{"name": "Kingdom of France", "nations": ["francia", "france", "carthage", "india", "liverpool", "maurya_dynasty", "nepal", "bharat", "kievan_rus"], "color": ["#0F1D6E"]},
 	{"name": "German Confederation", "nations": ["mexican-empire", "san_luis_potosi", "chihuahua", "austria", "belgium", "saxony", "barinas", "germany", "h.r.e.", "olmec", "south-pole", "eum", "preußen"], "color": ["#E7FF47"]},
 	{"name": "Caucasus Empire", "nations": ["greater-armenia", "sakartvelo"], "color": ["#A5FF7F"]},
-	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia", "nordaustlandet"], "color": ["#00FFFF"]},
+	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia", "nordaustlandet", "kalmar_union"], "color": ["#00FFFF"]},
 	
 	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia", "krasnoyarsk"], "color": ["#D18915"]},
 	{"name": "Russia", "nations": ["russian_empire", "russia", "tzarist_ukraine", "northern_russia", "south_russia", "taymyria", "republic_of_rus", "yuzhny", "rule4.1", "joseon", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "kievan_rus", "nenets", "north_yakutia", "astrakhan", "russian_state", "wrangel", "sibir", "far", "hungary"], "color": ["#FFD894"]},
