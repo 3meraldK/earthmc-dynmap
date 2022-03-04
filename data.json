@@ -15,7 +15,7 @@
 	{"name": "People's Republic of China", "nations": ["prc", "northeast_china", "prc_xinjiang", "prc_fujian", "prc_jilin", "northprc", "west_prc", "shu"], "color": ["#FF4C00"]},
 	{"name": "Han Dynasty", "nations": ["han", "hong_kong", "chu", "south_sea", "iceland", "bei_qi", "cape_dorset"], "color": ["#282828"]},
 	{"name": "Liao", "nations": ["liao", "great_liao"], "color": ["#01315A"]},
-	{"name": "Federation of the East", "nations": ["philippines", "mcmurdo", "mindanao", "mozambique", "roc"], "color": ["#0038A8"]},
+	{"name": "Federation of the East", "nations": ["philippines", "mcmurdo", "mozambique", "roc"], "color": ["#0038A8"]},
 	{"name": "Indochina", "nations": ["indochina", "sumatra", "vietnam"], "color": ["#FFFFFF"]},
 	{"name": "Majapahit Empire", "nations": ["majapahit", "dutch_indies", "sulawesi", "sarawak", "maluku"], "color": ["#FFDF3F"]},
 	{"name": "The Formosa Realm", "nations": ["taiwan", "takasago"], "color": ["#7FFFFF"]},
