@@ -36,7 +36,7 @@
 	
 	{"name": "Cuban Empire", "nations": ["cuba", "haiti", "new_granada", "cordoba", "yucatan", "dominican", "miami", "costa_rica", "panama", "nicaragua"], "color": ["#CC0001"]},
 	{"name": "Republic of Rio Grande", "nations": ["rio_grande", "lone_star", "new_mexico"], "color": ["#FFFFFF"]},
-	{"name": "Texico Empire", "nations": ["texas_republic", "pueblo", "zapotec", "vanuatu", "south_island"], "color": ["#FFFFFF", "#FF0E0E"]},
+	{"name": "Texico Empire", "nations": ["texas_republic", "pueblo", "zapotec", "vanuatu", "south_island", "texas"], "color": ["#FFFFFF", "#FF0E0E"]},
 	{"name": "State of Jefferson", "nations": ["jefferson", "roughandready", "utah", "oregon", "deseret", "california", "baja", "nevada", "navajo"], "color": ["#009900"]},
 	{"name": "Illinois Empire", "nations": ["illinois", "indiana", "united_states", "missouri", "west_jersey", "south_carolina", "west_virginia", "kingsport", "iowa"], "color": ["#00F6FF"]},
 	{"name": "United States of America", "nations": ["new_jersey", "new_york", "ohio", "america", "pennsylvania", "hawaii", "empire_state", "tibet", "yemen", "csa", "alabama", "georgia", "usa", "guam", "minnesota", "wisconsin"], "color": ["#0052FF"]},
