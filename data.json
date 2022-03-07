@@ -8,8 +8,8 @@
 	{"name": "Caucasus Empire", "nations": ["greater-armenia", "sakartvelo"], "color": ["#A5FF7F"]},
 	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia", "kalmar_union"], "color": ["#00FFFF"]},
 	
-	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia", "krasnoyarsk", "northern_russia"], "color": ["#D18915"]},
-	{"name": "Russia", "nations": ["russian_empire", "russia", "tzarist_ukraine", "northern_russia", "south_russia", "taymyria", "republic_of_rus", "yuzhny", "rule4.1", "joseon", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "kievan_rus", "nenets", "north_yakutia", "astrakhan", "russian_state", "wrangel", "sibir", "far", "hungary", "duchy_of_finland"], "color": ["#FFD894"]},
+	{"name": "True Russia", "nations": ["cccp", "yakutia", "sovietunion", "far_east", "ussr", "republic_of_komi", "russian_dominion", "sibirya", "yamalia", "contact_a_staff", "tomsk", "karelia", "verkhoyansk", "siberian_empire", "asia", "krasnoyarsk", "northern_russia", "republic_of_rus"], "color": ["#D18915"]},
+	{"name": "Russia", "nations": ["russian_empire", "russia", "tzarist_ukraine", "northern_russia", "south_russia", "taymyria", "yuzhny", "rule4.1", "joseon", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "kievan_rus", "nenets", "north_yakutia", "astrakhan", "russian_state", "wrangel", "sibir", "far", "hungary", "duchy_of_finland"], "color": ["#FFD894"]},
 	{"name": "Israel", "nations": ["israel", "himyar", "qatar", "egypt"], "color": ["#0038B8"]},
 	{"name": "Japanese Empire", "nations": ["japan", "japan_north", "korea", "shimazu", "toban", "prince_george", "yamato", "ooka", "koyuk", "xiongnu", "tugur", "yokuso", "chumikan", "ayano_mainsky", "bokkai", "dai", "xixia", "yan", "roc"], "color": ["#BC002D"]},
 	{"name": "People's Republic of China", "nations": ["prc", "northeast_china", "prc_xinjiang", "prc_fujian", "prc_jilin", "northprc", "west_prc", "shu"], "color": ["#FF4C00"]},
