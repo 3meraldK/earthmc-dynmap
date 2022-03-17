@@ -22,7 +22,7 @@
 	{"name": "Formosa Realm", "nations": ["taiwan", "takasago"], "color": ["#7FFFFF"]},
 	
 	{"name": "Oniyama Shogunate", "nations": ["grasberg", "pulau_japen", "lutzow_bay", "kepulauan_aru"], "color": ["#41F226"]},
-	{"name": "Third Victorian Empire", "nations": ["long_bay", "ulimaroa", "oceania", "huron", "swedish_empire", "lake_torrens", "northaustralia", "cape_york", "southaustralia"], "color": ["#003FA3"]},
+	{"name": "Third Victorian Empire", "nations": ["long_bay", "ulimaroa", "oceania", "huron", "swedish_empire", "lake_torrens", "down_under", "northaustralia", "cape_york", "southaustralia"], "color": ["#003FA3"]},
 	{"name": "Fourth Australian Empire", "nations": ["australia", "westernaustralia", "kimberley", "neale", "terraaustralis", "straya", "papua", "west_papua"], "color": ["#FF8800"]},
 	
 	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "cote_divoire", "algeria", "cameroon", "east_africa", "ghana", "comoros", "senegal", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "zanzibar", "angola", "numidia", "pomene", "mozambique", "india", "gujarat", "fezzan", "tripolitania", "riodeoro"], "color": ["#7F3300"]},
