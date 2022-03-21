@@ -1,16 +1,16 @@
 const encoder = new TextEncoder(),
 	  decoder = new TextDecoder('utf-8')
-
+	  
 // Fetch meganation file and return a json response or empty array.
-function meganations() { 
-	return fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json')
-		   		.then(res => { return res.json() }).catch(() => { return []}) 
+function fetchMegations() { 
+	fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json')
+		.then(res => { return res.json() }).catch(() => { return []})
 }
 
 // Helper function for to-do
-// function alliances() {
-// 	return fetch('https://earthmc-api.herokuapp.com/api/v1/alliances')
-// 				.then(res => { return res.json() }).catch(() => { return []}) 
+// function fetchAlliances() {
+// 	fetch('https://earthmc-api.herokuapp.com/api/v1/alliances')
+// 		.then(res => { return res.json() }).catch(() => { return []}) 
 // }
 
 // Listens for requests.
@@ -61,10 +61,11 @@ function onMapUpdate(details) {
 			}
 
 			// Get rid of an array and brackets.
-			var meganationList = ''
+			var meganations = fetchMegations(),
+				meganationList = ''
 
 			// Check if town's nation is in any meganation.
-			meganations().forEach(meganation => {
+			meganations.forEach(meganation => {
 				// Nation controlled by multiple meganations support.
 				if (!meganation.nations.includes(nation)) return
 				if (meganationList.length < 1) meganationList += meganation.name
