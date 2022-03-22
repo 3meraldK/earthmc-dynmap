@@ -2,21 +2,24 @@ const encoder = new TextEncoder(),
 	  decoder = new TextDecoder('utf-8')
 	  
 // Fetch meganation file and return a json response or empty array.
-function fetchMegations() { 
-	fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json')
-		.then(res => { return res.json() }).catch(() => { return []})
+async function fetchMegations() { 
+	await fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json')
+		  .then(res => { return res.json() }).catch(() => {})
+
+	return []
 }
 
 // Helper function for to-do
 // function fetchAlliances() {
-// 	fetch('https://earthmc-api.herokuapp.com/api/v1/alliances')
-// 		.then(res => { return res.json() }).catch(() => { return []}) 
+// 	await fetch('https://earthmc-api.herokuapp.com/api/v1/alliances')
+// 		.then(res => { return res.json() }).catch(() => {})
+
+// 	return []
 // }
 
 // Listens for requests.
 browser.webRequest.onBeforeRequest.addListener(function listener(details) { 
-	details.url.includes('up/world/earth/') ? onPlayerUpdate(details) : onMapUpdate(details); }, 
-	{
+	details.url.includes('up/world/earth/') ? onPlayerUpdate(details) : onMapUpdate(details); }, {
 		urls: ['https://earthmc.net/map/tiles/_markers_/marker_earth.json', 
 			   'https://earthmc.net/map/up/world/earth/*']
 	}, ['blocking']
@@ -61,7 +64,7 @@ function onMapUpdate(details) {
 			}
 
 			// Get rid of an array and brackets.
-			var meganations = fetchMegations(),
+			var meganations = await fetchMegations(),
 				meganationList = ''
 
 			// Check if town's nation is in any meganation.
