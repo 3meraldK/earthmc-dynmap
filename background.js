@@ -43,6 +43,8 @@ function onMapUpdate(details) {
 		if (!data.sets) return
 		delete data.sets["townyPlugin.markerset"].markers
 
+		var meganations = await fetchMegations()
+
 		// Iterate through every town.
 		Object.values(data.sets["townyPlugin.markerset"].areas).forEach(town => {
 			// Settings for every town.
@@ -64,8 +66,7 @@ function onMapUpdate(details) {
 			}
 
 			// Get rid of an array and brackets.
-			var meganations = await fetchMegations(),
-				meganationList = ''
+			var meganationList = ''
 
 			// Check if town's nation is in any meganation.
 			meganations.forEach(meganation => {
