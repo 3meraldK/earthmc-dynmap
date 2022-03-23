@@ -1,11 +1,9 @@
 const encoder = new TextEncoder(),
-	  decoder = new TextDecoder('utf-8')
+      decoder = new TextDecoder('utf-8')
 	  
 // Fetch meganation file and return a json response or empty array.
-async function fetchMegations() { 
-	await fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json')
-		  .then(res => { return res.json() }).catch(() => {})
-
+function fetchMegations() { 
+	fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json').then(res => { return res.json() }).catch(() => {})
 	return []
 }
 
@@ -43,7 +41,7 @@ function onMapUpdate(details) {
 		if (!data.sets) return
 		delete data.sets["townyPlugin.markerset"].markers
 
-		var meganations = await fetchMegations()
+		var meganations = fetchMegations()
 
 		// Iterate through every town.
 		Object.values(data.sets["townyPlugin.markerset"].areas).forEach(town => {
