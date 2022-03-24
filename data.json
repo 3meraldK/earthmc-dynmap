@@ -26,7 +26,6 @@
 	{"name": "Fourth Australian Empire", "nations": ["australia", "westernaustralia", "kimberley", "neale", "terraaustralis", "straya", "papua", "west_papua", "blackwood"], "color": ["#FF8800"]},
 	
 	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "cote_divoire", "algeria", "cameroon", "east_africa", "ghana", "comoros", "senegal", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "zanzibar", "angola", "numidia", "pomene", "mozambique", "india", "gujarat", "fezzan", "tripolitania", "riodeoro"], "color": ["#7F3300"]},
-	{"name": "Federation of Indian Ocean", "nations": ["ancient_egypt", "kemet", "cyrene", "libya", "egypte_federe", "congo_freestate", "somalia", "north_sudan"], "color": ["#45818E"]},
 	{"name": "Tanzanian Empire", "nations": ["tanzania", "lake_nyasa", "uganda", "sudan", "ethiopia", "drc", "katanga", "center_africa", "maravi", "zimbabwe", "4.1messagestaff", "uae", "syria", "middle_east", "europe", "madeira", "normandie", "new_caledonia", "bharat", "kievan_rus", "nepal", "maurya_dynasty", "new_granada", "azande", "agadez", "liverpool", "tavastia", "suomi", "lapland"], "color": ["#1EB53A"]},
 	{"name": "Madagascar", "nations": ["madagascar", "samoa"], "color": ["#237542" ,"#FFBB00"]},
 
