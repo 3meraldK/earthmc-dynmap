@@ -18,7 +18,7 @@
 	{"name": "Han Dynasty", "nations": ["han", "hong_kong", "chu", "south_sea", "bei_qi", "cape_dorset"], "color": ["#FFFFFF", "#FF7676"]},
 	{"name": "People's Republic of China", "nations": ["prc", "northeast_china", "prc_xinjiang", "prc_jilin", "west_prc", "shu"], "color": ["#C10E16"]},
 	{"name": "Liao", "nations": ["liao", "great_liao"], "color": ["#DCAE27"]},
-	{"name": "Federative Kingdom of True Russia", "nations": ["siberian_empire", "far_east", "republic_of_komi", "russian_dominion", "yamalia", "sibirya", "tomsk", "contact_a_staff", "karelia", "cccp", "sovietunion", "ussr", "verkhoyansk", "krasnoyarsk", "northern_russia", "republic_of_rus", "russiarepublic", "sibir", "swedish_empire"], "color": ["#CC0000"]},
+	{"name": "Federative Kingdom of True Russia", "nations": ["siberian_empire", "far_east", "republic_of_komi", "russian_dominion", "yamalia", "sibirya", "tomsk", "contact_a_staff", "karelia", "cccp", "sovietunion", "ussr", "verkhoyansk", "krasnoyarsk", "northern_russia", "republic_of_rus", "russiarepublic", "sibir", "swedish_empire", "europe"], "color": ["#CC0000"]},
 	{"name": "Ming", "nations": ["ming", "north_china"], "color": ["#FFFFCC", "#FFFF00"]},
 	{"name": "Republic of Nusantara", "nations": ["philippines", "mcmurdo", "mozambique", "roc", "majapahit", "sulawesi", "sarawak", "maluku"], "color": ["#0000FF", "#000080"]},
 	
