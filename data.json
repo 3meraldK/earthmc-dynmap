@@ -1,6 +1,6 @@
 [
 	{"name": "German Confederation", "nations": ["austria", "4.1getnewname", "south-pole", "germany", "preußen", "h.r.e.", "belgium", "switzerland"], "color": ["#FFA500"]},
-	{"name": "Lechian Empire", "nations": ["poland", "tasmania", "croatia", "lithuania"], "color": ["#4E0707"]},
+	{"name": "Lechian Empire", "nations": ["poland", "tasmania", "croatia", "lithuania", "kievan_rus"], "color": ["#4E0707"]},
 	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia", "kalmar_union"], "color": ["#FFFFFF"]},
 	{"name": "Denmark", "nations": ["denmark", "4.1neednewname", "hannover", "norway"], "color": ["#E3242B"]},
 	{"name": "Spanish Empire", "nations": ["spain", "canarias", "portugal", "patagonia", "argentina", "chile", "paraguay", "peru", "acre", "colombia", "uruguay", "bolivia", "guinea", "iberian_angola", "spanish_antilles"], "color": ["#FFFF00"]},
@@ -8,7 +8,7 @@
 	{"name": "French Kingdom", "nations": ["france", "carthage", "free_france"], "color": ["#0F1D6E"]},
 	{"name": "Wales", "nations": ["wales", "norge"], "color": ["#FDA2CD"]},
 	
-	{"name": "Russia", "nations": ["russia", "russian_empire", "hunnic_empire", "northern_russia", "south_russia", "taymyria", "yuzhny", "asia", "rule4.1", "joseon", "duchy_of_finland", "rus", "wrangel", "far", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "kievan_rus", "nenets", "north_yakutia", "astrakhan", "russian_state", "hungary", "greater-armenia", "sakartvelo"], "color": ["#F9E076"]},
+	{"name": "Russia", "nations": ["russia", "russian_empire", "hunnic_empire", "northern_russia", "south_russia", "taymyria", "yuzhny", "asia", "joseon", "duchy_of_finland", "rus", "wrangel", "far", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "nenets", "north_yakutia", "astrakhan", "russian_state", "hungary", "greater-armenia", "sakartvelo"], "color": ["#F9E076"]},
 	{"name": "Israel", "nations": ["israel", "himyar", "egypt"], "color": ["#0000AA"]},
 	{"name": "Indochinese Kingdom", "nations": ["indochina", "sumatra", "vietnam"], "color": ["#4F0000"]},
 	{"name": "Japanese Empire", "nations": ["japan", "japan_north", "shimazu", "bokkai", "toban", "tugur", "yokuso", "chumikan", "ayano_mainsky", "xixia", "yan", "koyuk", "xiongnu", "prince_george", "yamato", "dai", "roc", "korea"], "color": ["#FFB7C5"]},
@@ -16,7 +16,6 @@
 	{"name": "Manchuria", "nations": ["manchuria", "sanjan"], "color": ["#36E9FF"]},
 	{"name": "Indian Empire", "nations": ["india", "bharat", "south_india", "liverpool", "punjab", "nepal", "maurya_dynasty", "vanuatu"], "color": ["#FF9933"]},
 	{"name": "Han Dynasty", "nations": ["han", "hong_kong", "chu", "bei_qi", "cape_dorset"], "color": ["#FFFFFF", "#FF7676"]},
-	{"name": "People's Republic of China", "nations": ["prc", "northeast_china", "prc_xinjiang", "prc_jilin", "west_prc", "shu"], "color": ["#C10E16"]},
 	{"name": "Liao", "nations": ["liao", "great_liao"], "color": ["#DCAE27"]},
 	{"name": "Federative Kingdom of True Russia", "nations": ["siberian_empire", "far_east", "republic_of_komi", "russian_dominion", "yamalia", "sibirya", "tomsk", "contact_a_staff", "karelia", "cccp", "sovietunion", "ussr", "verkhoyansk", "krasnoyarsk", "northern_russia", "republic_of_rus", "russiarepublic", "sibir", "europe", "swedish_empire", "yakutia"], "color": ["#CC0000"]},
 	{"name": "Ming", "nations": ["ming", "north_china"], "color": ["#FFFFCC", "#FFFF00"]},
@@ -44,9 +43,8 @@
 	{"name": "Illinois Empire", "nations": ["illinois", "indiana", "united_states", "missouri", "west_jersey", "south_carolina", "kingsport", "iowa"], "color": ["#FF33C9", "#000000"]},
 	{"name": "Alaskan Tsardom", "nations": ["kodiak", "bering_strait", "yukon"], "color": ["#011DC1"]},
 
-	{"name": "Republic of Brazil", "nations": ["brazil", "manabi"], "color": ["#0010FF", "#0000FF"]},
+	{"name": "Republic of Brazil", "nations": ["brazil", "manabi", "portugal_empire"], "color": ["#0010FF", "#0000FF"]},
 	{"name": "Peru-Bolivia", "nations": ["peru-bolivia", "barinas"], "color": ["#FF0000"]},
 	
-	{"name": "Theocratic Confederacy of Antarctica", "nations": ["ssrbv", "amery", "victoria_land"], "color": ["#541E1B"]},
-	{"name": "Egalitarist People's Republic of Antarctica", "nations": ["casey", "sandwich_islands", "marie_byrd_land", "antarctica", "west_antarctic"], "color": ["#C80000", "#FF0000"]}
+	{"name": "Egalitarist People's Republic of Antarctica", "nations": ["casey", "sandwich_islands", "marie_byrd_land", "antarctica", "west_antarctic", "victoria_land"], "color": ["#C80000", "#FF0000"]}
 ]
