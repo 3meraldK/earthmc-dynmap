@@ -95,7 +95,7 @@ async function onMapUpdate(details) {
 }
 
 // Fired each ~1 second when the update request is sent.
-function onPlayerUpdate(details) {
+async function onPlayerUpdate(details) {
 	const filter = browser.webRequest.filterResponseData(details.requestId),
 		  arrayBuffer = []
 	
