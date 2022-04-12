@@ -2,18 +2,16 @@ const encoder = new TextEncoder(),
       decoder = new TextDecoder('utf-8')
 	  
 // Fetch meganation file and return a json response or empty array.
-function fetchMegations() { 
-	fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json').then(res => { return res.json() }).catch(() => {})
+async function fetchMegations() { 
+	fetch('https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data.json').then(data => { return data.json() }).catch(() => {})
 	return []
 }
 
 // Helper function for to-do
-// function fetchAlliances() {
-// 	await fetch('https://earthmc-api.herokuapp.com/api/v1/alliances')
-// 		.then(res => { return res.json() }).catch(() => {})
-
-// 	return []
-// }
+async function fetchAlliances() {
+	fetch('https://earthmc-api.herokuapp.com/api/v1/alliances').then(res => { return res.json() }).catch(() => {})
+	return []
+}
 
 // Listens for requests.
 browser.webRequest.onBeforeRequest.addListener(function listener(details) { 
@@ -24,7 +22,7 @@ browser.webRequest.onBeforeRequest.addListener(function listener(details) {
 )
 
 // Function is fired when the marker_earth request is sent.
-function onMapUpdate(details) {
+async function onMapUpdate(details) {
 	const filter = browser.webRequest.filterResponseData(details.requestId),
 		  arrayBuffer = []
 
@@ -41,7 +39,7 @@ function onMapUpdate(details) {
 		if (!data.sets) return
 		delete data.sets["townyPlugin.markerset"].markers
 
-		var meganations = fetchMegations()
+		var meganations = await fetchMegations()
 
 		// Iterate through every town.
 		Object.values(data.sets["townyPlugin.markerset"].areas).forEach(town => {
