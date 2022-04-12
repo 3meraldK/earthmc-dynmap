@@ -15,7 +15,7 @@
 	{"name": "Japanese Empire", "nations": ["japan", "japan_north", "shimazu", "bokkai", "toban", "tugur", "yokuso", "chumikan", "ayano_mainsky", "xixia", "yan", "koyuk", "xiongnu", "prince_george", "yamato", "dai", "roc", "korea"], "color": ["#FFB7C5"]},
 	{"name": "Taiwan", "nations": ["taiwan", "takasago"], "color": ["#FFFFFF"]},
 	{"name": "Manchuria", "nations": ["manchuria", "sanjan"], "color": ["#36E9FF"]},
-	{"name": "Indian Empire", "nations": ["india", "bharat", "south_india", "liverpool", "punjab", "nepal", "maurya_dynasty", "vanuatu"], "color": ["#FF9933"]},
+	{"name": "Indian Empire", "nations": ["india", "bharat", "south_india", "liverpool", "punjab", "nepal", "maurya_dynasty", "vanuatu", "british_raj"], "color": ["#FF9933"]},
 	{"name": "Han Dynasty", "nations": ["han", "hong_kong", "chu", "bei_qi", "cape_dorset"], "color": ["#FFFFFF", "#FF7676"]},
 	{"name": "Liao", "nations": ["liao", "great_liao"], "color": ["#DCAE27"]},
 	{"name": "Federative Kingdom of True Russia", "nations": ["siberian_empire", "far_east", "republic_of_komi", "russian_dominion", "yamalia", "sibirya", "tomsk", "contact_a_staff", "karelia", "cccp", "sovietunion", "ussr", "verkhoyansk", "krasnoyarsk", "northern_russia", "republic_of_rus", "russiarepublic", "sibir", "europe", "swedish_empire", "yakutia"], "color": ["#CC0000"]},
@@ -29,7 +29,7 @@
 	{"name": "Madagascar", "nations": ["madagascar", "samoa"], "color": ["#237542" ,"#FFBB00"]},
 	{"name": "Somalian Kingdom", "nations": ["somalia", "congo_freestate"], "color": ["#000000"]},
 	{"name": "Ancient Egypt", "nations": ["ancient_egypt", "kemet", "cyrene", "libya", "egypte_federe"], "color": ["#00672B"]},
-	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "cote_divoire", "algeria", "cameroon", "east_africa", "comoros", "senegal", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "zanzibar", "maravi", "angola", "numidia", "pomene", "mozambique", "gujarat", "fezzan", "tripolitania", "riodeoro", "oranje", "songhai"], "color": ["#FFBFDE", "#FF4CA8"]},
+	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "cote_divoire", "algeria", "cameroon", "east_africa", "comoros", "senegal", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "zanzibar", "maravi", "angola", "numidia", "pomene", "mozambique", "fezzan", "tripolitania", "riodeoro", "oranje", "songhai", "gujarat"], "color": ["#FFBFDE", "#FF4CA8"]},
 	{"name": "Tanzanian Empire", "nations": ["tanzania", "lake_nyasa", "uganda", "sudan", "ethiopia", "drc", "katanga", "center_africa", "zimbabwe", "4.1messagestaff", "uae", "syria", "middle_east", "madeira", "normandie", "new_caledonia", "agadez", "azande", "tavastia", "suomi", "lapland"], "color": ["#1EB53A"]},
 
 	{"name": "Cuban Empire", "nations": ["cuba", "haiti", "new_granada", "cordoba", "yucatan", "dominican", "miami", "costa_rica", "panama"], "color": ["#FF0068"]},
