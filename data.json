@@ -6,9 +6,8 @@
 	{"name": "Spanish Empire", "nations": ["spain", "canarias", "portugal", "patagonia", "argentina", "chile", "paraguay", "peru", "acre", "colombia", "uruguay", "bolivia", "guinea", "iberian_angola", "spanish_antilles"], "color": ["#FFFF00"]},
 	{"name": "Greater Roman Empire", "nations": ["spqr", "italia", "romania", "greater_romania", "tzarist_ukraine", "turkey", "bulgaria"], "color": ["#8B008B"]},
 	{"name": "French Kingdom", "nations": ["france", "carthage", "free_france"], "color": ["#0F1D6E"]},
-	{"name": "Wales", "nations": ["wales", "norge"], "color": ["#FDA2CD"]},
+	{"name": "Wales", "nations": ["wales", "norge", "tavastia", "suomi", "lapland"], "color": ["#FDA2CD"]},
 	{"name": "Ukraine", "nations": ["ukraine", "eswatini"], "color": ["#2F2F2F"]},
-	{"name": "Greater Finnish Empire", "nations": ["tavastia", "suomi", "lapland"], "color": ["#2832C2"]},
 	
 	{"name": "Russia", "nations": ["russia", "russian_empire", "hunnic_empire", "northern_russia", "south_russia", "taymyria", "yuzhny", "asia", "joseon", "duchy_of_finland", "rus", "iceland", "wrangel", "far", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "nenets", "north_yakutia", "astrakhan", "russian_state", "hungary", "greater-armenia", "sakartvelo"], "color": ["#F9E076"]},
 	{"name": "Israel", "nations": ["israel", "himyar", "egypt"], "color": ["#0000AA"]},
