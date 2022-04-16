@@ -79,7 +79,7 @@ function onMapUpdate(details) {
 		});
 
 		// Send the modified response and close the filter.
-		print('Response was modified and sent')
+		console.log('Response was modified and sent');
 		filter.write(encoder.encode(JSON.stringify(data)));
 		filter.close();
 	};
