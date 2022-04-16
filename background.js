@@ -79,6 +79,7 @@ function onMapUpdate(details) {
 		});
 
 		// Send the modified response and close the filter.
+		print('Response was modified and sent')
 		filter.write(encoder.encode(JSON.stringify(data)));
 		filter.close();
 	};
@@ -96,7 +97,7 @@ function onPlayerUpdate(details) {
 		const data = JSON.parse(string);
 
 		// If response's length > 32 kB then trigger onMapUpdate(), otherwise write data to the filter
-		if (data.currentcount === undefined) return;
+		if (!data.currentcount) return;
 		if (string.length < 32768) filter.write(encoder.encode(JSON.stringify(data)));
 		else onMapUpdate(details);
 		filter.close();
