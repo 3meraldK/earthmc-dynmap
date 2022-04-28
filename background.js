@@ -10,7 +10,7 @@ setInterval(() => fetchMeganations(), 1000*60*5);
 // Listens for requests.
 browser.webRequest.onBeforeRequest.addListener(
 	function listener(details) { details.url.includes('up/world/earth/') ? onPlayerUpdate(details) : onMapUpdate(details); }, 
-	{urls: ['https://earthmc.net/map/tiles/_markers_/marker_earth.json', 'https://earthmc.net/map/up/world/earth/*']}, 
+	{urls: ['https://earthmc.net/map/nova/tiles/_markers_/marker_earth.json', 'https://earthmc.net/map/nova/up/world/earth/*']}, 
 	['blocking']
 );
 

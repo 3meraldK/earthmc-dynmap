@@ -1,6 +1,6 @@
 [
 	{"name": "German Confederation", "nations": ["austria", "4.1getnewname", "south-pole", "germany", "preußen", "h.r.e.", "belgium", "switzerland"], "color": ["#A48111"]},
-	{"name": "Lechian Empire", "nations": ["poland", "tasmania", "croatia", "lithuania", "kievan_rus", "madeira", "bulgaria"], "color": ["#4E0707"]},
+	{"name": "Lechian Empire", "nations": ["poland", "tasmania", "croatia", "lithuania", "madeira", "bulgaria"], "color": ["#4E0707"]},
 	{"name": "Estonian Empire", "nations": ["estonia", "finnmark", "serbia", "kalmar_union"], "color": ["#FFFFFF"]},
 	{"name": "Denmark", "nations": ["denmark", "4.1neednewname", "hannover", "norway", "socotra"], "color": ["#E3242B"]},
 	{"name": "Spanish Empire", "nations": ["spain", "canarias", "portugal", "patagonia", "argentina", "chile", "paraguay", "peru", "acre", "colombia", "uruguay", "bolivia", "guinea", "iberian_angola", "spanish_antilles"], "color": ["#FFFF00"]},
@@ -9,7 +9,7 @@
 	{"name": "Wales", "nations": ["wales", "norge", "tavastia", "suomi", "lapland", "troms"], "color": ["#FDA2CD"]},
 	{"name": "Ukraine", "nations": ["ukraine", "eswatini"], "color": ["#2F2F2F"]},
 	
-	{"name": "Russia", "nations": ["russia", "russian_empire", "hunnic_empire", "northern_russia", "south_russia", "taymyria", "yuzhny", "asia", "joseon", "duchy_of_finland", "rus", "iceland", "kalmar_union", "oranje", "wrangel", "far", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "nenets", "north_yakutia", "astrakhan", "russian_state", "hungary", "greater-armenia", "sakartvelo"], "color": ["#F9E076"]},
+	{"name": "Russia", "nations": ["russia", "russian_empire", "hunnic_empire", "northern_russia", "south_russia", "taymyria", "yuzhny", "asia", "joseon", "duchy_of_finland", "rus", "iceland", "kalmar_union", "oranje", "wrangel", "far", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "nenets", "north_yakutia", "astrakhan", "russian_state", "zimbabwe", "kievan_rus", "hungary", "greater-armenia", "sakartvelo"], "color": ["#F9E076"]},
 	{"name": "Israel", "nations": ["israel", "himyar", "egypt"], "color": ["#0000AA"]},
 	{"name": "Persian Empire", "nations": ["persia", "dubai"], "color": ["#7F1F1F"]},
 	{"name": "Indochinese Kingdom", "nations": ["indochina", "sumatra", "vietnam"], "color": ["#4F0000"]},

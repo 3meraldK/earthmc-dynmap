@@ -23,7 +23,7 @@
 
 	"content_scripts": [
 		{
-		  "matches": ["https://earthmc.net/map/*"],
+		  "matches": ["https://earthmc.net/map/nova/*"],
 		  "js": ["content.js"]
 		}
 	],
@@ -31,6 +31,6 @@
 	"permissions": [
 		"webRequest",
 		"webRequestBlocking",
-		"https://earthmc.net/map/*"
+		"https://earthmc.net/map/nova/*"
 	]
 }
