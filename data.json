@@ -30,7 +30,7 @@
 	{"name": "Madagascar", "nations": ["madagascar", "samoa"], "color": ["#237542" ,"#FFBB00"]},
 	{"name": "Somalian Kingdom", "nations": ["somalia", "congo_freestate"], "color": ["#000000"]},
 	{"name": "Ancient Egypt", "nations": ["ancient_egypt", "kemet", "cyrene", "libya", "egypte_federe"], "color": ["#00672B"]},
-	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "algeria", "east_africa", "comoros", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "maravi", "angola", "numidia", "pomene", "mozambique", "fezzan", "tripolitania", "songhai", "gujarat"], "color": ["#FFBFDE", "#FF4CA8"]},
+	{"name": "Second Nubian Empire", "nations": ["nubia", "kasai", "nejd", "namibia", "molodezhnaya", "bura", "algeria", "east_africa", "comoros", "ifriqiya", "dzata", "mauritania", "rhodesia", "sadr", "gabon", "cape", "maravi", "numidia", "pomene", "mozambique", "fezzan", "tripolitania", "songhai", "gujarat"], "color": ["#FFBFDE", "#FF4CA8"]},
 	{"name": "Tanzanian Empire", "nations": ["tanzania", "lake_nyasa", "uganda", "sudan", "ethiopia", "drc", "katanga", "center_africa", "4.1messagestaff", "uae", "syria", "normandie", "new_caledonia", "agadez", "azande", "bharat", "middle_east"], "color": ["#1EB53A"]},
 
 	{"name": "Cuban Empire", "nations": ["cuba", "haiti", "new_granada", "cordoba", "yucatan", "dominican", "miami", "costa_rica", "panama"], "color": ["#FF0068"]},
