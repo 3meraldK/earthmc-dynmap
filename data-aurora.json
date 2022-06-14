@@ -1,0 +1,28 @@
+[
+	{"type": "meganation", "name": "Franco-Germany", "nations": ["france", "germany"], "color": ["#00008B"]},
+	{"type": "meganation", "name": "Britain", "nations": ["britain", "norway", "texas"], "color": ["#000080", "#800000"]},
+	{"type": "meganation", "name": "North Sea Empire", "nations": ["ireland", "iceland", "greenland"], "color": ["#FFFFFF"]},
+	{"type": "meganation", "name": "Rûm", "nations": ["rum", "italy"], "color": ["#0000FF", "#000000"]},
+	{"type": "meganation", "name": "Åland", "nations": ["aland", "mongolia"], "color": ["#FF0000", "#FFFF00"]},
+	{"type": "meganation", "name": "Benelux", "nations": ["netherlands", "belgium"], "color": ["#FF9B00"]},
+	{"type": "meganation", "name": "Groß-Kaiserreich", "nations": ["kaiserreich", "belarus"], "color": ["#000000", "#FF0000"]},
+
+	{"type": "meganation", "name": "California", "nations": ["california", "oregon"], "color": ["#FA8072"]},
+	{"type": "meganation", "name": "Cuba", "nations": ["cuba", "south_america"], "color": ["#FF0068"]},
+	{"type": "meganation", "name": "Mexican Empire", "nations": ["mexico", "sonora"], "color": ["#00CF00", "#00FF00"]},
+	{"type": "meganation", "name": "United States of America", "nations": ["america", "louisiana"], "color": ["#0000FF"]},
+
+	{"type": "meganation", "name": "Indochina", "nations": ["indochina", "timor", "south_pole", "borneo"], "color": ["#800006", "#FF0000"]},
+	{"type": "meganation", "name": "Indian Empire", "nations": ["india", "himalayas"], "color": ["#FFFF00"]},
+	{"type": "meganation", "name": "Philippines", "nations": ["philippines", "new_guinea"], "color": ["#001E43", "#000000"]},
+
+	{"type": "meganation", "name": "Australia", "nations": ["australia", "tasmania", "queensland"], "color": ["#012169", "#FF0000"]},
+
+	{"type": "alliance", "name": "Regional Powers", "nations": ["indochina", "timor", "south_pole", "borneo", "aland", "mongolia", "norway", "texas", "britain", "canada", "denmark", "america", "louisiana"], "color": ["#EE2224"]},
+	{"type": "alliance", "name": "Sydney Accord", "nations": ["indochina", "timor", "south_pole", "borneo", "australia", "tasmania", "queensland", "egypt", "babylon", "philippines", "new_guinea"], "color": ["#0000FF"]},
+	{"type": "alliance", "name": "Saadabad Pact", "nations": ["rum", "italy", "babylon", "egypt", "carthage", "greece", "morocco"], "color": ["#FFCC00"]},
+	{"type": "alliance", "name": "Kyiv Treaty Organization", "nations": ["ukraine", "hungary", "poland", "romania", "khazar", "russian_empire", "livonia", "epirus"], "color": ["#D1EDF2"]},
+	{"type": "alliance", "name": "Liberal Nations", "nations": ["manitoba", "ob", "mali", "new_guinea", "khanate_of_sibir", "empire_of_japan"], "color": ["#03c03c"]},
+	{"type": "alliance", "name": "African Union", "nations": ["mali", "carthage", "morocco", "gold_coast", "cameroon"], "color": ["#006239"]},
+	{"type": "alliance", "name": "Caribbean Mutual Defense Organization", "nations": ["yucatan", "gran_colombia"], "color": ["#00008B"]}
+]
