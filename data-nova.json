@@ -47,5 +47,11 @@
 	{"type": "meganation", "name": "Brazilian Empire", "nations": ["brazil", "manabi", "portugal_empire"], "color": ["#0010FF", "#0000FF"]},
 	{"type": "meganation", "name": "Peru-Bolivia", "nations": ["peru-bolivia", "barinas"], "color": ["#FF0000"]},
 	
-	{"type": "meganation", "name": "Egalitarist People's Republic of Antarctica", "nations": ["casey", "sandwich_islands", "marie_byrd_land", "antarctica", "west_antarctic", "victoria_land"], "color": ["#C80000", "#FF0000"]}
+	{"type": "meganation", "name": "Egalitarist People's Republic of Antarctica", "nations": ["casey", "sandwich_islands", "marie_byrd_land", "antarctica", "west_antarctic", "victoria_land"], "color": ["#C80000", "#FF0000"]},
+
+	{"type": "alliance", "name": "Europa Pact", "nations": ["sweden", "austria", "4.1getnewname", "south-pole", "germany", "preußen", "h.r.e.", "belgium", "switzerland", "spqr", "italia", "romania", "greater_romania", "tzarist_ukraine", "turkey", "spain", "canarias", "portugal", "patagonia", "argentina", "chile", "paraguay", "peru", "acre", "colombia", "uruguay", "bolivia", "guinea", "iberian_angola", "spanish_antilles"], "color": ["#EFC230"]},
+	{"type": "alliance", "name": "Third Canadian Empire", "nations": ["quebec", "baffin", "hall", "macaua", "canada", "ellesmere", "saskatchewan", "hbc", "hollis", "contactstaff4.1", "cumberland", "klondike", "nouvelle-france", "maine", "acadia", "keewatin", "cumania", "fiji", "western_sahara", "eastern_kingdoms", "avalon", "labrador", "manitoba", "bermuda", "north_america", "ontario", "arctic_alaska", "buckland", "arctic", "saint-laurent", "arctic_islands"], "color": ["#C83A4A"]},
+	{"type": "alliance", "name": "International Defense Coalition", "nations": ["israel", "himyar", "egypt", "russia", "russian_empire", "hunnic_empire", "northern_russia", "south_russia", "taymyria", "yuzhny", "asia", "joseon", "duchy_of_finland", "rus", "iceland", "kalmar_union", "oranje", "wrangel", "far", "west_russia", "greater_russia", "east_russia", "pakistan", "khabarovsk", "nenets", "north_yakutia", "astrakhan", "russian_state", "zimbabwe", "kievan_rus", "hungary", "greater-armenia", "sakartvelo", "poland", "tasmania", "croatia", "lithuania", "madeira", "bulgaria", "france", "carthage", "free_france", "rio_grande", "lone_star", "new_mexico", "estonia", "finnmark", "kalmar_union", "india", "tamil", "liverpool", "punjab", "nepal", "maurya_dynasty", "vanuatu", "british_raj", "mexico", "chihuahua", "san_luis_potosi", "nicaragua"], "color": ["#548414"]}
+
+
 ]

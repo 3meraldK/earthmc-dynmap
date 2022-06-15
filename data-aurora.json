@@ -16,13 +16,13 @@
 	{"type": "meganation", "name": "Indian Empire", "nations": ["india", "himalayas"], "color": ["#FFFF00"]},
 	{"type": "meganation", "name": "Philippines", "nations": ["philippines", "new_guinea"], "color": ["#001E43", "#000000"]},
 
-	{"type": "meganation", "name": "Australia", "nations": ["australia", "tasmania", "queensland"], "color": ["#012169", "#FF0000"]},
+	{"type": "meganation", "name": "Australia", "nations": ["australia", "tasmania", "queensland"], "color": ["#012169", "#051094"]},
 
 	{"type": "alliance", "name": "Regional Powers", "nations": ["indochina", "timor", "south_pole", "borneo", "aland", "mongolia", "norway", "texas", "britain", "canada", "denmark", "america", "louisiana"], "color": ["#EE2224"]},
 	{"type": "alliance", "name": "Sydney Accord", "nations": ["indochina", "timor", "south_pole", "borneo", "australia", "tasmania", "queensland", "egypt", "babylon", "philippines", "new_guinea"], "color": ["#0000FF"]},
 	{"type": "alliance", "name": "Saadabad Pact", "nations": ["rum", "italy", "babylon", "egypt", "carthage", "greece", "morocco"], "color": ["#FFCC00"]},
 	{"type": "alliance", "name": "Kyiv Treaty Organization", "nations": ["ukraine", "hungary", "poland", "romania", "khazar", "russian_empire", "livonia", "epirus"], "color": ["#D1EDF2"]},
-	{"type": "alliance", "name": "Liberal Nations", "nations": ["manitoba", "ob", "mali", "new_guinea", "khanate_of_sibir", "empire_of_japan"], "color": ["#03c03c"]},
+	{"type": "alliance", "name": "Liberal Nations", "nations": ["manitoba", "ob", "mali", "new_guinea", "khanate_of_sibir", "empire_of_japan", "volga"], "color": ["#03c03c"]},
 	{"type": "alliance", "name": "African Union", "nations": ["mali", "carthage", "morocco", "gold_coast", "cameroon"], "color": ["#006239"]},
 	{"type": "alliance", "name": "Caribbean Mutual Defense Organization", "nations": ["yucatan", "gran_colombia"], "color": ["#00008B"]}
 ]
