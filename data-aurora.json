@@ -6,16 +6,13 @@
 	{"type": "meganation", "name": "Åland", "nations": ["aland", "mongolia"], "color": ["#FF0000", "#FFFF00"]},
 	{"type": "meganation", "name": "Benelux", "nations": ["netherlands", "belgium"], "color": ["#FF9B00"]},
 	{"type": "meganation", "name": "Groß-Kaiserreich", "nations": ["kaiserreich", "belarus"], "color": ["#000000", "#FF0000"]},
-
 	{"type": "meganation", "name": "California", "nations": ["california", "oregon"], "color": ["#FA8072"]},
 	{"type": "meganation", "name": "Cuba", "nations": ["cuba", "south_america"], "color": ["#FF0068"]},
 	{"type": "meganation", "name": "Mexican Empire", "nations": ["mexico", "sonora"], "color": ["#00CF00", "#00FF00"]},
 	{"type": "meganation", "name": "United States of America", "nations": ["america", "louisiana"], "color": ["#0000FF"]},
-
 	{"type": "meganation", "name": "Indochina", "nations": ["indochina", "timor", "south_pole", "borneo"], "color": ["#800006", "#FF0000"]},
 	{"type": "meganation", "name": "Indian Empire", "nations": ["india", "himalayas"], "color": ["#FFFF00"]},
-	{"type": "meganation", "name": "Philippines", "nations": ["philippines", "new_guinea"], "color": ["#001E43", "#000000"]},
-
+	{"type": "meganation", "name": "Philippines", "nations": ["philippines", "new_guinea"], "color": ["#080000", "#000000"]},
 	{"type": "meganation", "name": "Australia", "nations": ["australia", "tasmania", "queensland"], "color": ["#012169", "#051094"]},
 
 	{"type": "alliance", "name": "Regional Powers", "nations": ["indochina", "timor", "south_pole", "borneo", "aland", "mongolia", "norway", "texas", "britain", "canada", "denmark", "america", "louisiana"], "color": ["#EE2224"]},
