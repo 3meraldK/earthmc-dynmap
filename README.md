@@ -1,7 +1,7 @@
 ![Release](https://img.shields.io/github/v/release/3meraldK/earthmc-dynmapcolor) ![Repo size](https://img.shields.io/github/repo-size/3meraldK/earthmc-dynmapcolor) ![Downloads](https://img.shields.io/github/downloads/3meraldK/earthmc-dynmapcolor/total)
 
 # earthmc-dynmapcolor
-This Mozilla Firefox add-on enriches the EarthMC dynmap with the meganation support, i.e. now colors entire meganations/alliances the same color, and more. 
+This Mozilla Firefox add-on enriches the EarthMC dynmap, i.e. colors entire meganations/alliances the same color, and more. 
 
 ## Updates
 Meganation data should be maintained regularly. If you govern the meganation or alliance, and want to modify it, please contact the owner through Discord by the name 3meraldK#2137.

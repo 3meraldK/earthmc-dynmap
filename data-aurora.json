@@ -21,5 +21,6 @@
 	{"type": "alliance", "name": "Kyiv Treaty Organization", "nations": ["ukraine", "hungary", "poland", "romania", "khazar", "russian_empire", "livonia", "epirus"], "color": ["#D1EDF2"]},
 	{"type": "alliance", "name": "Liberal Nations", "nations": ["manitoba", "ob", "mali", "new_guinea", "khanate_of_sibir", "empire_of_japan", "volga"], "color": ["#03c03c"]},
 	{"type": "alliance", "name": "African Union", "nations": ["mali", "carthage", "morocco", "gold_coast", "cameroon"], "color": ["#006239"]},
-	{"type": "alliance", "name": "Caribbean Mutual Defense Organization", "nations": ["yucatan", "gran_colombia"], "color": ["#00008B"]}
+	{"type": "alliance", "name": "Caribbean Mutual Defense Organization", "nations": ["yucatan", "gran_colombia"], "color": ["#00008B"]},
+	{"type": "alliance", "name": "Alaskan Union", "nations": ["alaska", "bering_sea", "aleutians_east"], "color": ["#14232E"]}
 ]
