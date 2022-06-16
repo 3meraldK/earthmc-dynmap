@@ -15,6 +15,7 @@ This plugin is supported only on Mozilla Firefox due to Chromium limitations, ho
     1. Search "about:config", accept the prompt and search for 'xpinstall.signatures.required' and toggle the value to false.
     2. Restart the browser.
     3. Search "about:addons" and import the add-on from the file.
+    4. Restart the browser and ensure the add-on is installed, by searching "about:addons" again (because it may bug).
 
 # Screenshots
 ![image](https://user-images.githubusercontent.com/48335651/153918902-67f8741d-323e-422e-ae39-fda503359b21.png)
