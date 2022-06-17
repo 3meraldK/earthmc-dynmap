@@ -98,11 +98,11 @@ function onPlayerUpdate(details) {
 
 	filter.onstop = () => {
 		arrayBuffer.push(decoder.decode());
-		const data = encoder.encode(JSON.stringify(JSON.parse( arrayBuffer.join(''))));
-
+		const string = arrayBuffer.join('');
+		const data = JSON.parse(string);
 		// If response's length > 64 kB then trigger onMapUpdate(), otherwise write data to the filter
 		if (!data.currentcount) return;
-		string.length < 65336 ? filter.write(data) : onMapUpdate(details);
+		string.length < 65536 ? filter.write(encoder.encode(JSON.stringify(data))) : onMapUpdate(details);
 		filter.close();
 	};
 }
