@@ -1,5 +1,5 @@
 const interval = setInterval(() => {
-	if (document.getElementsByClassName('compass compass_S compass_flat').length > 0) {
+	if (document.getElementsByClassName('coord-control coord-control-noy leaflet-control').length > 0) {
 		// Page has been loaded; remove elements.
 		document.getElementsByClassName('compass compass_S compass_flat')[0].remove();
 		document.getElementsByClassName('largeclock timeofday')[0].remove();
