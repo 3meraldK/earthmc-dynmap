@@ -13,7 +13,7 @@
 	{"type": "meganation", "name": "Indochina", "nations": ["indochina", "timor", "south_pole", "borneo"], "color": ["#800006", "#FF0000"]},
 	{"type": "meganation", "name": "Indian Empire", "nations": ["india", "himalayas"], "color": ["#FFFF00"]},
 	{"type": "meganation", "name": "Philippines", "nations": ["philippines", "new_guinea"], "color": ["#080000", "#000000"]},
-	{"type": "meganation", "name": "Australia", "nations": ["australia", "tasmania", "queensland"], "color": ["#478DFF"]},
+	{"type": "meganation", "name": "Australia", "nations": ["australia", "tasmania", "queensland"], "color": ["#003863"]},
 
 	{"type": "alliance", "name": "Regional Powers", "nations": ["indochina", "timor", "south_pole", "borneo", "aland", "mongolia", "norway", "texas", "britain", "canada", "denmark", "america", "louisiana"], "color": ["#EE2224"]},
 	{"type": "alliance", "name": "Sydney Accord", "nations": ["indochina", "timor", "south_pole", "borneo", "australia", "tasmania", "queensland", "egypt", "babylon", "philippines", "new_guinea"], "color": ["#0000FF"]},
