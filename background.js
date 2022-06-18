@@ -1,8 +1,8 @@
 const encoder = new TextEncoder(),
 	  decoder = new TextDecoder('utf-8')
 
-const getURL = map => new URL(`https://raw.githubusercontent.com/3meraldK/earthmc-dynmapcolor/main/data-${map}.json`),
-	  fetchAlliances = async (map) => await fetch(getURL(map)).then(res => res.json()).catch(() => {}),
+const getURL = map => new URL(`https://earthmc-api.herokuapp.com/api/v1/${map}/alliances`),
+	  fetchAlliances = async (map) => await fetch(getURL(map)).then(res => res.json()).catch(console.error),
 	  buttonEvent = () => whatIsFetched == 'meganation' ? whatIsFetched = 'alliance' : whatIsFetched = 'meganation'
 
 var whatIsFetched = 'meganation'
