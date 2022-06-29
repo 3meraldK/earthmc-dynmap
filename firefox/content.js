@@ -23,5 +23,3 @@ const interval = setInterval(() => {
 		clearInterval(interval);
 	}
 }, 1000);
-
-

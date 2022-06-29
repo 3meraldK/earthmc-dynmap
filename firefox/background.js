@@ -4,14 +4,14 @@ const novaURL = 'https://earthmc-api.herokuapp.com/api/v1/nova/alliances';
 const auroraURL = 'https://earthmc-api.herokuapp.com/api/v1/aurora/alliances';
 const fetchAlliances = (url) => fetch(url).then(res => res.json()).catch(() => {});
 const buttonEvent = () => mapMode == 'mega' ? mapMode = 'normal' : mapMode = 'mega';
-var mapMode = 'mega';
+let mapMode = 'mega';
 browser.runtime.onMessage.addListener(buttonEvent);
 
 // Courtesy of 32Vache :)
 function calcArea(x, y, ptsNum) {
-	var area = 0;
-	var j = ptsNum - 1;
-	for (var i = 0; i < ptsNum; i++) {
+	let area = 0;
+	let j = ptsNum - 1;
+	for (let i = 0; i < ptsNum; i++) {
 		area = area + (x[j] + x[i]) * (y[j] - y[i]);
 		j = i;
 	}
@@ -41,7 +41,7 @@ function onMapUpdate(details) {
 
 		arrayBuffer.push(decoder.decode());
 		const data = JSON.parse(arrayBuffer.join(''));
-		if (data.sets == undefined) return;
+		if (!data.sets) return;
 		
 		// Delete star icons.
 		delete data.sets["townyPlugin.markerset"].markers;
@@ -50,63 +50,64 @@ function onMapUpdate(details) {
 		Object.values(data.sets["townyPlugin.markerset"].areas).forEach(town => {
 
 			// Some variables.
-			var townTitle = town.desc.split('<br \/>')[0];
-			townTitle = townTitle.replace(/\(Shop\)$/g, '').replaceAll(/[()]/g, '').split(' ');
-			const nation = townTitle[2].replace('</span>', '');
-			const area = calcArea(town.x, town.z, town.x.length);
-			const memberList = town.desc.split('Members <span style=\"font-weight:bold\">')[1].split('</span><br />Flags')[0];
-			const memberSize = (memberList.match(/,/g) || []).length + 1;
+			let townTitle = town.desc.split('<br \/>')[0].replace(/\(Shop\)$/g, '').replaceAll(/[()]/g, '').split(' ');
+			const nation = townTitle[2].replace('</span>', ''),
+				  area = calcArea(town.x, town.z, town.x.length),
+				  memberList = town.desc.split('Members <span style=\"font-weight:bold\">')[1].split('</span><br />Flags')[0],
+				  memberSize = (memberList.match(/,/g) || []).length + 1;
 
-			// Removing shop areas.
+			// Making shop areas invisible.
 			if (town.desc.includes('(Shop) (')) {
-				town.fillopacity = 0;
-				town.opacity = 0;
+				town.fillopacity = town.opacity = 0;
+				return;
 			}
 
 			// Recreating town's description.
-			town.desc = town.desc.replace('>hasUpkeep:', '>Has upkeep:').replace('>pvp:', '>PVP allowed:').replace('>mobs:', '>Mob spawning:').replace('>public:', '>Public status:').replace('>explosion:', '>Explosions:').replace('>fire:', '>Fire spread:').replace('>capital:', '>Is capital:');
-			town.desc = town.desc.replaceAll('true<', '\u2705<').replaceAll('false<', '\u26D4<');
-			town.desc = town.desc.replace('Members <span', 'Members <b>[' + memberSize + ']</b> <span');
-			town.desc = town.desc.replace('</span><br /> Members', '</span><br />Size<span style=\"font-weight:bold\"> ' + area + ' </span><br /> Members');
+			town.desc = town.desc.replace('\">hasUpkeep:', '; white-space:pre\">hasUpkeep:');
+			town.desc = town.desc.replace('>hasUpkeep:', '>Has upkeep:')
+								 .replace('>pvp:', '>PVP allowed:')
+								 .replace('>mobs:', '>Mob spawning:')
+								 .replace('>public:', '>Public status:')
+								 .replace('>explosion:', '>Explosions:&#9;')
+								 .replace('>fire:', '>Fire spread:')
+								 .replace('>capital:', '>Is capital:&#9;')
+		  						 .replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
+			                     .replaceAll('false<', '&#9;<span style="color:red">No</span><')
+								 .replace('Members <span', 'Members <b>[' + memberSize + ']</b> <span')
+							 	 .replace('</span><br /> Members', '</span><br />Size<span style=\"font-weight:bold\"> ' + area + ' </span><br /> Members');
 
 			// Modifying esthetics of the area.
 			town.weight = 1;
 			town.opacity = 0.7;
-			if (town.color == "#3FB4FF" && town.fillcolor == "#3FB4FF") town.color = "#000000", town.fillcolor = "#000000";
+			if (town.color == "#3FB4FF" && town.fillcolor == "#3FB4FF") town.color = town.fillcolor = "#000000";
 			if (nation.length < 1) {
-				town.color = '#83003F';
-				town.fillcolor = '#83003F';
+				town.fillcolor = town.color = '#83003F';
 				return;
 			}
 		})
 
 		// Fetching alliances from appriopriate worlds.
-		details.url.includes('nova') ? usedMap = 'nova' : usedMap = 'aurora';
-		fetchAlliances(usedMap == 'nova' ? novaURL : auroraURL).then(alliances => {
+		fetchAlliances(details.url.includes('nova') ? novaURL : auroraURL).then(alliances => {
 
 			Object.values(data.sets["townyPlugin.markerset"].areas).forEach(town => {
 
-				var townTitle = town.desc.split('<br \/>')[0];
+				let townTitle = town.desc.split('<br \/>')[0],
+				    meganationList = '';
 				townTitle = townTitle.replace(/\(Shop\)$/g, '').replaceAll(/[()]/g, '').split(' ');
 				const nation = townTitle[2].replace('</span>', '');
-				var meganationList = '';
-
+				
 				alliances.forEach(alliance => {
 
 					// Some variables and their default values.
-					var allianceType, allianceName, allianceStrokeColor, allianceFillColor;
+					let allianceType, allianceName, allianceStrokeColor, allianceFillColor;
 					allianceType = alliance.type ?? 'mega';
 					allianceName = alliance.fullName ?? alliance.allianceName;
 					if (alliance.hasOwnProperty('colours')) {
 						allianceFillColor = alliance.colours.fill;
 						allianceStrokeColor = alliance.colours.outline;
-					} else {
-						allianceFillColor = "#000000";
-						allianceStrokeColor = "#000000";
-					}
+					} else allianceFillColor = allianceStrokeColor = "#000000";
 					
-					if (allianceType != mapMode) return;
-					if (!alliance.nations.includes(nation)) return;
+					if (allianceType != mapMode || !alliance.nations.includes(nation)) return;
 					meganationList.length < 1 ? meganationList += allianceName : meganationList += ', ' + allianceName;
 
 					// Esthetics of alliance areas; their visuals differ from single nations and nationless towns.
@@ -119,10 +120,10 @@ function onMapUpdate(details) {
 				});
 
 				// Assigning the alliance name to the town.
-				if (meganationList.length > 0) town.desc = town.desc.replace(')</span><br />', ')</span><br /> ' + 
+				if (meganationList.length > 0) town.desc = town.desc.replace(
+					')</span><br />', ')</span><br /> ' + 
 					'<span style=\"font-size:80%\">Part of</span> ' + 
 					'<span style=\"font-size:90%\"><b>' + meganationList + '</b></span><br />');
-				
 			});
 
 			// Sending the modified response.

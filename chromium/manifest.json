@@ -1,0 +1,28 @@
+{
+	"manifest_version": 3,
+	"name": "EarthMC Dynmap+",
+	"version": "1.8",
+	"author": "3meraldK",
+	"description": "Enrich the EarthMC dynmap with various features",
+
+	"icons": {
+		"48": "48.png",
+		"256": "256.png"
+	},
+
+	"background": {"service_worker": "background.js"},
+
+	"content_scripts": [
+		{
+		  "matches": ["https://earthmc.net/map/*"],
+		  "js": ["content.js"]
+		}
+	],
+
+	"permissions": ["declarativeNetRequest"],
+
+	"host_permissions": [
+		"https://earthmc.net/map/*",
+		"https://earthmc-api.herokuapp.com/api/v1/*"
+	]
+}
