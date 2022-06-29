@@ -26,6 +26,7 @@
 	"permissions": [
 		"webRequest",
 		"webRequestBlocking",
-		"https://earthmc.net/map/*"
+		"https://earthmc.net/map/*",
+		"https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/firefox/manifest.json"
 	]
 }
