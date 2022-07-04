@@ -43,34 +43,37 @@ function onMapUpdate(details) {
 		const data = JSON.parse(arrayBuffer.join(''));
 		if (!data.sets) return;
 		
-		// Delete star icons.
+		// Modify star markers.
+		const markers = data.sets["townyPlugin.markerset"].markers;
+		Object.values(markers).forEach(marker => delete marker.desc);
 		delete data.sets["townyPlugin.markerset"].markers;
+		data.sets.markers.markers = markers;
+
+		// Delete shop areas.
+		Object.keys(data.sets["townyPlugin.markerset"].areas).forEach(town => {
+			if (data.sets["townyPlugin.markerset"].areas[town].desc.includes('(Shop) (')) delete data.sets["townyPlugin.markerset"].areas[town];
+		});
 
 		// Iterating through every area drawn on the map.
 		Object.values(data.sets["townyPlugin.markerset"].areas).forEach(town => {
 
 			// Some variables.
-			let townTitle = town.desc.split('<br \/>')[0].replace(/\(Shop\)$/g, '').replaceAll(/[()]/g, '').split(' ');
+			let townTitle = town.desc.split('<br \/>')[0].replaceAll(/[()]/g, '').split(' ');
 			const nation = townTitle[2].replace('</span>', ''),
 				  area = calcArea(town.x, town.z, town.x.length),
 				  memberList = town.desc.split('Members <span style=\"font-weight:bold\">')[1].split('</span><br />Flags')[0],
 				  memberSize = (memberList.match(/,/g) || []).length + 1;
 
-			// Making shop areas invisible.
-			if (town.desc.includes('(Shop) (')) {
-				town.fillopacity = town.opacity = 0;
-				return;
-			}
-
 			// Recreating town's description.
 			town.desc = town.desc.replace('\">hasUpkeep:', '; white-space:pre\">hasUpkeep:');
-			town.desc = town.desc.replace('>hasUpkeep:', '>Has upkeep:')
+			town.desc = town.desc.replace('>hasUpkeep: true<br />', '>')
 								 .replace('>pvp:', '>PVP allowed:')
 								 .replace('>mobs:', '>Mob spawning:')
 								 .replace('>public:', '>Public status:')
 								 .replace('>explosion:', '>Explosions:&#9;')
 								 .replace('>fire:', '>Fire spread:')
-								 .replace('>capital:', '>Is capital:&#9;')
+								 .replace('<br />capital: false</span>', '</span>')
+								 .replace('<br />capital: true</span>', '</span>')
 		  						 .replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
 			                     .replaceAll('false<', '&#9;<span style="color:red">No</span><')
 								 .replace('Members <span', 'Members <b>[' + memberSize + ']</b> <span')
@@ -84,7 +87,7 @@ function onMapUpdate(details) {
 				town.fillcolor = town.color = '#83003F';
 				return;
 			}
-		})
+		});
 
 		// Fetching alliances from appriopriate worlds.
 		fetchAlliances(details.url.includes('nova') ? novaURL : auroraURL).then(alliances => {
@@ -93,7 +96,7 @@ function onMapUpdate(details) {
 
 				let townTitle = town.desc.split('<br \/>')[0],
 				    meganationList = '';
-				townTitle = townTitle.replace(/\(Shop\)$/g, '').replaceAll(/[()]/g, '').split(' ');
+				townTitle = townTitle.replaceAll(/[()]/g, '').split(' ');
 				const nation = townTitle[2].replace('</span>', '');
 				
 				alliances.forEach(alliance => {
@@ -111,12 +114,10 @@ function onMapUpdate(details) {
 					meganationList.length < 1 ? meganationList += allianceName : meganationList += ', ' + allianceName;
 
 					// Esthetics of alliance areas; their visuals differ from single nations and nationless towns.
-					if (!town.desc.includes('(Shop) (')) {
-						town.weight = 2.2;
-						town.opacity = 1;
-						town.color = allianceStrokeColor;
-						town.fillcolor = allianceFillColor;
-					}
+					town.weight = 2.2;
+					town.opacity = 1;
+					town.color = allianceStrokeColor;
+					town.fillcolor = allianceFillColor;
 				});
 
 				// Assigning the alliance name to the town.

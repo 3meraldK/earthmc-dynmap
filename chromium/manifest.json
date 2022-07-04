@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "EarthMC Dynmap+",
-	"version": "1.8",
+	"version": "1.8.1",
 	"author": "3meraldK",
 	"description": "Enrich the EarthMC dynmap with various features",
 
@@ -14,7 +14,7 @@
 
 	"content_scripts": [
 		{
-		  "matches": ["https://earthmc.net/map/*"],
+			"matches": ["https://earthmc.net/map/nova/", "https://earthmc.net/map/aurora/", "https://earthmc.net/map/nova/?*", "https://earthmc.net/map/aurora/?*"],
 		  "js": ["content.js"]
 		}
 	],
