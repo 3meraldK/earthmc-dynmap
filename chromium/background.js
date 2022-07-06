@@ -1,4 +1,4 @@
-var mapMode = 'mega'
+var mapMode = 'mega';
 
 const createRule = (id, action, filter) => ({
 	'id': id,
@@ -8,7 +8,7 @@ const createRule = (id, action, filter) => ({
 		'urlFilter': filter,
 		'resourceTypes': ['main_frame', 'xmlhttprequest']
 	}
-})
+});
 
 // Method for updating rules.
 function updateRules(mode) {
@@ -19,27 +19,27 @@ function updateRules(mode) {
 			createRule(3, getURL('aurora'), getFilter('aurora')),
 			createRule(4, getURL('aurora', mode), getFilter('aurora', mode))
 		], removeRuleIds: [1, 2, 3, 4]
-	})
+	});
 }
 
 // Utility method for URLs.
 const getURL = (world, type = 'update') => type == 'update' ? 
 	  `https://earthmc-api.herokuapp.com/api/v1/${world}/update` :
-	  `https://earthmc-api.herokuapp.com/api/v1/${world}/markers/${type}`
+	  `https://earthmc-api.herokuapp.com/api/v1/${world}/markers/${type}`;
 
 const getFilter = (world, type = 'update') => type == 'update' ? 
 	  `https://earthmc.net/map/${world}/up/world/earth/*` : 
-	  `https://earthmc.net/map/${world}/tiles/_markers_/marker_earth.json`
+	  `https://earthmc.net/map/${world}/tiles/_markers_/marker_earth.json`;
 
 // Redirecting system.
 const onMessage = (event) => {
 	if (event.message == 'Button clicked') {
-		mapMode = mapMode == 'mega' ? 'pact' : 'mega'
-		updateRules(mapMode)
+		mapMode = mapMode == 'mega' ? 'pact' : 'mega';
+		updateRules(mapMode);
 	}
-	else if (event.message == 'Database fetched') updateRules(mapMode)
-	else chrome.declarativeNetRequest.updateDynamicRules({removeRuleIds: [1, 2, 3, 4]})
+	else if (event.message == 'Database fetched') updateRules(mapMode);
+	else chrome.declarativeNetRequest.updateDynamicRules({removeRuleIds: [1, 2, 3, 4]});
 }
 
-chrome.runtime.onMessage.addListener(onMessage)
-updateRules(mapMode)
+chrome.runtime.onMessage.addListener(onMessage);
+updateRules(mapMode);
