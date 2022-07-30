@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "EarthMC Dynmap+",
-	"version": "1.8.1",
+	"version": "1.8.2",
 	"author": "3meraldK",
 	"description": "Enrich the EarthMC dynmap with various features",
 
@@ -23,6 +23,6 @@
 
 	"host_permissions": [
 		"https://earthmc.net/map/*",
-		"https://earthmc-api.herokuapp.com/api/v1/*"
+		"https://emc-toolkit.vercel.app/api/*"
 	]
 }

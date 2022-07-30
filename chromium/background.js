@@ -24,8 +24,8 @@ function updateRules(mode) {
 
 // Utility method for URLs.
 const getURL = (world, type = 'update') => type == 'update' ? 
-	  `https://earthmc-api.herokuapp.com/api/v1/${world}/update` :
-	  `https://earthmc-api.herokuapp.com/api/v1/${world}/markers/${type}`;
+	  `https://emc-toolkit.vercel.app/api/${world}/update` :
+	  `https://emc-toolkit.vercel.app/api/${world}/markers/${type}`;
 
 const getFilter = (world, type = 'update') => type == 'update' ? 
 	  `https://earthmc.net/map/${world}/up/world/earth/*` : 

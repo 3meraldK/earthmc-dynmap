@@ -1,7 +1,7 @@
 const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf-8');
-const novaURL = 'https://earthmc-api.herokuapp.com/api/v1/nova/alliances';
-const auroraURL = 'https://earthmc-api.herokuapp.com/api/v1/aurora/alliances';
+const novaURL = 'https://emc-toolkit.vercel.app/api/nova/alliances';
+const auroraURL = 'https://emc-toolkit.vercel.app/api/aurora/alliances';
 const fetchAlliances = (url) => fetch(url).then(res => res.json()).catch(() => {});
 const buttonEvent = () => mapMode == 'mega' ? mapMode = 'normal' : mapMode = 'mega';
 let mapMode = 'mega';

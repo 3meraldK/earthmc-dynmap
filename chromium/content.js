@@ -1,6 +1,6 @@
 // Check if database is available.
 let fetchFailure;
-fetch('https://earthmc-api.herokuapp.com/api/v1/nova/onlineplayers')
+fetch('https://emc-toolkit.vercel.app/api/aurora/onlineplayers')
     .then(response => { 
 		if (response.ok || response.status == 304) {chrome.runtime.sendMessage({message: 'Database fetched'}); fetchFailure = false;} 
 		else {chrome.runtime.sendMessage({message: 'Database error'}); fetchFailure = true;}})
