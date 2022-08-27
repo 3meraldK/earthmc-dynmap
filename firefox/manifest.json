@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "EarthMC Dynmap+",
-	"version": "1.8.2",
+	"version": "1.9",
 	"author": "3meraldK",
 	"description": "Enrich the EarthMC dynmap with various features",
 	"browser_specific_settings": {"gecko": {"id": "fff999abc999@users.noreply.github.com"}},
@@ -27,6 +27,7 @@
 		"webRequest",
 		"webRequestBlocking",
 		"https://earthmc.net/map/*",
-		"https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/firefox/manifest.json"
+		"https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/firefox/manifest.json",
+		"https://web.archive.org/web/*/https://earthmc.net/map/*"
 	]
 }
