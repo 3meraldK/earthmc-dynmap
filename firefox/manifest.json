@@ -1,10 +1,9 @@
 {
 	"manifest_version": 2,
 	"name": "EarthMC Dynmap+",
-	"version": "1.9",
+	"version": "1.9.1",
 	"author": "3meraldK",
-	"description": "Enrich the EarthMC dynmap with various features",
-	"browser_specific_settings": {"gecko": {"id": "fff999abc999@users.noreply.github.com"}},
+	"description": "Extension to enrich the EarthMC Dynmap experience",
 
 	"icons": {
 		"48": "48.png",
