@@ -4,12 +4,12 @@ const novaURL = 'https://emc-toolkit.vercel.app/api/nova/alliances';
 const auroraURL = 'https://emc-toolkit.vercel.app/api/aurora/alliances';
 
 // Webpage listener.
-let mapMode = 'mega';
+let mapMode = 'meganations';
 let date = 0;
 browser.runtime.onMessage.addListener(webpageListener);
 function webpageListener(message) {
 	if (message.message) {
-		mapMode = mapMode == 'mega' ? 'normal' : 'mega';
+		mapMode = mapMode == 'meganations' ? 'alliances' : 'meganations';
 		date = 0;
 		return;
 	}
@@ -90,31 +90,45 @@ function onMapUpdate(details) {
 					area = calcArea(townArea.x, townArea.z, townArea.x.length),
 					membersPlaceholder = (date && parseInt(date) < 20200410) ? 'Associates' : 'Members',
 					memberList = townArea.desc.split(`${membersPlaceholder} <span style="font-weight:bold">`)[1].split('</span><br />Flags')[0],
-					memberSize = (memberList.match(/,/g) || []).length + 1;
+					memberSize = (memberList.match(/,/g) || []).length + 1,
+					isCapital = townArea.desc.includes('capital: true'),
+					hasWikiLink = townArea.desc.includes('</a>');
+				if (hasWikiLink) {
+					const link = townArea.desc.split('href="')[1].split('" rel=')[0];
+					townArea.desc = townArea.desc.replace(`<a href="${link}" rel="nofollow">${nation}</a>`, `${nation}`)
+					townArea.desc = townArea.desc.replace(`${nation})`, `${nation}) <a target="_blank" title="Click to open the wiki article." href="${link}">📖</a>`)
+				}
+				if (isCapital) townArea.desc = townArea.desc.replace('120%">', '120%">★ ')
 
-					if (date != '0' && parseInt(date) < 20220906) {
-						townArea.desc = townArea.desc.replace('">hasUpkeep:', '; white-space:pre">hasUpkeep:');
-						townArea.desc = townArea.desc.replace('>hasUpkeep: true<br />', '>').replace('>hasUpkeep: false<br />', '>');
-					} else {
-						townArea.desc = townArea.desc.replace('">pvp:', '; white-space:pre">pvp:');
-					}
-					townArea.desc = townArea.desc.replace('>pvp:', '>PVP allowed:')
-						.replace('>mobs:', '>Mob spawning:')
-						.replace('>public:', '>Public status:')
-						.replace('>explosion:', '>Explosions:&#9;')
-						.replace('>fire:', '>Fire spread:')
-						.replace('<br />capital: false</span>', '</span>')
-						.replace('<br />capital: true</span>', '</span>')
-						.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
-						.replaceAll('false<', '&#9;<span style="color:red">No</span><')
-						.replace(`${membersPlaceholder} <span`, `${membersPlaceholder} <b>[${memberSize}]</b> <span`)
-						.replace(`</span><br /> ${membersPlaceholder}`, `</span><br />Size<span style="font-weight:bold"> ${area} </span><br /> ${membersPlaceholder}`);
+				if (date != '0' && parseInt(date) < 20220906) {
+					townArea.desc = townArea.desc.replace('">hasUpkeep:', '; white-space:pre">hasUpkeep:');
+					townArea.desc = townArea.desc.replace('>hasUpkeep: true<br />', '>').replace('>hasUpkeep: false<br />', '>');
+				} else {
+					townArea.desc = townArea.desc.replace('">pvp:', '; white-space:pre">pvp:');
+				}
+				townArea.desc = townArea.desc.replace('>pvp:', '>PVP allowed:')
+					.replace('>mobs:', '>Mob spawning:')
+					.replace('>public:', '>Public status:')
+					.replace('>explosion:', '>Explosions:&#9;')
+					.replace('>fire:', '>Fire spread:')
+					.replace('<br />capital: false</span>', '</span>')
+					.replace('<br />capital: true</span>', '</span>')
+					.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
+					.replaceAll('false<', '&#9;<span style="color:red">No</span><')
+					.replace(`${membersPlaceholder} <span`, `${membersPlaceholder} <b>[${memberSize}]</b> <span`)
+					.replace(`</span><br /> ${membersPlaceholder}`, `</span><br />Size<span style="font-weight:bold"> ${area} </span><br /> ${membersPlaceholder}`);
+
+				if (memberSize > 50) {
+					townArea.desc = townArea.desc
+						.replace(`<b>[${memberSize}]</b> <span style="font-weight:bold">`, `<b>[${memberSize}]</b> <div style="overflow:auto;height:200px;"><span style="font-weight:bold">`)
+						.replace('Flags', '</div>Flags')
+				}
 
 				townArea.weight = 1.5;
 				townArea.opacity = 1;
 
 				if (archiveMode) return;
-				if (mapMode == 'normal') { townArea.color = townArea.fillcolor = '#000000'; }
+				if (mapMode == 'alliances') { townArea.color = townArea.fillcolor = '#000000'; }
 				else {
 					if (townArea.color == '#3FB4FF' && townArea.fillcolor == '#3FB4FF') townArea.color = townArea.fillcolor = '#000000';
 					if (nation == '') townArea.fillcolor = townArea.color = '#FF00FF';
@@ -131,9 +145,11 @@ function onMapUpdate(details) {
 			fetch(details.url.includes('nova') ? novaURL : auroraURL).then(res => res.json())
 				.then(alliancesJSON => {
 					alliancesJSON.forEach(alliance => {
+						let allianceType = alliance.type || 'mega';
+						allianceType = allianceType == 'mega' ? 'meganations' : 'alliances'; 
 						alliances.push(
 							{ name: alliance.fullName || alliance.allianceName,
-								type: alliance.type || 'mega',
+								type: allianceType,
 								nations: alliance.nations,
 								colours: alliance.colours || { fill: '#000000', outline: '#000000' },
 							});

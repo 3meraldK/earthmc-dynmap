@@ -1,4 +1,4 @@
-if (!window.sessionStorage.getItem('mapMode')) window.sessionStorage.setItem('mapMode', 'mega');
+if (!window.sessionStorage.getItem('mapMode')) window.sessionStorage.setItem('mapMode', 'meganations');
 if (!window.sessionStorage.getItem('date')) window.sessionStorage.setItem('date', '0');
 
 const interval = setInterval(() => {
@@ -18,7 +18,7 @@ const interval = setInterval(() => {
 		const button = document.createElement('button');
 		const buttonDiv = document.createElement('div');
 		button.innerHTML = 'Switch map mode';
-		buttonDiv.innerHTML = '<abbr title="Switch between alliances and meganations. You may reload the page to get it work; otherwise, it is unavailable database or other unexpected errors.">(?)</abbr> ';
+		buttonDiv.innerHTML = '<abbr title="Switch between alliances and meganations. You may reload the page to get it work; otherwise, it is unavailable database or other unexpected error.">(?)</abbr> ';
 		buttonDiv.appendChild(button);
 		menu.appendChild(buttonDiv);
 
@@ -27,21 +27,35 @@ const interval = setInterval(() => {
 		const archiveDiv = document.createElement('div');
 		archiveDiv.innerHTML = '<abbr title="View old claims & stats, does not include terrain. Switch map mode to leave the archive. You may reload the page to get it work.">(?)</abbr> ';
 		date.min = window.location.href.includes('nova') ? '2018-12-18' : '2022-05-01';
+		date.max = new Date().toLocaleDateString('en-ca');
 		date.type = 'date';
+		date.style.width = '120px';
 		archiveDiv.appendChild(date);
 		menu.appendChild(archiveDiv);
+
+		// Create the search.
+		const search = document.createElement('input');
+		const searchButton = document.createElement('button');
+		const searchDiv = document.createElement('div');
+		searchDiv.innerHTML = '<abbr title="Search cities by name.">(?)</abbr> ';
+		searchButton.innerHTML = 'Search';
+		search.style.width = '60px';
+		searchDiv.appendChild(search);
+		searchDiv.appendChild(searchButton);
+		menu.appendChild(searchDiv);
 
 		// Create the label.
 		const labelDiv = document.createElement('div');
 		const dateInfo = window.sessionStorage.getItem('date') != '0' ? `, date: ${window.sessionStorage.getItem('date').replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3')}` : '';
-		labelDiv.innerHTML = `Mode: ${window.sessionStorage.getItem('mapMode')}${dateInfo}`;
+		labelDiv.innerHTML = `Showing: ${window.sessionStorage.getItem('mapMode')}${dateInfo}`;
+		dateInfo.width = '120px';
 		menu.appendChild(labelDiv);
 
 		// Implement listeners.
 		button.addEventListener('click', () => {
 			browser.runtime.sendMessage({ message: 'Button clicked' });
 			window.sessionStorage.setItem('date', '0');
-			window.sessionStorage.setItem('mapMode', window.sessionStorage.getItem('mapMode') == 'mega' ? 'normal' : 'mega');
+			window.sessionStorage.setItem('mapMode', window.sessionStorage.getItem('mapMode') == 'meganations' ? 'alliances' : 'meganations');
 			document.location.reload();
 		});
 		date.addEventListener('change', () => {
@@ -49,6 +63,18 @@ const interval = setInterval(() => {
 			window.sessionStorage.setItem('mapMode', 'archive');
 			browser.runtime.sendMessage({ date: date.valueAsDate });
 			document.location.reload();
+		});
+		searchButton.addEventListener('click', async () => {
+			const server = window.location.href.split('/')[4];
+			const markers = await fetch(`https://earthmc.net/map/${server}/tiles/_markers_/marker_earth.json`).then(res => res.json());
+			for (const townArea of Object.values(markers.sets['townyPlugin.markerset'].areas)) {
+				if (townArea.label.toLowerCase() == search.value.toLowerCase()) {
+					const x = townArea.x[0],
+						z = townArea.z[0];
+					window.location.href = `https://earthmc.net/map/${server}/?zoom=8&x=${x}&y=64&z=${z}`;
+					break;
+				}
+			}
 		});
 
 		// Check for updates.
