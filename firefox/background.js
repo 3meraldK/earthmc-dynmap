@@ -2,7 +2,6 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf-8');
 const novaURL = 'https://emc-toolkit.vercel.app/api/nova/alliances';
 const auroraURL = 'https://emc-toolkit.vercel.app/api/aurora/alliances';
-
 // Webpage listener.
 let mapMode = 'meganations';
 let date = 0;
@@ -27,6 +26,19 @@ function calcArea(x, y, ptsNum) {
 	return (Math.abs(area / 2)) / 256;
 }
 
+// Return hashed HEX color
+function HEXhash(string) {
+	let i, l,
+		hval = 0x811c9dc5;
+
+	for (i = 0, l = string.length; i < l; i++) {
+		hval ^= string.charCodeAt(i);
+		hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+	}
+
+	return `#${((hval >>> 0) % 16777216).toString(16)}`;
+}
+
 // Listen for requests.
 browser.webRequest.onBeforeRequest.addListener(
 	function requestListener(details) {
@@ -34,10 +46,12 @@ browser.webRequest.onBeforeRequest.addListener(
 			onPlayerUpdate(details);
 		} else onMapUpdate(details);
 	},
-	{ urls: ['https://earthmc.net/map/nova/tiles/_markers_/marker_earth.json',
-		'https://earthmc.net/map/nova/up/world/earth/*',
-		'https://earthmc.net/map/aurora/tiles/_markers_/marker_earth.json',
-		'https://earthmc.net/map/aurora/standalone/dynmap_earth.json'] },
+	{
+		urls: ['https://earthmc.net/map/nova/tiles/_markers_/marker_earth.json',
+			'https://earthmc.net/map/nova/up/world/earth/*',
+			'https://earthmc.net/map/aurora/tiles/_markers_/marker_earth.json',
+			'https://earthmc.net/map/aurora/standalone/dynmap_earth.json']
+	},
 	['blocking'],
 );
 
@@ -63,10 +77,18 @@ function onMapUpdate(details) {
 				urlProper = [`https://web.archive.org/web/${date}id_/https://earthmc.net/map`, 'tiles/_markers_/marker_earth.json'],
 				url = parseInt(date) < 20220428 ? `${urlProper[0]}/${urlProper[1]}` : `${urlProper[0]}/${server}/${urlProper[1]}`,
 				jsonPath = parseInt(date) < 20200322 ? 'towny.markerset' : 'townyPlugin.markerset';
+			browser.tabs
+				.query({ currentWindow: true, active: true })
+				.then((tabs) => { browser.tabs.sendMessage(tabs[0].id, { msg: 'fetching_archive' }) }, (error) => console.log(`Error getting the active tab: ${error}`));
 			fetch(url)
-				.then(res => res.json()).then(archiveData => execute(archiveData, true, jsonPath))
+				.then(res => res.json()).then(archiveData => {
+					execute(archiveData, true, jsonPath);
+					browser.tabs
+						.query({ currentWindow: true, active: true })
+						.then((tabs) => { browser.tabs.sendMessage(tabs[0].id, { msg: 'fetched_archive' }) }, (error) => console.log(`Error getting the active tab: ${error}`));
+				})
 				.catch((error) => {
-					console.error(`Could not fetch archives, exiting archive mode: ${error}`);
+					console.log(`Could not fetch archives, exiting archive mode: ${error}`);
 					execute(streamData, false, 'townyPlugin.markerset');
 				});
 		}
@@ -95,10 +117,10 @@ function onMapUpdate(details) {
 					hasWikiLink = townArea.desc.includes('</a>');
 				if (hasWikiLink) {
 					const link = townArea.desc.split('href="')[1].split('" rel=')[0];
-					townArea.desc = townArea.desc.replace(`<a href="${link}" rel="nofollow">${nation}</a>`, `${nation}`)
-					townArea.desc = townArea.desc.replace(`${nation})`, `${nation}) <a target="_blank" title="Click to open the wiki article." href="${link}">📖</a>`)
+					townArea.desc = townArea.desc.replace(`<a href="${link}" rel="nofollow">${nation}</a>`, `${nation}`);
+					townArea.desc = townArea.desc.replace(`${nation})`, `${nation}) <a target="_blank" title="Click to open the wiki article." href="${link}">📖</a>`);
 				}
-				if (isCapital) townArea.desc = townArea.desc.replace('120%">', '120%">★ ')
+				if (isCapital) townArea.desc = townArea.desc.replace('120%">', '120%">★ ');
 
 				if (date != '0' && parseInt(date) < 20220906) {
 					townArea.desc = townArea.desc.replace('">hasUpkeep:', '; white-space:pre">hasUpkeep:');
@@ -121,16 +143,24 @@ function onMapUpdate(details) {
 				if (memberSize > 50) {
 					townArea.desc = townArea.desc
 						.replace(`<b>[${memberSize}]</b> <span style="font-weight:bold">`, `<b>[${memberSize}]</b> <div style="overflow:auto;height:200px;"><span style="font-weight:bold">`)
-						.replace('Flags', '</div>Flags')
+						.replace('Flags', '</div>Flags');
 				}
 
 				townArea.weight = 1.5;
 				townArea.opacity = 1;
+				townArea.fillopacity = 0.33;
 
 				if (archiveMode) return;
-				if (mapMode == 'alliances') { townArea.color = townArea.fillcolor = '#000000'; }
+				if (mapMode == 'alliances') {
+					townArea.color = townArea.fillcolor = '#000000';
+					townArea.weight = 0.75;
+				}
 				else {
-					if (townArea.color == '#3FB4FF' && townArea.fillcolor == '#3FB4FF') townArea.color = townArea.fillcolor = '#000000';
+					if (townArea.color == '#3FB4FF' && townArea.fillcolor == '#3FB4FF') {
+						townArea.color = '#363636';
+						townArea.fillcolor = HEXhash(nation);
+					} else townArea.color = '#bfff00';
+					if (townArea.desc.includes('NPC')) townArea.fillcolor = townArea.color = '#7B00FF';
 					if (nation == '') townArea.fillcolor = townArea.color = '#FF00FF';
 				}
 			});
@@ -146,9 +176,10 @@ function onMapUpdate(details) {
 				.then(alliancesJSON => {
 					alliancesJSON.forEach(alliance => {
 						let allianceType = alliance.type || 'mega';
-						allianceType = allianceType == 'mega' ? 'meganations' : 'alliances'; 
+						allianceType = allianceType == 'mega' ? 'meganations' : 'alliances';
 						alliances.push(
-							{ name: alliance.fullName || alliance.allianceName,
+							{
+								name: alliance.fullName || alliance.allianceName,
 								type: allianceType,
 								nations: alliance.nations,
 								colours: alliance.colours || { fill: '#000000', outline: '#000000' },
@@ -160,24 +191,49 @@ function onMapUpdate(details) {
 					Object.values(data.sets[jsonPath].areas).forEach(townArea => {
 						const nation = !townArea.desc.includes('"nofollow">') ? townArea.desc.split(' (')[1].split(')')[0] : townArea.desc.split('"nofollow">')[1].split('</a>)')[0];
 						let meganationList = '';
+						let id = '';
+						const alliancesOutlines = [];
 						alliances.forEach(alliance => {
 							if (alliance.nations.includes(nation) && mapMode == alliance.type) {
 								townArea.color = alliance.colours.outline;
 								townArea.fillcolor = alliance.colours.fill;
+								if (mapMode == 'alliances') townArea.weight = 1.5;
 								meganationList += meganationList.length < 1 ? alliance.name : ', ' + alliance.name;
+								id += alliance.name;
+								alliancesOutlines.push(alliance.colours.outline);
 							}
 						});
-						if (meganationList.length > 0) townArea.desc = townArea.desc.replace(')</span><br />', `)</span><br /> <span style="font-size:80%">Part of</span> <span style="font-size:90%"><b>${meganationList}</b></span><br />`);
+
+						// Condominiums
+						const a = alliancesOutlines[0]
+						const b = alliancesOutlines[1]
+						id = id.replaceAll(' ', '');
+						if (meganationList.includes(',')) {
+							browser.tabs
+								.query({ currentWindow: true, active: true })
+								.then((tabs) => { browser.tabs.sendMessage(tabs[0].id, { msg: 'condominium', a: a, b: b, id: id }) }, (error) => console.log(`Error getting the active tab: ${error}`));
+							townArea.fillcolor = `url(#${id})`
+							townArea.color = "#FF00FF"
+							townArea.weight = 1.5;
+						}
+
+						if (meganationList.length > 0) {
+							if (townArea.desc.includes('</a>')) townArea.desc = townArea.desc.replace('</a></span><br />', `</a></span><br /> <span style="font-size:80%">Part of</span> <span style="font-size:90%"><b>${meganationList}</b></span><br />`);
+							else townArea.desc = townArea.desc.replace(')</span><br />', `)</span><br /> <span style="font-size:80%">Part of</span> <span style="font-size:90%"><b>${meganationList}</b></span><br />`);
+						}
 					});
 					filter.write(encoder.encode(JSON.stringify(data)));
 					filter.close();
 				}).catch(error => {
-					console.error(`Couldn't fetch alliances: ${error}`);
+					browser.tabs
+						.query({ currentWindow: true, active: true })
+						.then((tabs) => { browser.tabs.sendMessage(tabs[0].id, { msg: 'alliance_error' }) }, (error) => console.log(`Error getting the active tab: ${error}`));
+					console.log(`Couldn't fetch alliances: ${error}`);
 					filter.write(encoder.encode(JSON.stringify(data)));
 					filter.close();
 				});
 		}
-	};
+	}
 }
 
 // Manage the player response.
@@ -199,5 +255,5 @@ function onPlayerUpdate(details) {
 		// If response is bigger than usual then it is map update.
 		string.length < 65536 ? filter.write(encoder.encode(JSON.stringify(data))) : onMapUpdate(details);
 		filter.close();
-	};
+	}
 }
