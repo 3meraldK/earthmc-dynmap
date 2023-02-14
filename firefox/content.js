@@ -1,6 +1,6 @@
 browser.runtime.onMessage.addListener(
 	(data, sender) => {
-		if (data.msg == 'alliance_error') document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 50px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Could not fetch latest alliances, try again soon.<button onclick="document.getElementById('error-label').remove()">OK</button></span>`);
+		if (data.msg == 'alliance_error') document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 80px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Third-party alliance API temporarily unavailable, try again soon.<button onclick="document.getElementById('error-label').remove()">OK</button></span>`);
 		if (data.msg == 'fetching_archive') document.body.insertAdjacentHTML('beforeend', `<span id="wait-label" style="position: fixed;height: 50px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Fetching archive, please wait.</span>`);
 		if (data.msg == 'fetched_archive') document.getElementById('wait-label').remove();
 		if (data.msg == 'condominium') {

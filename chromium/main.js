@@ -39,7 +39,7 @@ async function getAlliances(server) {
 		return alliances;
 	}).catch(error => {
 		console.log(`Couldn't fetch alliances: ${error}`);
-		document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 50px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Could not fetch latest alliances, try again soon.<button onclick="document.getElementById('error-label').remove()">OK</button></span>`);
+		document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 80px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Third-party alliance API temporarily unavailable, try again soon.<br><button onclick="document.getElementById('error-label').remove()">OK</button></span>`);
 		return JSON.parse(window.localStorage.getItem(`alliances${server}`)) || [];
 	});
 	return alliances;
@@ -62,7 +62,7 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 	_this.onreadystatechange = async function () {
 		let state = _this.readyState;
 		const server = window.location.href.includes('nova') ? 'nova' : 'aurora';
-		if (state == 1 && URL.includes('tiles/_markers_/marker_earth.json')) {
+		if (state == 1 && URL.includes('marker_earth.json')) {
 			if (date == '0') { alliances = await getAlliances(server); }
 			else {
 				const urlProper = [`https://web.archive.org/web/${date}id_/https://earthmc.net/map`, 'tiles/_markers_/marker_earth.json'];
@@ -77,13 +77,13 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 				}
 			}
 		}
-		if (state === 4 && (URL.includes('tiles/_markers_/marker_earth.json') || URL.includes('standalone/dynmap_earth.json') || URL.includes('up/world/earth'))) {
+		if (state === 4 && (URL.includes('marker_earth.json') || URL.includes('update.php'))) {
 			const streamData = JSON.parse(_this.responseText);
-			URL.includes('tiles/_markers_/marker_earth.json') ? mapUpdate() : playerUpdate();
+			URL.includes('marker_earth.json') ? mapUpdate() : playerUpdate();
 
 			function playerUpdate() {
 				if (date != '0') _this.abort();
-				if (JSON.stringify(streamData).length > 65536) {
+				if (JSON.stringify(streamData).length > 130672) {
 					streamData.updates = null;
 					Object.defineProperty(_this, 'responseText', { value: JSON.stringify(streamData) });
 					return;

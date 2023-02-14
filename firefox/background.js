@@ -42,15 +42,14 @@ function HEXhash(string) {
 // Listen for requests.
 browser.webRequest.onBeforeRequest.addListener(
 	function requestListener(details) {
-		if (details.url.includes('up/world/earth') || details.url.includes('standalone/dynmap_earth.json')) {
-			onPlayerUpdate(details);
-		} else onMapUpdate(details);
+		if (details.url.includes('update.php')) onPlayerUpdate(details);
+		else onMapUpdate(details);
 	},
 	{
 		urls: ['https://earthmc.net/map/nova/tiles/_markers_/marker_earth.json',
 			'https://earthmc.net/map/nova/up/world/earth/*',
-			'https://earthmc.net/map/aurora/tiles/_markers_/marker_earth.json',
-			'https://earthmc.net/map/aurora/standalone/dynmap_earth.json']
+			'https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json',
+			'https://earthmc.net/map/aurora/standalone/MySQL_update.php?world=earth&ts=*']
 	},
 	['blocking'],
 );
@@ -253,7 +252,7 @@ function onPlayerUpdate(details) {
 		const data = JSON.parse(string);
 		if (!data.currentcount) return;
 		// If response is bigger than usual then it is map update.
-		string.length < 65536 ? filter.write(encoder.encode(JSON.stringify(data))) : onMapUpdate(details);
+		string.length < 130672 ? filter.write(encoder.encode(JSON.stringify(data))) : onMapUpdate(details);
 		filter.close();
 	}
 }
