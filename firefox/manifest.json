@@ -4,6 +4,7 @@
 	"version": "1.11.1",
 	"author": "3meraldK",
 	"description": "Extension to enrich the EarthMC Dynmap experience",
+	"browser_specific_settings": {"gecko": {"id": "fff999abc999@users.noreply.github.com"}},
 
 	"icons": {
 		"48": "48.png",
