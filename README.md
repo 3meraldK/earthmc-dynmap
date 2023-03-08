@@ -9,8 +9,9 @@ When creating the WebExtension, the main idea was to connect the countries on th
 * Archive mode to view old claims and statistics. (from the Wayback Machine)
 * Search towns and nations by name
 * Total revamp of the aesthetics
-* More information about players or towns, in one click. (to view player's information, click the username on map)
-* Much more! It's regularly updated with new stuff you'll like.
+* Notifications about new releases
+* More information about players or towns, in one click (to view player's information, click the username on map)
+* Much more! It's regularly updated with new stuff you'll like
 
 ## Contribution <a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
 We don't work alone! We cooperate with EMC Toolkit (developers of EarthMC Stats and more), which provide latest alliances data. You can help by registering a new alliance, or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs) 
