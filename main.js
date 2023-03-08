@@ -1,7 +1,7 @@
-// Courtesy of 32Vache.
+// Courtesy of 32Vache
 function calcArea(x, y, ptsNum) {
-	let area = 0;
-	let j = ptsNum - 1;
+	let area = 0,
+		j = ptsNum - 1;
 	for (let i = 0; i < ptsNum; i++) {
 		area = area + (x[j] + x[i]) * (y[j] - y[i]);
 		j = i;
@@ -11,14 +11,12 @@ function calcArea(x, y, ptsNum) {
 
 // Return hashed HEX color
 function HEXhash(string) {
-	let i, l,
-		hval = 0x811c9dc5;
-
+	let i, l;
+	let hval = 0x811c9dc5;
 	for (i = 0, l = string.length; i < l; i++) {
 		hval ^= string.charCodeAt(i);
 		hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
 	}
-
 	return `#${((hval >>> 0) % 16777216).toString(16)}`;
 }
 
@@ -27,7 +25,7 @@ async function getAlliances(server) {
 	await fetch(`https://emc-toolkit.vercel.app/api/${server}/alliances`).then(res => res.json()).then(alliancesJSON => {
 		alliancesJSON.forEach(alliance => {
 			let allianceType = alliance.type || 'mega';
-			allianceType = allianceType == 'mega' ? 'meganations' : 'alliances';
+			allianceType = allianceType === 'mega' ? 'meganations' : 'alliances';
 			alliances.push({
 				name: alliance.fullName || alliance.allianceName,
 				type: allianceType,
@@ -38,8 +36,8 @@ async function getAlliances(server) {
 		window.localStorage.setItem(`alliances${server}`, JSON.stringify(alliances));
 		return alliances;
 	}).catch(error => {
-		console.log(`Couldn't fetch alliances: ${error}`);
-		document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 80px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Third-party alliance API temporarily unavailable, try again soon.<br><button onclick="document.getElementById('error-label').remove()">OK</button></span>`);
+		console.log(`Could not fetch alliances: ${error}`);
+		document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 80px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Third-party alliance API temporarily unavailable, try again soon.<br><button onclick="document.querySelector('#error-label').remove()">OK</button></span>`);
 		return JSON.parse(window.localStorage.getItem(`alliances${server}`)) || [];
 	});
 	return alliances;
@@ -48,26 +46,28 @@ async function getArchive(url) {
 	document.body.insertAdjacentHTML('beforeend', `<span id="wait-label" style="position: fixed;height: 50px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Fetching archive, please wait.</span>`);
 	const targetURL = `https://api.codetabs.com/v1/proxy/?quest=${url}`,
 		response = await fetch(targetURL).then(res => res.json()).catch(error => console.log(`Could not fetch archives: ${error}`));
-	document.getElementById('wait-label').textContent = 'Fetched archive, reloading the page.';
+	document.querySelector('#wait-label').textContent = 'Fetched archive, reloading the page.';
 	return JSON.stringify(response);
 }
 
 const _open = XMLHttpRequest.prototype.open;
 window.XMLHttpRequest.prototype.open = async function (_method, URL) {
-	let alliances = [];
-	let archiveData = null;
-	const date = window.sessionStorage.getItem('date') || '0';
-	const _this = this;
-	let _onreadystatechange = this.onreadystatechange;
+	let alliances = [],
+		archiveData = null,
+		_onreadystatechange = this.onreadystatechange;
+	const date = window.sessionStorage.getItem('date') || '0',
+		_this = this;
+
 	_this.onreadystatechange = async function () {
-		let state = _this.readyState;
-		const server = window.location.href.includes('nova') ? 'nova' : 'aurora';
-		if (state == 1 && URL.includes('marker_earth.json')) {
-			if (date == '0') { alliances = await getAlliances(server); }
+		const state = _this.readyState,
+			server = window.location.href.includes('nova') ? 'nova' : 'aurora';
+
+		if (state === 1 && URL.includes('marker_earth.json')) {
+			if (date === '0') { alliances = await getAlliances(server); }
 			else {
-				const urlProper = [`https://web.archive.org/web/${date}id_/https://earthmc.net/map`, 'tiles/_markers_/marker_earth.json'];
-				const archiveURL = parseInt(date) < 20220428 ? `${urlProper[0]}/${urlProper[1]}` : `${urlProper[0]}/${server}/${urlProper[1]}`;
-				if (window.localStorage.getItem('latestArchiveDate') != date) {
+				const urlProper = [`https://web.archive.org/web/${date}id_/https://earthmc.net/map`, 'tiles/_markers_/marker_earth.json'],
+					archiveURL = parseInt(date) < 20220428 ? `${urlProper[0]}/${urlProper[1]}` : `${urlProper[0]}/${server}/${urlProper[1]}`;
+				if (window.localStorage.getItem('latestArchiveDate') !== date) {
 
 					window.localStorage.setItem('latestArchive', await getArchive(archiveURL));
 					window.localStorage.setItem('latestArchiveDate', date);
@@ -77,12 +77,14 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 				}
 			}
 		}
+
 		if (state === 4 && (URL.includes('marker_earth.json') || URL.includes('update.php'))) {
+
 			const streamData = JSON.parse(_this.responseText);
 			URL.includes('marker_earth.json') ? mapUpdate() : playerUpdate();
 
 			function playerUpdate() {
-				if (date != '0') _this.abort();
+				if (date !== '0') _this.abort();
 				if (JSON.stringify(streamData).length > 130672) {
 					streamData.updates = null;
 					Object.defineProperty(_this, 'responseText', { value: JSON.stringify(streamData) });
@@ -91,12 +93,9 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 			}
 
 			function mapUpdate() {
+
 				// Check the selected mode.
-				if (date == '0') {
-					execute(streamData, 'townyPlugin.markerset');
-					return;
-				}
-				if (!archiveData) {
+				if (date === '0' || !archiveData) {
 					execute(streamData, 'townyPlugin.markerset');
 					return;
 				}
@@ -104,9 +103,10 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 				execute(archiveData, jsonPath);
 
 				function execute(data, jsonPath) {
+
 					// Move markers to appriopriate path.
-					const markers = data.sets[jsonPath].markers;
-					const mapMode = window.sessionStorage.getItem('mapMode') || 'meganations';
+					const markers = data.sets[jsonPath].markers,
+						mapMode = window.sessionStorage.getItem('mapMode') || 'meganations';
 					Object.values(markers).forEach(marker => delete marker.desc);
 					delete data.sets[jsonPath].markers;
 					data.sets.markers.markers = markers;
@@ -117,26 +117,29 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 					});
 					// Configure all areas.
 					Object.values(data.sets[jsonPath].areas).forEach(townArea => {
+
 						const nation = !townArea.desc.includes('"nofollow">') ? townArea.desc.split(' (')[1].split(')')[0] : townArea.desc.split('"nofollow">')[1].split('</a>)')[0];
 						area = calcArea(townArea.x, townArea.z, townArea.x.length);
-						membersPlaceholder = (date != '0' && parseInt(date) < 20200410) ? 'Associates' : 'Members';
+						membersPlaceholder = (date !== '0' && parseInt(date) < 20200410) ? 'Associates' : 'Members';
 						memberList = townArea.desc.split(`${membersPlaceholder} <span style="font-weight:bold">`)[1].split('</span><br />Flags')[0];
 						memberSize = (memberList.match(/,/g) || []).length + 1;
 						isCapital = townArea.desc.includes('capital: true');
 						hasWikiLink = townArea.desc.includes('</a>');
+
 						if (hasWikiLink) {
 							const link = townArea.desc.split('href="')[1].split('" rel=')[0];
 							townArea.desc = townArea.desc.replace(`<a href="${link}" rel="nofollow">${nation}</a>`, `${nation}`);
-							townArea.desc = townArea.desc.replace(`${nation})`, `${nation}) <a target="_blank" title="Click to open the wiki article." href="${link}">📖</a>`);
+							townArea.desc = townArea.desc.replace(`${nation})`, `${nation}) <a target="_blank" title="Click to open the wiki article." href="${link}" rel="nofollow">📖</a>`);
 						}
 						if (isCapital) townArea.desc = townArea.desc.replace('120%">', '120%">★ ');
 
-						if (date != '0' && parseInt(date) < 20220906) {
+						if (date !== '0' && parseInt(date) < 20220906) {
 							townArea.desc = townArea.desc.replace('">hasUpkeep:', '; white-space:pre">hasUpkeep:');
 							townArea.desc = townArea.desc.replace('>hasUpkeep: true<br />', '>').replace('>hasUpkeep: false<br />', '>');
 						} else {
 							townArea.desc = townArea.desc.replace('">pvp:', '; white-space:pre">pvp:');
 						}
+
 						townArea.desc = townArea.desc.replace('>pvp:', '>PVP allowed:')
 							.replace('>mobs:', '>Mob spawning:')
 							.replace('>public:', '>Public status:')
@@ -160,33 +163,37 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 						townArea.fillopacity = 0.33;
 
 					});
-					if (mapMode == 'archive') {
+
+					if (mapMode === 'archive' || mapMode === 'default') {
 						Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
 						return;
 					}
+
 					alliances = JSON.parse(window.localStorage.getItem(`alliances${server}`));
 					Object.values(data.sets[jsonPath].areas).forEach(townArea => {
-						const nation = !townArea.desc.includes('"nofollow">') ? townArea.desc.split(' (')[1].split(')')[0] : townArea.desc.split('"nofollow">')[1].split('</a>)')[0];
-						if (mapMode == 'alliances') {
+
+						const nation = townArea.desc.split(' (')[1].split(')')[0];
+						if (mapMode === 'alliances') {
 							townArea.color = townArea.fillcolor = '#000000';
 							townArea.weight = 0.75;
 						}
 						else {
-							if (townArea.color == '#3FB4FF' && townArea.fillcolor == '#3FB4FF') {
+							if (townArea.color === '#3FB4FF' && townArea.fillcolor === '#3FB4FF') {
 								townArea.color = '#363636';
 								townArea.fillcolor = HEXhash(nation);
 							} else townArea.color = '#bfff00';
 							if (townArea.desc.includes('NPC')) townArea.fillcolor = townArea.color = '#7B00FF';
-							if (nation == '') townArea.fillcolor = townArea.color = '#FF00FF';
+							if (nation === '') townArea.fillcolor = townArea.color = '#FF00FF';
 						}
-						let meganationList = '';
-						let id = '';
+
+						let meganationList = '',
+							id = '';
 						const alliancesOutlines = [];
 						alliances.forEach(alliance => {
-							if (alliance.nations.includes(nation) && mapMode == alliance.type) {
+							if (alliance.nations.includes(nation) && mapMode === alliance.type) {
 								townArea.color = alliance.colours.outline;
 								townArea.fillcolor = alliance.colours.fill;
-								if (mapMode == 'alliances') townArea.weight = 1.5;
+								if (mapMode === 'alliances') townArea.weight = 1.5;
 								meganationList += meganationList.length < 1 ? alliance.name : ', ' + alliance.name;
 								id += alliance.name;
 								alliancesOutlines.push(alliance.colours.outline);
@@ -194,27 +201,27 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 						});
 
 						// Condominiums
-						const a = alliancesOutlines[0]
-						const b = alliancesOutlines[1]
+						const a = alliancesOutlines[0],
+							b = alliancesOutlines[1];
 						id = id.replaceAll(' ', '');
 						if (meganationList.includes(',')) {
 							const interval = setInterval(() => {
-								if (document.getElementsByTagName('svg')[0]) {
+								if (document.querySelector('svg')) {
 									clearInterval(interval);
-									if (!document.getElementById(id)) {
+									if (!document.querySelector(`#${id}`)) {
 										const condominium = `<pattern id="${id}" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
 										<rect class="checker" x="0" width="10" height="10" y="0" fill="${a}"/>
 										<rect class="checker" x="10" width="10" height="10" y="10" fill="${a}"/>
 										<rect class="checker" x="10" width="10" height="10" y="0" fill="${b}"/>
 										<rect class="checker" x="0" width="10" height="10" y="10" fill="${b}"/>
-										</pattern>`
-										document.getElementsByTagName('svg')[0].insertAdjacentHTML('afterbegin', condominium);
+										</pattern>`;
+										document.querySelector('svg').insertAdjacentHTML('afterbegin', condominium);
 									}
 
 								}
 							}, 1);
-							townArea.fillcolor = `url(#${id})`
-							townArea.color = "#FF00FF"
+							townArea.fillcolor = `url(#${id})`;
+							townArea.color = "#FF00FF";
 							townArea.weight = 1.5;
 						}
 
