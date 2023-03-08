@@ -1,0 +1,22 @@
+{
+	"manifest_version": 3,
+	"name": "EarthMC Dynmap+",
+	"version": "1.12",
+	"author": "3meraldK",
+	"description": "Extension to enrich the EarthMC Dynmap experience",
+
+	"icons": {
+		"48": "48.png",
+		"256": "256.png"
+	},
+
+    "web_accessible_resources": [{
+        "resources": ["main.js"],
+        "matches": ["https://earthmc.net/*"]
+    }],
+
+	"content_scripts": [{
+		"matches": ["https://earthmc.net/map/*"],
+		"js": ["content.js"]
+	}]
+}
