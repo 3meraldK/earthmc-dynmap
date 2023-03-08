@@ -12,9 +12,8 @@ When creating the WebExtension, the main idea was to connect the countries on th
 * More information about player or town, in one click
 * Much more! It's regularly updated with new stuff you'll like.
 
-## Contribution
+## Contribution <a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
 We don't work alone! We cooperate with EMC Toolkit (developers of EarthMC Stats and more), which provide latest alliances data. You can help by registering a new alliance, or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs) 
-<a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
 
 ## Installation
 ### Chromium-based (Chrome, Opera, Edge, Brave)
