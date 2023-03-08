@@ -13,9 +13,8 @@ When creating the WebExtension, the main idea was to connect the countries on th
 * Much more! It's regularly updated with new stuff you'll like.
 
 ## Contribution
-<a href="https://discord.gg/AVtgkcRgFs">
-  <img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
-We don't work alone! We cooperate with EMC Toolkit (developers of EarthMC Stats and more), which provide latest alliances data. You can help by registering a new alliance, or requesting a change. [Click here to join.]](https://discord.gg/AVtgkcRgFs)
+We don't work alone! We cooperate with EMC Toolkit (developers of EarthMC Stats and more), which provide latest alliances data. You can help by registering a new alliance, or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs) 
+<a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
 
 ## Installation
 ### Chromium-based (Chrome, Opera, Edge, Brave)
@@ -32,3 +31,6 @@ b. In this case, go to 'about:config' and set 'xpinstall.signatures.required' to
 c. Go to 'about:addons' and 'Install add-on from file'.
 
 ## Screenshots
+![image](https://user-images.githubusercontent.com/48335651/223814076-56ca9015-800b-4ed0-a55e-0e7c3017f876.png)
+![image](https://user-images.githubusercontent.com/48335651/223814282-913a1871-1d04-4f4a-91a4-68536ceefc1c.png)
+![image](https://user-images.githubusercontent.com/48335651/223813990-7d701630-4c8e-4ed6-9802-764abb8fb73b.png)
