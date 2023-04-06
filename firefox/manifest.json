@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "EarthMC Dynmap+",
-	"version": "1.12",
+	"version": "1.13",
 	"author": "3meraldK",
 	"description": "Extension to enrich the EarthMC Dynmap experience",
 	"browser_specific_settings": {"gecko": {"id": "example@gmail.com"}},
@@ -20,6 +20,6 @@
 
 	"permissions": [
 		"https://emctoolkit.vercel.app/api/*",
-		"https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/firefox-manifest.json"
+		"https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/*"
 	]
 }

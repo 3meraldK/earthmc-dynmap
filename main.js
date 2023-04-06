@@ -1,206 +1,288 @@
-// Courtesy of 32Vache
-function calcArea(x, y, ptsNum) {
-	let area = 0,
-		j = ptsNum - 1;
-	for (let i = 0; i < ptsNum; i++) {
-		area = area + (x[j] + x[i]) * (y[j] - y[i]);
+// Constants used in the entire script.
+const alertMsgStyle =
+	`position: absolute;
+	height: 80px;
+	width: 250px;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	background-color: #ffffff;
+	color: black;
+	font-size: 22px;
+	margin-top: -40px;
+	margin-left: -125px`,
+	nationRegex = /(?<=\()[^)]*/,
+	nationWikiRegex = /(?<=nofollow">)[^<]+(?=<\/a>\))/,
+	endpointsURL = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/endpoints.json';
+
+// The shoelace formula, returns area of polygon.
+function getArea(vertX, vertY, totalVertices) {
+
+	let area = 0;
+	let j = totalVertices - 1;
+	for (let i = 0; i < totalVertices; i++) {
+		area += (vertX[j] + vertX[i]) * (vertY[j] - vertY[i]);
 		j = i;
 	}
-	return (Math.abs(area / 2)) / 256;
+	return Math.abs(area / 2) / 256;
+
 }
 
-// Return hashed HEX color
-function HEXhash(string) {
-	let i, l;
-	let hval = 0x811c9dc5;
-	for (i = 0, l = string.length; i < l; i++) {
-		hval ^= string.charCodeAt(i);
-		hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+// Send alerts.
+function sendAlert(message, error = null) {
+	const button = `<button onclick="document.querySelector('#error-label').remove()">OK</button>`;
+	document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="${alertMsgStyle}">${message}<br>${button}</span>`);
+	if (error) console.log(message + `\n${error}`);
+}
+
+// Fowler-Noll-Vo hash function, returns hash code value in hexadecimal form.
+function hashCode(string) {
+
+	let hexValue = 0x811c9dc5;
+	for (let i = 0; i < string.length; i++) {
+		hexValue ^= string.charCodeAt(i);
+		hexValue += (hexValue << 1) + (hexValue << 4) + (hexValue << 7) + (hexValue << 8) + (hexValue << 24);
 	}
-	return `#${((hval >>> 0) % 16777216).toString(16)}`;
+	return '#' + ((hexValue >>> 0) % 16777216).toString(16).padStart(6, '0');
+
 }
 
-async function getAlliances(server) {
-	const alliances = [];
-	await fetch(`https://emc-toolkit.vercel.app/api/${server}/alliances`).then(res => res.json()).then(alliancesJSON => {
-		alliancesJSON.forEach(alliance => {
-			let allianceType = alliance.type || 'mega';
-			allianceType = allianceType === 'mega' ? 'meganations' : 'alliances';
-			alliances.push({
-				name: alliance.fullName || alliance.allianceName,
-				type: allianceType,
-				nations: alliance.nations,
-				colours: alliance.colours || { fill: '#000000', outline: '#000000' }
+// Fetch alliances.
+async function getAlliances(map) {
+
+	const alliancesArray = [];
+	const endpoints = await fetch(endpointsURL)
+		.then(response => response.json())
+		.catch((error) => sendAlert('Could not fetch dataset of URLs, try again soon.', error));
+
+	await fetch(endpoints.alliances.replace('{map}', map))
+		.then(response1 => response1.json())
+		.then(alliances => {
+
+			alliances.forEach(alliance => {
+				let allianceType = alliance.type.toLowerCase() || 'mega';
+				allianceType = allianceType === 'mega' ? 'meganations' : 'alliances';
+				alliancesArray.push({
+					name: alliance.fullName || alliance.allianceName,
+					type: allianceType,
+					nations: alliance.nations,
+					colours: alliance.colours || { fill: '#000000', outline: '#000000' }
+				});
 			});
+			localStorage.setItem('alliances-' + map, JSON.stringify(alliancesArray));
+			return alliancesArray;
+
+		}).catch(error => {
+			sendAlert('Third-party data source temporarily unavailable, try again soon.', error);
+			return JSON.parse(localStorage.getItem('alliances-' + map)) || [];
 		});
-		window.localStorage.setItem(`alliances${server}`, JSON.stringify(alliances));
-		return alliances;
-	}).catch(error => {
-		console.log(`Could not fetch alliances: ${error}`);
-		document.body.insertAdjacentHTML('beforeend', `<span id="error-label" style="position: fixed;height: 80px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Third-party alliance API temporarily unavailable, try again soon.<br><button onclick="document.querySelector('#error-label').remove()">OK</button></span>`);
-		return JSON.parse(window.localStorage.getItem(`alliances${server}`)) || [];
-	});
-	return alliances;
-}
-async function getArchive(url) {
-	document.body.insertAdjacentHTML('beforeend', `<span id="wait-label" style="position: fixed;height: 50px;width: 250px;top: 50%;left: 50%;margin: -25px 0 0 -125px;text-align: center;background-color: #ffffff;z-index: 10000;color: black;font-size:22px;">Fetching archive, please wait.</span>`);
-	const targetURL = `https://api.codetabs.com/v1/proxy/?quest=${url}`,
-		response = await fetch(targetURL).then(res => res.json()).catch(error => console.log(`Could not fetch archives: ${error}`));
-	document.querySelector('#wait-label').textContent = 'Fetched archive, reloading the page.';
-	return JSON.stringify(response);
+	return alliancesArray;
+
 }
 
+// Fetch archived towns.
+async function getArchive(url) {
+
+	sendAlert('Fetching archive, please wait.');
+	const endpoints = await fetch(endpointsURL)
+		.then(response => response.json())
+		.catch((error) => sendAlert('Could not fetch dataset of URLs, try again soon.', error));
+	const archiveMarkers = await fetch(endpoints.proxy.replace('{url}', url).replace('{decoded_url}', encodeURIComponent(url)))
+		.then(response1 => response1.json())
+		.catch(error => sendAlert('Could not fetch archives, try again soon.', error));
+	sendAlert('Fetched archive, reloading the page.');
+	return JSON.stringify(archiveMarkers);
+
+}
+
+// Set description of town.
+function setDescription(town, data, jsonObject) {
+
+	// Get various variables with help of RegExp.
+	const { desc, icon, label, x, z } = town,
+		date = sessionStorage.getItem('date') || '0',
+		townRegex = /(?<=%">)[^ ]*/,
+		townWikiRegex = /(?<=nofollow">)[^<]*/,
+		townWikiLinkRegex = /(?<=%"><a href=")[^"]*/,
+		nationWikiLinkRegex = /(?<=\(<a href=")[^"]*/;
+	const townName = desc.includes('%"><a ') ? desc.match(townWikiRegex)[0] : desc.match(townRegex)[0],
+		nationName = desc.includes('(<a ') ? desc.match(nationWikiRegex)[0] : desc.match(nationRegex)[0],
+		nationWiki = desc.includes('(<a ') ? desc.match(nationWikiLinkRegex)[0] : null,
+		townWiki = desc.includes('%"><a ') ? desc.match(townWikiLinkRegex)[0] : null,
+		membersPlaceholder = (date !== '0' && parseInt(date) < 20200410) ? 'Associates' : 'Members',
+		memberList = desc.split(`${membersPlaceholder} <span style="font-weight:bold">`)[1].split('</span><br />Flags')[0],
+		memberSize = (memberList.match(/,/g) || []).length + 1,
+		isCapital = desc.includes('capital: true');
+	let area = getArea(x, z, x.length);
+
+	if (icon !== undefined) {
+		const towns = Object.values(data.sets[jsonObject].areas);
+		const matchingTowns = towns.filter(town1 => town1.label === label);
+		const mappedTowns = matchingTowns.map(town1 => getArea(town1.x, town1.z, town1.x.length));
+		area = Math.max(...mappedTowns);
+	}
+
+	// Modify description.
+	if (nationWiki !== null) town.desc = town.desc.replace(/\(.*\)/,
+		`(${nationName}) <a target="_blank" title="Open nation's wiki article." href="${nationWiki}" rel="nofollow">📖</a>`);
+	if (townWiki !== null) town.desc = town.desc.replace(/(?<!\()<a[^%">][^<]+<\/a>/,
+		`${townName} <a target="_blank" title="Open town's wiki article." href="${townWiki}" rel="nofollow">📖</a>`);
+	if (isCapital) town.desc = town.desc.replace('120%">', '120%">★ ');
+	if (date !== '0' && parseInt(date) < 20220906) town.desc = town.desc.replace(/">hasUpkeep:.*<br \/>/, '; white-space:pre">');
+	else town.desc = town.desc.replace('">pvp:', '; white-space:pre">pvp:');
+
+	town.desc = town.desc.replace('Flags<br />', '<br>Flags<br>')
+		.replace('>pvp:', '>PVP allowed:')
+		.replace('>mobs:', '>Mob spawning:')
+		.replace('>public:', '>Public status:')
+		.replace('>explosion:', '>Explosions:&#9;')
+		.replace('>fire:', '>Fire spread:&#9;')
+		.replace(/<br \/>capital:.*<\/span>/, '</span>')
+		.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
+		.replaceAll('false<', '&#9;<span style="color:red">No</span><')
+		.replace(`${membersPlaceholder} <span`, `${membersPlaceholder} <b>[${memberSize}]</b> <span`)
+		.replace(`</span><br /> ${membersPlaceholder}`, `</span><br>Size<span style="font-weight:bold"> ${area} </span><br> ${membersPlaceholder}`);
+
+	if (memberSize > 50) {
+		town.desc = town.desc
+			.replace(`<b>[${memberSize}]</b> <span style="font-weight:bold">`,
+				`<b>[${memberSize}]</b> <div style="overflow:auto;height:200px;"><span style="font-weight:bold">`)
+			.replace('<br>Flags', '</div><br>Flags');
+	}
+	return town.desc;
+
+}
+
+// Main function.
 const _open = XMLHttpRequest.prototype.open;
-window.XMLHttpRequest.prototype.open = async function (_method, URL) {
+XMLHttpRequest.prototype.open = async function (_method, URL) {
+
 	let alliances = [],
 		archiveData = null,
 		_onreadystatechange = this.onreadystatechange;
-	const date = window.sessionStorage.getItem('date') || '0',
-		_this = this;
+	const date = sessionStorage.getItem('date') || '0';
+	const _this = this;
 
 	_this.onreadystatechange = async function () {
-		const state = _this.readyState,
-			server = window.location.href.includes('nova') ? 'nova' : 'aurora';
+		const XMLstate = _this.readyState;
+		const map = location.href.includes('nova') ? 'nova' : 'aurora';
 
-		if (state === 1 && URL.includes('marker_earth.json')) {
-			if (date === '0') { alliances = await getAlliances(server); }
+		// State of XMLHttpRequest client is: opened.
+		if (XMLstate === 1 && URL.includes('marker')) {
+			if (date === '0') alliances = await getAlliances(map);
 			else {
-				const urlProper = [`https://web.archive.org/web/${date}id_/https://earthmc.net/map`, 'tiles/_markers_/marker_earth.json'],
-					archiveURL = parseInt(date) < 20220428 ? `${urlProper[0]}/${urlProper[1]}` : `${urlProper[0]}/${server}/${urlProper[1]}`;
-				if (window.localStorage.getItem('latestArchiveDate') !== date) {
 
-					window.localStorage.setItem('latestArchive', await getArchive(archiveURL));
-					window.localStorage.setItem('latestArchiveDate', date);
-					window.location.reload();
-				} else {
-					archiveData = JSON.parse(window.localStorage.getItem('latestArchive'));
-				}
+				// If user selected archive mode.
+				const baseArchiveURL = `https://web.archive.org/web/${date}id_/https://earthmc.net/map`;
+				const oldMarkersURL = 'tiles/_markers_/marker_earth.json';
+				let archiveURL = parseInt(date) < 20220428 ? `${baseArchiveURL}/${oldMarkersURL}` : `${baseArchiveURL}/${map}/${oldMarkersURL}`;
+				if (parseInt(date) > 20230201) archiveURL = `${baseArchiveURL}/${map}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`;
+				if (localStorage.getItem('latestArchiveDate') !== date) {
+
+					localStorage.setItem('latestArchive', await getArchive(archiveURL));
+					localStorage.setItem('latestArchiveDate', date);
+					location.reload();
+
+				} else archiveData = JSON.parse(localStorage.getItem('latestArchive'));
+
 			}
 		}
 
-		if (state === 4 && (URL.includes('marker_earth.json') || URL.includes('update.php'))) {
+		// State of XMLHttpRequest client is: completed.
+		if (XMLstate === 4 && URL.match(/marker|update/)) {
 
-			const streamData = JSON.parse(_this.responseText);
-			URL.includes('marker_earth.json') ? mapUpdate() : playerUpdate();
+			const response = JSON.parse(_this.responseText);
+			URL.includes('marker') ? mapUpdate() : playerUpdate();
 
+			// Handle player updates.
 			function playerUpdate() {
 				if (date !== '0') _this.abort();
-				if (JSON.stringify(streamData).length > 130672) {
-					streamData.updates = null;
-					Object.defineProperty(_this, 'responseText', { value: JSON.stringify(streamData) });
-					return;
-				}
+				if (JSON.stringify(response).length < 130672) return;
+				response.updates = null;
+				Object.defineProperty(_this, 'responseText', { value: JSON.stringify(response) });
+				return;
 			}
 
+			// Handle marker_<world>.json updates.
 			function mapUpdate() {
 
 				// Check the selected mode.
-				if (date === '0' || !archiveData) {
-					execute(streamData, 'townyPlugin.markerset');
-					return;
+				if (date === '0' || !archiveData) execute(response, 'townyPlugin.markerset');
+				else {
+					const jsonObject = parseInt(date) < 20200322 ? 'towny.markerset' : 'townyPlugin.markerset';
+					execute(archiveData, jsonObject);
 				}
-				jsonPath = parseInt(date) < 20200322 ? 'towny.markerset' : 'townyPlugin.markerset';
-				execute(archiveData, jsonPath);
 
-				function execute(data, jsonPath) {
+				function execute(data, jsonObject) {
 
-					// Move markers to appriopriate path.
-					const markers = data.sets[jsonPath].markers,
-						mapMode = window.sessionStorage.getItem('mapMode') || 'meganations';
-					Object.values(markers).forEach(marker => delete marker.desc);
-					delete data.sets[jsonPath].markers;
-					data.sets.markers.markers = markers;
+					// Move stars to appriopriate path.
+					const stars = data.sets[jsonObject].markers;
+					const mapMode = sessionStorage.getItem('mapMode') || 'meganations';
+					Object.values(stars).forEach(star => star.desc = setDescription(star, data, jsonObject));
+					delete data.sets[jsonObject].markers;
+					data.sets.markers.markers = stars;
 
 					// Delete shop areas.
-					Object.keys(data.sets[jsonPath].areas).forEach(area => {
-						if (area.includes('_Shop')) delete data.sets[jsonPath].areas[area];
-					});
-					// Configure all areas.
-					Object.values(data.sets[jsonPath].areas).forEach(townArea => {
-
-						const nation = !townArea.desc.includes('"nofollow">') ? townArea.desc.split(' (')[1].split(')')[0] : townArea.desc.split('"nofollow">')[1].split('</a>)')[0];
-						area = calcArea(townArea.x, townArea.z, townArea.x.length);
-						membersPlaceholder = (date !== '0' && parseInt(date) < 20200410) ? 'Associates' : 'Members';
-						memberList = townArea.desc.split(`${membersPlaceholder} <span style="font-weight:bold">`)[1].split('</span><br />Flags')[0];
-						memberSize = (memberList.match(/,/g) || []).length + 1;
-						isCapital = townArea.desc.includes('capital: true');
-						hasWikiLink = townArea.desc.includes('</a>');
-
-						if (hasWikiLink) {
-							const link = townArea.desc.split('href="')[1].split('" rel=')[0];
-							townArea.desc = townArea.desc.replace(`<a href="${link}" rel="nofollow">${nation}</a>`, `${nation}`);
-							townArea.desc = townArea.desc.replace(`${nation})`, `${nation}) <a target="_blank" title="Click to open the wiki article." href="${link}" rel="nofollow">📖</a>`);
-						}
-						if (isCapital) townArea.desc = townArea.desc.replace('120%">', '120%">★ ');
-
-						if (date !== '0' && parseInt(date) < 20220906) {
-							townArea.desc = townArea.desc.replace('">hasUpkeep:', '; white-space:pre">hasUpkeep:');
-							townArea.desc = townArea.desc.replace('>hasUpkeep: true<br />', '>').replace('>hasUpkeep: false<br />', '>');
-						} else {
-							townArea.desc = townArea.desc.replace('">pvp:', '; white-space:pre">pvp:');
-						}
-
-						townArea.desc = townArea.desc.replace('>pvp:', '>PVP allowed:')
-							.replace('>mobs:', '>Mob spawning:')
-							.replace('>public:', '>Public status:')
-							.replace('>explosion:', '>Explosions:&#9;')
-							.replace('>fire:', '>Fire spread:&#9;')
-							.replace('<br />capital: false</span>', '</span>')
-							.replace('<br />capital: true</span>', '</span>')
-							.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
-							.replaceAll('false<', '&#9;<span style="color:red">No</span><')
-							.replace(`${membersPlaceholder} <span`, `${membersPlaceholder} <b>[${memberSize}]</b> <span`)
-							.replace(`</span><br /> ${membersPlaceholder}`, `</span><br />Size<span style="font-weight:bold"> ${area} </span><br /> ${membersPlaceholder}`);
-
-						if (memberSize > 50) {
-							townArea.desc = townArea.desc
-								.replace(`<b>[${memberSize}]</b> <span style="font-weight:bold">`, `<b>[${memberSize}]</b> <div style="overflow:auto;height:200px;"><span style="font-weight:bold">`)
-								.replace('Flags', '</div>Flags');
-						}
-
-						townArea.weight = 1.5;
-						townArea.opacity = 1;
-						townArea.fillopacity = 0.33;
-
+					Object.keys(data.sets[jsonObject].areas).forEach(area => {
+						if (area.includes('_Shop')) delete data.sets[jsonObject].areas[area];
 					});
 
+					// Configure all towns and modify their description.
+					Object.values(data.sets[jsonObject].areas).forEach(town => {
+						town.desc = setDescription(town, data, jsonObject);
+						town.weight = 1.5;
+						town.opacity = 1;
+						town.fillopacity = 0.33;
+					});
+
+					// Stop script if map mode is archive or default.
 					if (mapMode === 'archive' || mapMode === 'default') {
 						Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
 						return;
 					}
 
-					alliances = JSON.parse(window.localStorage.getItem(`alliances${server}`));
-					Object.values(data.sets[jsonPath].areas).forEach(townArea => {
+					// Configure all towns in alliances/meganations map mode.
+					alliances = JSON.parse(localStorage.getItem(`alliances-${map}`));
+					Object.values(data.sets[jsonObject].areas).forEach(town => {
 
-						const nation = townArea.desc.split(' (')[1].split(')')[0];
+						const nation = town.desc.match(/\(.*\)/)[0];
+						if (town.color === '#3FB4FF' && town.fillcolor === '#3FB4FF') {
+							town.color = '#363636';
+							town.fillcolor = hashCode(nation);
+						} else town.color = '#bFFF00';
+						if (nation === '()') town.fillcolor = town.color = '#FF00FF';
+						if (town.desc.match(/NPC[0-9]+/) && nation === '()') town.fillcolor = town.color = '#7B00FF';
 						if (mapMode === 'alliances') {
-							townArea.color = townArea.fillcolor = '#000000';
-							townArea.weight = 0.75;
-						}
-						else {
-							if (townArea.color === '#3FB4FF' && townArea.fillcolor === '#3FB4FF') {
-								townArea.color = '#363636';
-								townArea.fillcolor = HEXhash(nation);
-							} else townArea.color = '#bfff00';
-							if (townArea.desc.includes('NPC')) townArea.fillcolor = townArea.color = '#7B00FF';
-							if (nation === '') townArea.fillcolor = townArea.color = '#FF00FF';
+							town.color = town.fillcolor = '#000000';
+							town.weight = 0.75;
 						}
 
-						let meganationList = '',
-							id = '';
+					});
+
+					if (alliances === null) {
+						Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
+						return;
+					};
+
+					// Configure all alliances.
+					Object.values(data.sets[jsonObject].areas).forEach(town => {
+
+						const nation = town.desc.includes('(<a ') ? desc.match(nationWikiRegex)[0] : town.desc.match(nationRegex)[0];
+						let meganationList = '';
+						let id = '';
 						const alliancesOutlines = [];
 						alliances.forEach(alliance => {
 							if (alliance.nations.includes(nation) && mapMode === alliance.type) {
-								townArea.color = alliance.colours.outline;
-								townArea.fillcolor = alliance.colours.fill;
-								if (mapMode === 'alliances') townArea.weight = 1.5;
+								town.color = alliance.colours.outline.toUpperCase();
+								town.fillcolor = alliance.colours.fill.toUpperCase();
+								if (mapMode === 'alliances') town.weight = 1.5;
 								meganationList += meganationList.length < 1 ? alliance.name : ', ' + alliance.name;
 								id += alliance.name;
-								alliancesOutlines.push(alliance.colours.outline);
+								alliancesOutlines.push(alliance.colours.outline.toUpperCase());
 							}
 						});
 
-						// Condominiums
+						// Condominiums.
 						const a = alliancesOutlines[0],
 							b = alliancesOutlines[1];
 						id = id.replaceAll(' ', '');
@@ -220,14 +302,18 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 
 								}
 							}, 1);
-							townArea.fillcolor = `url(#${id})`;
-							townArea.color = "#FF00FF";
-							townArea.weight = 1.5;
+							town.fillcolor = `url(#${id})`;
+							town.color = "#FF00FF";
+							town.weight = 1.5;
 						}
 
 						if (meganationList.length > 0) {
-							if (townArea.desc.includes('</a>')) townArea.desc = townArea.desc.replace('</a></span><br />', `</a></span><br /> <span style="font-size:80%">Part of</span> <span style="font-size:90%"><b>${meganationList}</b></span><br />`);
-							else townArea.desc = townArea.desc.replace(')</span><br />', `)</span><br /> <span style="font-size:80%">Part of</span> <span style="font-size:90%"><b>${meganationList}</b></span><br />`);
+							const meganationListText = `<br> <span style="font-size:85%">Part of <b>${meganationList}</b></span> <br> Mayor`;
+							town.desc = town.desc.replace('<br /> Mayor', meganationListText);
+							const marker = data.sets.markers.markers[town.label + '__home'];
+							if (marker !== undefined && !marker.desc.includes('85%')) {
+								marker.desc = marker.desc.replace('<br /> Mayor', meganationListText);
+							}
 						}
 					});
 					Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
@@ -236,6 +322,7 @@ window.XMLHttpRequest.prototype.open = async function (_method, URL) {
 		}
 		if (_onreadystatechange) _onreadystatechange.apply(this, arguments);
 	}
+
 	Object.defineProperty(this, 'onreadystatechange', {
 		get: function () { return _onreadystatechange; },
 		set: function (value) { _onreadystatechange = value; },
