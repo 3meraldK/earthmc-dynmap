@@ -14,11 +14,11 @@ const repo = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap',
 
 function injectMainScript() {
 	const mainScript = document.createElement('script');
-	mainScript.src = 'https://cdn.jsdelivr.net/gh/3meraldK/earthmc-dynmap@1.13/main.js';
+	mainScript.src = 'https://cdn.jsdelivr.net/gh/3meraldK/earthmc-dynmap@main/main.js';
 	mainScript.onload = function () { this.remove(); };
 	(document.head || document.documentElement).appendChild(mainScript);
 	(document.head || document.documentElement).insertAdjacentHTML('beforeend',
-        '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/3meraldK/earthmc-dynmap@1.13/style.css" />')
+        '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/3meraldK/earthmc-dynmap@main/style.css" />')
 }
 
 function loadDarkMode() {
