@@ -1,3 +1,12 @@
+// ==UserScript==
+// @name         EarthMC Dynmap+
+// @version      1.13
+// @description  Extension to enrich the EarthMC Dynmap experience
+// @author       3meraldK
+// @match        https://earthmc.net/map/*
+// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/icon.png
+// ==/UserScript==
+
 const repo = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap',
 	endpointsURL = `${repo}/main/endpoints.json`,
 	playerLabelClass = 'span.playerNameNoHealth',
@@ -5,9 +14,11 @@ const repo = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap',
 
 function injectMainScript() {
 	const mainScript = document.createElement('script');
-	mainScript.src = chrome.runtime.getURL('main.js');
+	mainScript.src = 'https://cdn.jsdelivr.net/gh/3meraldK/earthmc-dynmap@1.13/main.js';
 	mainScript.onload = function () { this.remove(); };
 	(document.head || document.documentElement).appendChild(mainScript);
+	(document.head || document.documentElement).insertAdjacentHTML('beforeend',
+        '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/3meraldK/earthmc-dynmap@1.13/style.css" />')
 }
 
 function loadDarkMode() {
@@ -248,13 +259,16 @@ function addLegend() {
 	});
 }
 
-injectMainScript();
-waitForHTMLelems('.compass', '.largeclock').then(() => {
-	document.querySelector('.compass').remove();
-	document.querySelector('.largeclock').remove();
-	addMainMenu()
-	addLegend()
-	addPlayerLookup()
-	addDarkMode()
-	checkForUpdates()
-});
+(function() {
+    'use strict';
+    injectMainScript();
+    waitForHTMLelems('.compass', '.largeclock').then(() => {
+        document.querySelector('.compass').remove();
+        document.querySelector('.largeclock').remove();
+        addMainMenu()
+        addLegend()
+        addPlayerLookup()
+        addDarkMode()
+        checkForUpdates()
+    });
+})();

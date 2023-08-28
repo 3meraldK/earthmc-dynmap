@@ -1,0 +1,90 @@
+#collapsible-content { display: none; }
+
+.box {
+	float: left;
+	height: 12px;
+	width: 12px;
+	margin-bottom: 2px;
+	margin-right: 4px;
+	border: 2px solid black;
+	clear: both;
+}
+
+#nationless {
+	background-color: magenta;
+	border: 2px solid #a300a9;
+}
+
+#ruin {
+	background-color: purple;
+	border: 2px solid indigo;
+}
+
+#default, #premium, #meganation, #alliance {
+	background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+}
+
+#default {
+	border: 2px solid #363636;
+}
+
+#premium {
+	border: 2px solid #bfff00;
+}
+
+#meganation {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+}
+
+#alliance {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+}
+
+#condominium {
+	background-image: linear-gradient(45deg, #000000 25%, transparent 25%),
+	linear-gradient(-45deg, #000000 25%, transparent 25%),
+	linear-gradient(45deg, transparent 75%, #000000 75%),
+	linear-gradient(-45deg, transparent 75%, #000000 75%);
+	background-size: 6px 6px;
+	background-position: 0 0, 0 3px, 3px -3px, -3px 0px; border: 2px solid magenta;
+}
+
+#error-label {
+	position: absolute;
+	height: 80px;
+	width: 250px;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	background-color: #ffffff;
+	color: black;
+	font-size: 22px;
+	margin-top: -40px;
+	margin-left: -125px;
+}
+
+#player-info-close {
+	top: 5%;
+	right: 5%;
+	position: absolute;
+	font-size: 8px;
+}
+
+#player-face {
+	margin: 10px auto auto auto;
+	display: block;
+	width: 32px;
+}
+
+#player-info {
+	padding: 20px 10px 5px 10px;
+}
+
+#town-search-input,
+#nation-search-input {
+	width: 60px;
+}
