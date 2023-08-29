@@ -6,15 +6,15 @@ A web extension for all browsers. Designed specifically for EarthMC's dynamic ma
 ## Features
 When creating the extension, the main idea was to connect the countries on the map into their respective organizations and "meganations". Later on, in the natural course of things, the number of new features began to grow with new releases.
 * Three map modes to switch between: alliances, meganations, default
-* Archive mode to view old claims and statistics. (from the Wayback Machine)
+* Archive mode to view old claims and statistics (from the Wayback Machine)
 * Search towns and nations by name
 * Total revamp of the aesthetics
 * Notifications about new releases
 * More information about towns
 * And players - to view a player's information, click the username on map
-* Bugfix: Markers layer now can be toggled successfully
+* Bugfix: Markers layer now can be toggled
 * Dark mode
-* Much more! It's regularly updated with new stuff you'll like
+* Regularly updated with new stuff you'll like
 
 ## Contribution <a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
 We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats" Discord bot and more), which provide the latest alliances data. You can help by registering a new alliance or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs) 
