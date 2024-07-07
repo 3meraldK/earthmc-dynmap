@@ -21,8 +21,8 @@ We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats
 ### Extension (recommended)
 > [!IMPORTANT]
 > Only for Chromium browsers (Chrome, Opera, Edge, Brave, etc.). Other browsers users please go to the next section.
-Unfortunately, this extension can't be downloaded normally, because introducing it to the marketplace costs money. You can still install this extension in an easy way:
-1. Download the latest version by clicking here.
+Unfortunately, this extension can't be downloaded normally, because introducing it to the marketplace costs money. You can still install this extension in an easy way.
+1. Download the latest version by [clicking here](https://github.com/3meraldK/earthmc-dynmap/releases/download/v1.14/extension.zip).
 2. Unpack/unzip the file contents.
 3. Go to your browser extensions manager and turn on developer mode.
 4. Click "Load the unpacked folder" and select the unpacked folder.
@@ -31,7 +31,12 @@ Unfortunately, this extension can't be downloaded normally, because introducing 
 
 ### Userscript (Other browsers, like Firefox)
 1. Install Tampermonkey extension for your browser.
-2. Install EarthMC Dynmap+ by clicking here.
+    - [For Chrome](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+    - [For Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+    - [For Opera](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
+    - [For Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+3. Install EarthMC Dynmap+ by [clicking here](https://github.com/3meraldK/earthmc-dynmap/releases/download/v1.14/userscript.user.js).
 
 ## Screenshots
+![image](https://github.com/3meraldK/earthmc-dynmap/assets/48335651/fa846f7e-c222-4af3-8fdd-d45d9f757dd5)
 
