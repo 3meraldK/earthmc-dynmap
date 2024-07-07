@@ -13,6 +13,7 @@ const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganat
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 
 function sendAlert(message) {
+	if (document.querySelector('#alert') != null) document.querySelector('#alert').remove()
 	document.body.insertAdjacentHTML('beforeend', htmlCode.alert)
 	const alertMessage = document.querySelector('#alert-message')
 	alertMessage.innerHTML = alertMessage.innerHTML.replace('{message}', message)
