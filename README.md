@@ -13,6 +13,7 @@ When creating the extension, the main idea was to group the countries together i
 * Look up a player by clicking their name in town's statistics
 * A few bug fixes
 * Regularly updated with new stuff you'll like
+* **Read what has been added to the latest release by clicking [this link](https://github.com/3meraldK/earthmc-dynmap/releases/latest).**
 
 ## Contribution <a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
 We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats" Discord bot and more), which provide the latest alliances data. You can help by registering a new alliance or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs)
