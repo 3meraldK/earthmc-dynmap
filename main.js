@@ -102,6 +102,8 @@ function modifyDescription(marker) {
 		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
 		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorsList}</b>`) // Lookup councillors
 		.replace('Size: <b>0 chunks</b><br/>', '') // Remove 0 chunks town size info
+		.replaceAll('<b>false</b>', '<b><span style="color:red">No</span></b>') // False
+		.replaceAll('<b>true</b>', '<b><span style="color:green">Yes</span></b>') // True
 
 	if (isCapital) marker.popup = marker.popup
 		.replace('<span style="font-size:120%;">', '<span style="font-size:120%;">★ ') // Add capital star
