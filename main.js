@@ -130,6 +130,11 @@ function main(data) {
 		}
 	}
 
+	if (data[0].markers.length == 0) {
+		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
+		return data
+	}
+
 	for (const index in data[0].markers) {
 		let marker = data[0]['markers'][index]
 		if (marker.type == null) continue
