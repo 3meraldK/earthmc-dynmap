@@ -186,7 +186,7 @@ async function checkForUpdate(parent) {
 	const manifest = await fetchJSON('https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/manifest.json')
 	if (!manifest) return console.log('EarthMC Dynmap+ could not check for update.')
 	const latestVersion = manifest.version
-	if (latestVersion == localVersion) return
+	if (!latestVersion || latestVersion == localVersion) return
 	parent.insertAdjacentHTML('beforeend', htmlCode.updateNotification)
 	const updateNotification = parent.querySelector('#update-notification')
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{localVersion}', localVersion)

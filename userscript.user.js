@@ -199,7 +199,7 @@ async function checkForUpdate(parent) {
 	const manifest = await fetchJSON('https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/manifest.json')
 	if (!manifest) return console.log('EarthMC Dynmap+ could not check for update.')
 	const latestVersion = manifest.version
-	if (latestVersion == localVersion) return
+	if (!latestVersion || latestVersion == localVersion) return
 	parent.insertAdjacentHTML('beforeend', htmlCode.updateNotification)
 	const updateNotification = parent.querySelector('#update-notification')
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{localVersion}', localVersion)
@@ -252,13 +252,13 @@ function getArea(vertices) {
 
 function modifyDescription(marker) {
 	// Gather some information
-	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.at(1)
-	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)[1]
-	let councillors = marker.popup.match(/Councillors: <b>(.*)<\/b>/)[1].split(', ')
+	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.[1]
+	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)?.[1]
+	let councillors = marker.popup.match(/Councillors: <b>(.*)<\/b>/)?.[1].split(', ')
 	councillors = councillors.filter(councillor => councillor != 'None')
-	const residents = marker.popup.match(/<\/summary>\n    \t(.*)\n   \t<\/details>/)[1]
+	const residents = marker.popup.match(/<\/summary>\n    \t(.*)\n   \t<\/details>/)?.[1]
 	const residentNum = residents.split(', ').length
-	// Deprecated: const wealth = marker.popup.match(/Wealth: <b>(\d+)G/)[1]
+	// Deprecated: const wealth = marker.popup.match(/Wealth: <b>(\d+)G/)?.[1]
 	const isCapital = marker.tooltip.match(/\(Capital of (.*)\)/) != null
 	const nationAlliances = getNationAlliances(nation)
 
@@ -323,14 +323,14 @@ function main(data) {
 		}
 	}
 
-	if (data[0].markers.length == 0) {
+	if (data?.[0]?.markers?.length == 0) {
 		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
 		return data
 	}
 
 	for (const index in data[0].markers) {
 		let marker = data[0]['markers'][index]
-		if (marker.type == null) continue
+		if (marker.type != 'polygon' && marker.type != 'icon') continue
 
 		marker = modifyDescription(marker)
 
@@ -361,8 +361,8 @@ function getNationAlliances(nation) {
 }
 
 function colorTowns(marker) {
-	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.at(1)
-	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)[1]
+	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.[1]
+	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)?.[1]
 	const isRuin = (mayor.match(/NPC[0-9]+/) != null)
 	const isNationless = (nation == null)
 	const nationHasDefaultColor = (marker.color == '#3fb4ff' && marker.fillColor == '#3fb4ff') // Default blue
