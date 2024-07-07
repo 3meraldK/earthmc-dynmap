@@ -28,7 +28,7 @@ Unfortunately, this extension can't be downloaded normally, because introducing 
 3. Go to your browser extensions manager and turn on developer mode.
 4. Click "Load the unpacked folder" and select the unpacked folder.
 > [!NOTE]
-> You must keep the folder on your computer, otherwise you will have to re-install.
+> You must keep the folder on your computer in the same location, otherwise you will have to re-install.
 
 ### Userscript (Other browsers, like Firefox)
 1. Install Tampermonkey extension for your browser.
