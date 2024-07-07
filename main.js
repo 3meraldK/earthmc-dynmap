@@ -57,16 +57,6 @@ function getArea(vertices) {
     return (Math.abs(area) / 2) / (16 * 16)
 }
 
-function fixCapitalIcon(marker) {
-	marker['tooltip_anchor'].x = 0
-	marker['tooltip_anchor'].z = -8
-	marker['anchor'].x = 8
-	marker['anchor'].z = 8
-	marker.size.x = 16
-	marker.size.z = 16
-	return marker
-}
-
 function modifyDescription(marker) {
 	// Gather some information
 	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.at(1)
@@ -144,7 +134,6 @@ function main(data) {
 		let marker = data[0]['markers'][index]
 		if (marker.type == null) continue
 
-		if (marker.type == 'icon') marker = fixCapitalIcon(marker)
 		marker = modifyDescription(marker)
 
 		if (marker.type != 'polygon') continue
