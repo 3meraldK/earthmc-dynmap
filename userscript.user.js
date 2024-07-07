@@ -251,10 +251,10 @@ function getArea(vertices) {
 }
 
 function fixCapitalIcon(marker) {
-	marker['tooltip_anchor'].x = 8
-	marker['tooltip_anchor'].z = 0
-	marker['anchor'].x = 0
-	marker['anchor'].z = 0
+	marker['tooltip_anchor'].x = 0
+	marker['tooltip_anchor'].z = -8
+	marker['anchor'].x = 8
+	marker['anchor'].z = 8
 	marker.size.x = 16
 	marker.size.z = 16
 	return marker
