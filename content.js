@@ -1,260 +1,196 @@
-const repo = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap',
-	endpointsURL = `${repo}/main/endpoints.json`,
-	playerLabelClass = 'span.playerNameNoHealth',
-	sidebarClass = 'emcdynmap coord-control leaflet-control';
+const htmlCode = {
+	sidebar: '<div id="emcdynmapplus-sidebar" class="leaflet-control-layers leaflet-control"></div>',
+	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">🗙</span></div>',
+	optionContainer: '<div class="option-container"></div>',
+	locateTownInput: '<input class="sidebar-input" id="locate-town-input" placeholder="London">',
+	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',
+	locateNationInput: '<input class="sidebar-input" id="locate-nation-input" placeholder="Germany">',
+	locateNationButton: '<button class="sidebar-button" id="locate-nation-button" type="submit">Locate nation</button>',
+	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2024-07-04" max="${new Date().toLocaleDateString('en-ca')}">`,
+	archiveButton: '<button class="sidebar-button" id="archive-button" type="submit">Search archive</button>',
+	switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
+	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
+}
+
+function sendAlert(message) {
+	if (document.querySelector('#alert') != null) document.querySelector('#alert').remove()
+	document.body.insertAdjacentHTML('beforeend', htmlCode.alert)
+	const alertMessage = document.querySelector('#alert-message')
+	alertMessage.innerHTML = alertMessage.innerHTML.replace('{message}', message)
+	document.querySelector('#alert-close').addEventListener('click', event => { event.target.parentElement.remove() })
+}
 
 function injectMainScript() {
-	const mainScript = document.createElement('script');
-	mainScript.src = chrome.runtime.getURL('main.js');
-	mainScript.onload = function () { this.remove(); };
-	(document.head || document.documentElement).appendChild(mainScript);
+	const mainScript = document.createElement('script')
+	mainScript.src = chrome.runtime.getURL('main.js')
+	mainScript.onload = function () { this.remove() };
+	(document.head || document.documentElement).appendChild(mainScript)
 }
 
-function loadDarkMode() {
-	document.head.insertAdjacentHTML('beforeend',
-	`<style id="dark-mode">
-		.leaflet-control,
-		.leaflet-popup-content-wrapper,
-		.leaflet-control-zoom > a,
-		.leaflet-control button,
-		.leaflet-control input,
-		.leaflet-popup-tip {
-			background: #111 !important;
-			color: #bbb !important;
-			box-shadow: inset 0 0 0 1px #bbb !important;
-		}
-	</style>`
-	);
-}
-
-function waitForHTMLelems(selector1, selector2) {
+function waitForHTMLelement(selector, selectAll = false) {
     return new Promise(resolve => {
-        if (document.querySelector(selector1) && document.querySelector(selector2)) {
-            return resolve([document.querySelector(selector1), document.querySelector(selector2)]);
+        if (document.querySelector(selector)) {
+            return resolve(selectAll ? document.querySelectorAll(selector) : document.querySelector(selector))
         }
 
         const observer = new MutationObserver(() => {
-            if (document.querySelector(selector1) && document.querySelector(selector2)) {
-                resolve([document.querySelector(selector1), document.querySelector(selector2)]);
-                observer.disconnect();
+            if (document.querySelector(selector)) {
+                resolve(selectAll ? document.querySelectorAll(selector) : document.querySelector(selector))
+                observer.disconnect()
             }
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-    });
+        })
+        observer.observe(document.body, { childList: true, subtree: true })
+    })
 }
 
-function sendAlert(message, error = null) {
-	const button = `<button onclick="document.getElementById('error-label').remove()">OK</button>`;
-	document.body.insertAdjacentHTML('beforeend', `<span id="error-label">${message}<br>${button}</span>`);
-	if (error) console.log(message + `\n${error}`);
-}
+function addMainMenu(parent) {
+	parent.insertAdjacentHTML('beforeend', htmlCode.sidebar)
+	const sidebar = parent.querySelector('#emcdynmapplus-sidebar')
 
-async function search(searchWhat) {
-	const inputValue = document.getElementById(`${searchWhat}-search-input`).value;
-	const inputLength = inputValue.length;
-	if (!inputLength) return;
-	const map = location.href.split('/')[4];
+	// Locate town button
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
+	const findTownContainer = parent.querySelector('.option-container')
+	findTownContainer.insertAdjacentHTML('beforeend', htmlCode.locateTownButton)
+	findTownContainer.insertAdjacentHTML('beforeend', htmlCode.locateTownInput)
+	const locateTownButton = findTownContainer.querySelector('#locate-town-button')
+	const locateTownInput = findTownContainer.querySelector('#locate-town-input')
+	locateTownButton.addEventListener('click', () => locateTown(locateTownInput.value))
+	locateTownInput.addEventListener('keyup', (event) => {
+		if (event.key == 'Enter') locateTown(locateTownInput.value)
+	})
 
-	const markersURL = await fetch(endpointsURL)
-		.then(resp => resp.json())
-		.then(json => json.markers.replace('{map}', map))
-		.catch(() => {
-			sendAlert(`Couldn't get needed data, try again later.`, `Attempted to fetch data from: ${endpointsURL}`);
-			return;
-		});
-	const markers = await fetch(markersURL)
-		.then(resp => resp.json())
-		.then(json => json.sets['townyPlugin.markerset'].areas)
-		.catch(() => {
-			sendAlert(`Couldn't get needed data, try again later.`, `Attempted to fetch data from: ${endpointsURL}`);
-			return;
-		});
+	// Locate nation button
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
+	const findNationContainer = parent.querySelectorAll('.option-container')[1]
+	findNationContainer.insertAdjacentHTML('beforeend', htmlCode.locateNationButton)
+	findNationContainer.insertAdjacentHTML('beforeend', htmlCode.locateNationInput)
+	const locateNationButton = findNationContainer.querySelector('#locate-nation-button')
+	const locateNationInput = findNationContainer.querySelector('#locate-nation-input')
+	locateNationButton.addEventListener('click', () => locateNation(locateNationInput.value))
+	locateNationInput.addEventListener('keyup', (event) => {
+		if (event.key == 'Enter') locateNation(locateNationInput.value)
+	})
 
-	const town = Object.values(markers).find(town => {
-		const {desc, label} = town;
-		if (searchWhat === 'nation') {
-			const nation = getNation(desc);
-			return nation.toLowerCase() === inputValue.toLowerCase() && desc.includes('capital: true');
-		} else return label.toLowerCase() === inputValue.toLowerCase();
-	});
-	if (town) {
-		const avgX = (Math.min(...town.x) + Math.max(...town.x)) / 2;
-		const avgZ = (Math.min(...town.z) + Math.max(...town.z)) / 2;
-		location.href = `https://earthmc.net/map/${map}/?zoom=6&x=${avgX}&z=${avgZ}`;
-		return;
-	}
-	sendAlert(`Couldn't find searched ${searchWhat}.`);
-}
-
-function getNation(desc) {
-	const nationWikiRegex = /(?<=nofollow">)[^<]+(?=<\/a>\))/;
-	const nationRegex = /(?<=\()[^)]*/;
-	if (desc.includes('(<a ')) return desc.match(nationWikiRegex)[0];
-	else return desc.match(nationRegex)[0];
-}
-
-function addDarkMode() {
-	if (localStorage.getItem('emcdynmap-darkmode')) loadDarkMode();
-
-	// Dark mode button & listener
-	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', `<div class="${sidebarClass}"
-		style="display: grid"><button id="dark-mode-button">Dark mode</button></div>`);
-	document.getElementById('dark-mode-button').addEventListener("click", function () {
-		if (localStorage.getItem('emcdynmap-darkmode')) {
-			localStorage.removeItem('emcdynmap-darkmode');
-			document.getElementById('dark-mode').remove();
-		} else {
-			localStorage.setItem('emcdynmap-darkmode', 1);
-			loadDarkMode();
-		}
-	});
-}
-
-function addMainMenu() {
-	// Main box
-	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', `<div class="${sidebarClass}"
-		style="display: grid"></div>`);
-	const menu = document.querySelector('.emcdynmap');
+	// Search archive button
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
+	const archiveContainer = parent.querySelectorAll('.option-container')[2]
+	archiveContainer.insertAdjacentHTML('beforeend', htmlCode.archiveButton)
+	archiveContainer.insertAdjacentHTML('beforeend', htmlCode.archiveInput)
+	const archiveButton = archiveContainer.querySelector('#archive-button')
+	const archiveInput = archiveContainer.querySelector('#archive-input')
+	archiveButton.addEventListener('click', () => searchArchive(archiveInput.value))
+	archiveInput.addEventListener('keyup', (event) => {
+		if (event.key == 'Enter') searchArchive(archiveInput.value)
+	})
 
 	// Switch map mode button
-	const mapModeHint = 'Switch between meganations, alliances and default map modes.';
-	menu.insertAdjacentHTML('beforeend', `<div><abbr title="${mapModeHint}">(?)</abbr>
-	<button id="switch-button">Switch map mode</button></div>`);
-	document.getElementById('switch-button').addEventListener('click', () => {
-		let mapMode = sessionStorage.getItem('emcdynmap-mapMode') || 'meganations';
-		mapMode = (mapMode === 'meganations') ? 'alliances' : (mapMode === 'alliances') ? 'default' : 'meganations';
-		sessionStorage.setItem('emcdynmap-date', '0');
-		sessionStorage.setItem('emcdynmap-mapMode', mapMode);
-		location.reload();
-	});
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.switchMapMode)
+	const switchMapModeButton = parent.querySelector('#switch-map-mode')
+	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
-	// The archive input
-	const minDate = (location.href.includes('nova')) ? '2018-12-18' : '2022-05-01',
-		maxDate = new Date().toLocaleDateString('en-ca'),
-		archiveHint = 'View old claims & stats, does not include terrain. Switch map mode to leave this mode.';
-	menu.insertAdjacentHTML('beforeend', `<div><abbr title="${archiveHint}">(?)</abbr>
-		<input id="date" type="date" style="width: 120px" min="${minDate}" max="${maxDate}"></div>`);
-	const dateInput = document.getElementById('date');
-	dateInput.addEventListener('change', () => {
-		const unformattedDate = dateInput.valueAsDate.toLocaleDateString('sv').replaceAll('-', '');
-		sessionStorage.setItem('emcdynmap-date', unformattedDate);
-		sessionStorage.setItem('emcdynmap-mapMode', 'archive');
-		location.reload();
-	});
+	// Current map mode label
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
+	const currentMapModeLabel = parent.querySelectorAll('.option-container')[3]
+	const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
+	currentMapModeLabel.style.fontSize = 'larger'
+	currentMapModeLabel.style.boxSizing = 'border-box'
+	currentMapModeLabel.style.padding = '5px'
+	currentMapModeLabel.textContent = 'Current map mode: ' + currentMapMode
+}
 
-	// Search town/nation
-	const searchNationHint = 'Search nations by name. It will set your view on its capital.';
-	menu.insertAdjacentHTML('beforeend', `<div><abbr title="Search cities by name.">(?)</abbr>
-		<input id="town-search-input" placeholder="London"><button id="town-search-button">Search</button></div>`);
-	menu.insertAdjacentHTML('beforeend', `<div><abbr title="${searchNationHint}">(?)</abbr>
-		<input id="nation-search-input" placeholder="Germany"><button id="nation-search-button">Search</button></div>`);
-	['town', 'nation'].forEach(elem => {
-		const button = document.getElementById(`${elem}-search-button`);
-		const input = document.getElementById(`${elem}-search-input`);
-		button.addEventListener('click', () => search(elem));
-		input.addEventListener('keyup', (event) => { if (event.key === 'Enter') search(elem) });
+function switchMapMode() {
+	const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode')
+	if (currentMapMode == 'meganations') {
+		localStorage.setItem('emcdynmapplus-mapmode', 'alliances')
+	}
+	else if (currentMapMode == 'alliances') {
+		localStorage.setItem('emcdynmapplus-mapmode', 'default')
+	}
+	else {
+		localStorage.setItem('emcdynmapplus-mapmode', 'meganations')
+	}
+	location.reload()
+}
+
+function desaturateMap(elements) {
+	elements.forEach(layer => { layer.style.filter = 'brightness(50%)' })
+}
+
+function init() {
+	injectMainScript()
+	localStorage.setItem('emcdynmapplus-mapmode', localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations')
+
+	waitForHTMLelement('div.leaflet-top.leaflet-left').then(element => {
+		addMainMenu(element)
+		checkForUpdate(element)
 	})
-
-	// Current map mode and date
-	const date = sessionStorage.getItem('emcdynmap-date') || '0',
-		formattedDate = date.replace(/(\d{4})(\d{2})(\d{2})/g, '$1-$2-$3'),
-		dateInfo = (date !== '0') ? `, date: ${formattedDate}` : '',
-		mapMode = sessionStorage.getItem('emcdynmap-mapMode') || 'meganations';
-	menu.insertAdjacentHTML('beforeend', `<div>Showing: ${mapMode}${dateInfo}</div>`);
-}
-
-function checkForUpdates() {
-	fetch(`${repo}/main/manifest.json`)
-		.then(response => response.json())
-		.then(manifest => {
-			const localVersion = chrome.runtime.getManifest().version;
-			if (localVersion === manifest.version) return;
-			const releaseURL = `https://github.com/3meraldK/earthmc-dynmap/releases/latest`;
-			const updateMsg = `<div class="${sidebarClass}"><a href="${releaseURL}" target="_blank">
-				Extension update available</a><br>(from ${localVersion} to ${manifest.version})</div>`;
-			document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', updateMsg);
-		}).catch(() => console.log(`EarthMC Dynmap+ couldn't get latest release version.`));
-}
-
-function addPlayerLookup() {
-	const playerLabels = document.querySelector('.leaflet-pane');
-
-	// Hovering over usernames
-	playerLabels.addEventListener('mouseover', function (event) {
-		if (event.target.matches(playerLabelClass)) event.target.style = 'background: rgba(55, 55, 55, 0.6); cursor: default';
+	waitForHTMLelement('.leaflet-layer ', true).then(elements => desaturateMap(elements))
+	waitForHTMLelement('#update-notification-close').then(element => {
+		element.addEventListener('click', () => { element.parentElement.remove() })
 	})
-	playerLabels.addEventListener('mouseout', function (event) {
-		if (event.target.matches(playerLabelClass)) event.target.style.background = 'rgba(0, 0, 0, 0.6)';
-	})
-
-	// Clicking usernames
-	const closeButton = `<button id="player-info-close"
-		onclick="document.getElementById('player-info').remove()">X</button>`;
-	playerLabels.addEventListener('click', async function (event) {
-		if (event.target.matches(playerLabelClass)) {
-
-			let playerLookupElem = document.getElementById('player-info');
-			if (playerLookupElem) playerLookupElem.remove();
-			const playerLookupHTML = `<div class="${sidebarClass}" id="player-info">Loading...${closeButton}</div>`,
-				map = location.href.split('/')[4],
-				player = event.target.innerText,
-				faceImg = `https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=faces/16x16/${player}.png`;
-			const beginning = `<img src="${faceImg}" id="player-face"/><br><b>${player}</b><br>`;
-			let playerStatus = `Townless`;
-			document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', playerLookupHTML)
-			playerLookupElem = document.getElementById('player-info');
-
-			const onlinePlayersURL = await fetch(endpointsURL)
-				.then(resp => resp.json())
-				.then(json => json.onlineplayers.replace('{map}', map).replace('{player}', player))
-				.catch(() => {
-					sendAlert(`Couldn't get list of players, try again later.`, `Attempted to fetch data from: ${endpointsURL}`);
-					return;
-				});
-			const playerData = await fetch(onlinePlayersURL)
-				.then(resp => resp.json())
-				.catch(() => {
-					playerLookupElem.innerHTML = `${beginning}Couldn't get player info, try again later.${closeButton}`;
-					return;
-				});
-
-			if (playerData.town) playerStatus = 
-				`Town: ${playerData.town}<br>
-				Nation: ${playerData.nation}<br>
-				Rank: ${playerData.rank}`;
-			playerLookupElem.innerHTML = `${beginning}${playerStatus}${closeButton}`;
-		}
-	});
+	// Fix nameplates appearing over popups
+	waitForHTMLelement('.leaflet-pane.leaflet-nameplate-pane').then(element => element.style = '')
 }
 
-function addLegend() {
-	const hint = `<abbr title="Land shared between two or more alliances/meganations.">(?)</abbr>`,
-		legend =
-		`<div class="box" id="nationless"></div> Nation-less town<br>
-		<div class="box" id="ruin"></div> Ruined town<br>
-		<div class="box" id="default"></div> Default nation<br>
-		<div class="box" id="premium"></div> Custom-colored nation<br>
-		<div class="box" id="meganation"></div> Mega-nation<br>
-		<div class="box" id="alliance"></div> Alliance<br>
-		<div class="box" id="condominium"></div> ${hint} Condominium`;
-
-	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', `<div class="${sidebarClass}"
-		style="display: grid"><button id="collapsible">Open legend</button><div id="collapsible-content">${legend}</div></div>`);
-
-	document.getElementById('collapsible').addEventListener("click", function () {
-		this.classList.toggle("active");
-		const content = this.nextElementSibling;
-		content.style.display = (content.style.display === "block") ? "none" : "block";
-	});
+async function fetchJSON(url) {
+	const response = await fetch(url)
+	if (response.status == 404) return false
+	else if (response.ok) return response.json()
+	else return null
 }
 
-injectMainScript();
-waitForHTMLelems('.compass', '.largeclock').then(() => {
-	document.querySelector('.compass').remove();
-	document.querySelector('.largeclock').remove();
-	addMainMenu()
-	addLegend()
-	addPlayerLookup()
-	addDarkMode()
-	checkForUpdates()
-});
+async function searchArchive(date) {
+	if (date == '') return
+	sendAlert('Fetching archive, please wait.')
+	const URLDate = date.replaceAll('-', '')
+	const markersURL = `https://web.archive.org/web/${URLDate}id_/https://map.earthmc.net/tiles/minecraft_overworld/markers.json`
+	const archive = await fetchJSON('https://api.codetabs.com/v1/proxy/?quest=' + markersURL)
+	if (!archive) return sendAlert('Archive service is currently unavailable, please try later.')
+	localStorage.setItem('emcdynmapplus-archive', JSON.stringify(archive))
+	localStorage.setItem('emcdynmapplus-mapmode', 'archive')
+	location.reload()
+}
+
+async function locateTown(town) {
+	town = town.trim().toLowerCase()
+	if (town == '') return
+
+	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/towns?query=' + town)
+	if (data == false) return sendAlert('The searched town has not been found.')
+	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+
+	const coords = { x: Math.round(data[0].coordinates.spawn.x), z: Math.round(data[0].coordinates.spawn.z) }
+	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+
+}
+
+async function locateNation(nation) {
+	nation = nation.trim().toLowerCase()
+	if (nation == '') return
+
+	const nationData = await fetchJSON('https://api.earthmc.net/v3/aurora/nations?query=' + nation)
+	if (nationData == false) return sendAlert('The searched nation has not been found.')
+	if (nationData == null) return sendAlert('Service is currently unavailable, please try later.')
+
+	const capital = nationData[0].capital.name
+	const townData = await fetchJSON('https://api.earthmc.net/v3/aurora/towns?query=' + capital)
+	if (townData == false) return sendAlert('Some unexpected error occurred while searching for nation, please try later.')
+	if (townData == null) return sendAlert('Service is currently unavailable, please try later.')
+
+	const coords = { x: Math.round(townData[0].coordinates.spawn.x), z: Math.round(townData[0].coordinates.spawn.z) }
+	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+}
+
+async function checkForUpdate(parent) {
+	const localVersion = chrome.runtime.getManifest().version
+	const manifest = await fetchJSON('https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/manifest.json')
+	if (!manifest) return console.log('EarthMC Dynmap+ could not check for update.')
+	const latestVersion = manifest.version
+	if (latestVersion == localVersion) return
+	parent.insertAdjacentHTML('beforeend', htmlCode.updateNotification)
+	const updateNotification = parent.querySelector('#update-notification')
+	updateNotification.innerHTML = updateNotification.innerHTML.replace('{localVersion}', localVersion)
+	updateNotification.innerHTML = updateNotification.innerHTML.replace('{latestVersion}', latestVersion)
+}
+
+init()

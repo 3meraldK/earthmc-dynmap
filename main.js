@@ -1,314 +1,296 @@
-const nationRegex = /(?<=\()[^)]*/,
-	nationWikiRegex = /(?<=nofollow">)[^<]+(?=<\/a>\))/,
-	nationWikiLinkRegex = /(?<=\(<a href=")[^"]*/,
-	townRegex = /(?<=%">)[^ ]*/,
-	townWikiRegex = /(?<=nofollow">)[^<]*/,
-	townWikiLinkRegex = /(?<=%"><a href=")[^"]*/,
-	endpointsURL = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/endpoints.json',
-	serverChangedates = {
-		membersTitle: 20200410,
-		hasUpkeepRemoval: 20220906,
-		newMap: 20220428,
-		newMarkersPath: 20230201,
-		newMarkerJsonPath: 20200322
-	};
-
-// Using shoelace formula
-function getArea(vertX, vertY, totalVertices) {
-	let area = 0;
-	let j = totalVertices - 1;
-	for (let i = 0; i < totalVertices; i++) {
-		area += (vertX[j] + vertX[i]) * (vertY[j] - vertY[i]);
-		j = i;
-	}
-	return Math.abs(area / 2) / (16 * 16);
+const { fetch: originalFetch } = window
+const htmlCode = {
+	playerLookup: '<div class="leaflet-control-layers leaflet-control" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span id="player-lookup-close">🗙</span></div>',
+	partOf: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
+	residentClickable: '<span class="resident-clickable" onclick="lookupPlayer(\'{player}\')">{player}</span>',
+	residentList: '<span id="resident-list">\t{list}</span>',
+	scrollableResidentList: '<div id="scrollable-resident-list">\t{list}</div>',
+	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
 }
 
-function sendAlert(message, error = null) {
-	const button = `<button onclick="document.getElementById('error-label').remove()">OK</button>`;
-	document.body.insertAdjacentHTML('beforeend', `<span id="error-label">${message}<br>${button}</span>`);
-	if (error) console.log(message + `\n${error}`);
+let alliances = null
+const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
+if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
+
+function sendAlert(message) {
+	document.body.insertAdjacentHTML('beforeend', htmlCode.alert)
+	const alertMessage = document.querySelector('#alert-message')
+	alertMessage.innerHTML = alertMessage.innerHTML.replace('{message}', message)
+	document.querySelector('#alert-close').addEventListener('click', event => { event.target.parentElement.remove() })
+}
+
+function modifySettings(data) {
+	data['player_tracker'].nameplates['show_heads'] = true
+	data.zoom.def = 0
+	// Set camera on Europe
+	data.spawn.x = 2000
+	data.spawn.z = -10000
+	return data
+}
+
+function roundTo16(number) {
+	return Math.round(number / 16) * 16
 }
 
 // Fowler-Noll-Vo hash function
 function hashCode(string) {
-	let hexValue = 0x811c9dc5;
+	let hexValue = 0x811c9dc5
 	for (let i = 0; i < string.length; i++) {
-		hexValue ^= string.charCodeAt(i);
-		hexValue += (hexValue << 1) + (hexValue << 4) + (hexValue << 7) + (hexValue << 8) + (hexValue << 24);
+		hexValue ^= string.charCodeAt(i)
+		hexValue += (hexValue << 1) + (hexValue << 4) + (hexValue << 7) + (hexValue << 8) + (hexValue << 24)
 	}
-	return '#' + ((hexValue >>> 0) % 16777216).toString(16).padStart(6, '0');
+	return '#' + ((hexValue >>> 0) % 16777216).toString(16).padStart(6, '0')
 }
 
-async function getAlliances(map) {
-	const alliancesArray = [],
-		returnOnFail = JSON.parse(localStorage.getItem('emcdynmap-alliances-' + map)) || [];
-	const alliancesURL = await fetch(endpointsURL)
-		.then(resp => resp.json())
-		.then(json => json.alliances.replace('{map}', map))
-		.catch(() => {
-			sendAlert(`Couldn't get needed data, try again later.`, `Attempted to fetch data from: ${endpointsURL}`);
-			return returnOnFail;
-		});
-	const alliances = await fetch(alliancesURL)
-		.then(resp => resp.json())
-		.catch(() => {
-			sendAlert(`Couldn't get list of alliances, try again later.`, `Attempted to fetch data from: ${alliancesURL}`);
-			return returnOnFail;
-		});
+// Shoelace formula
+function getArea(vertices) {
+    const n = vertices.length
+    let area = 0
 
-	alliances.forEach(alliance => {
-		let allianceType = alliance.type.toLowerCase() || 'mega';
-		if (allianceType === 'sub') return;
-		if (allianceType === 'mega') allianceType = 'meganations';
-		else allianceType = 'alliances';
-		alliancesArray.push({
+	// Vertices need rounding to 16 because data has imprecise coordinates
+    for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n
+        area += roundTo16(vertices[i].x) * roundTo16(vertices[j].z)
+        area -= roundTo16(vertices[j].x) * roundTo16(vertices[i].z)
+    }
+
+    return (Math.abs(area) / 2) / (16 * 16)
+}
+
+function fixCapitalIcon(marker) {
+	marker['tooltip_anchor'].x = 8
+	marker['tooltip_anchor'].z = 0
+	marker['anchor'].x = 0
+	marker['anchor'].z = 0
+	marker.size.x = 16
+	marker.size.z = 16
+	return marker
+}
+
+function modifyDescription(marker) {
+	// Gather some information
+	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.at(1)
+	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)[1]
+	let councillors = marker.popup.match(/Councillors: <b>(.*)<\/b>/)[1].split(', ')
+	councillors = councillors.filter(councillor => councillor != 'None')
+	const residents = marker.popup.match(/<\/summary>\n    \t(.*)\n   \t<\/details>/)[1]
+	const residentNum = residents.split(', ').length
+	const wealth = marker.popup.match(/Wealth: <b>(\d+)G/)[1]
+	const isCapital = marker.tooltip.match(/\(Capital of (.*)\)/) != null
+	const nationAlliances = getNationAlliances(nation)
+
+	// Calculate town's area
+	let area = 0
+	if (marker.type == 'polygon') {
+		for (const region of marker.points) {
+			const vertices = []
+			for (const vertex of region[0]) { vertices.push(vertex) }
+			area += getArea(vertices)
+		}
+	}
+
+	// Modify resident list
+	const residentList = residents.split(', ').map(resident => htmlCode.residentClickable.replaceAll('{player}', resident)).join(', ')
+	const councillorsList = councillors.map(councillor => htmlCode.residentClickable.replaceAll('{player}', councillor)).join(', ')
+	if (residentNum > 50) {
+		marker.popup = marker.popup.replace(residents, htmlCode.scrollableResidentList.replace('{list}', residentList))
+	}
+	else {
+		marker.popup = marker.popup.replace(residents + '\n', htmlCode.residentList.replace('{list}', residentList) + '\n')
+	}
+
+	// Modify popup
+	marker.popup = marker.popup
+		.replace('</details>\n   \t<br>', '</details>') // Remove line break
+		.replace('Councillors:', `Size: <b>${area} chunks</b><br/>Councillors:`) // Add size info
+		.replace(/Wealth: <b>(\d+)G/, `Wealth: <b>${wealth} gold`) // Replace 'G' with 'gold'
+		.replace('Wealth: <b>0 gold</b>\n\t<br>', '') // Remove 0 gold wealth info
+		.replace('<i>/town set board [msg]</i>', '<i></i>') // Remove default town board
+		.replace('<i></i> \n    <br>\n', '') // Remove empty town board
+		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`) // Lookup mayor
+		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
+		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorsList}</b>`) // Lookup councillors
+		.replace('Size: <b>0 chunks</b><br/>', '') // Remove 0 chunks town size info
+
+	if (isCapital) marker.popup = marker.popup
+		.replace('<span style="font-size:120%;">', '<span style="font-size:120%;">★ ') // Add capital star
+
+	// Modify tooltip
+	marker.tooltip = marker.tooltip
+		.replace('<i>/town set board [msg]</i>', '<i></i>')
+		.replace('<br>\n    <i></i>', '')
+
+	// Add part of label
+	if (nationAlliances.length > 0) {
+		const allianceList = nationAlliances.map(alliance => alliance.name).join(', ')
+		const partOfLabel = htmlCode.partOf.replace('{allianceList}', allianceList)
+		marker.popup = marker.popup.replace('</span>\n', '</span></br>' + partOfLabel)
+	}
+
+	return marker
+}
+
+function main(data) {
+	if (currentMapMode == 'archive') {
+		if (localStorage.getItem('emcdynmapplus-archive') == null) {
+			sendAlert('Unexpected error occurred while setting the map mode to archive, maybe the service is unavailable? Try again later.')
+		} else {
+			const archive = localStorage.getItem('emcdynmapplus-archive')
+			data = JSON.parse(archive)
+		}
+	}
+
+	for (const index in data[0].markers) {
+		let marker = data[0]['markers'][index]
+		if (marker.type == null) continue
+
+		if (marker.type == 'icon') marker = fixCapitalIcon(marker)
+		marker = modifyDescription(marker)
+
+		if (marker.type != 'polygon') continue
+
+		// Universal properties
+		marker.opacity = 1
+		marker.fillOpacity = 0.33
+		marker.weight = 1.5
+
+		if (currentMapMode == 'default' || currentMapMode == 'archive') continue
+
+		marker = colorTowns(marker)
+	}
+
+	return data
+}
+
+function getNationAlliances(nation) {
+	const nationAlliances = []
+	if (alliances == null) return nationAlliances
+	for (const alliance of alliances) {
+		if (!alliance.nations.includes(nation)) continue
+		if (alliance.type != currentMapMode) continue
+		nationAlliances.push({name: alliance.name, colours: alliance.colours})
+	}
+	return nationAlliances
+}
+
+function colorTowns(marker) {
+	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.at(1)
+	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)[1]
+	const isRuin = (mayor.match(/NPC[0-9]+/) != null)
+	const isNationless = (nation == null)
+	const nationHasDefaultColor = (marker.color == '#3fb4ff' && marker.fillColor == '#3fb4ff') // Default blue
+	const nationAlliances = getNationAlliances(nation)
+
+	// Universal properties for the map modes
+	if (currentMapMode == 'alliances') {
+		marker.color = '#000000' // Black
+		marker.fillColor = '#000000'
+		marker.weight = 1
+	} else {
+		if (nationHasDefaultColor) {
+			marker.color = '#363636' // Dark gray
+			marker.fillColor = hashCode(nation)
+		}
+		if (!nationHasDefaultColor) marker.color = '#bfff00' // Default green
+		if (isRuin) marker.fillColor = marker.color = '#7b00ff' // Violet
+		if (isNationless) marker.fillColor = marker.color = '#ff00ff' // Magenta
+	}
+
+	// Properties for alliances
+	if (nationAlliances.length == 0) return marker
+	marker.weight = 1.5
+	marker.fillColor = nationAlliances[0].colours.fill
+	marker.color = nationAlliances[0].colours.outline
+	if (nationAlliances.length < 2) return marker
+	marker.opacity = 0
+
+	return marker
+}
+
+async function lookupPlayer(player) {
+	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/players?query=' + player)
+	if (data == false) return sendAlert('Unexpected error occurred while looking up the player, please try later.')
+	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+
+	if (document.querySelector('#player-lookup') != null) document.querySelector('#player-lookup').remove()
+	document.querySelector('div.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', htmlCode.playerLookup)
+	const lookup = document.querySelector('#player-lookup')
+
+	const isOnline = data[0].status.isOnline
+	const balance = data[0].stats.balance
+	const about = (!data[0].about || data[0].about == '/res set about [msg]') ? '' : `<br><i>${data[0].about}</i>`
+	let rank = 'Townless'
+	if (data[0].status.hasTown) rank = 'Resident'
+	if (data[0].ranks.townRanks.includes('Councillor')) rank = 'Councillor'
+	if (data[0].status.isMayor) rank = 'Mayor'
+	if (data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
+	if (data[0].status.isKing) rank = 'Leader'
+
+	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data[0].uuid.replaceAll('-', '')
+	document.querySelector('#player-lookup-avatar').setAttribute('src', playerAvatarURL)
+	lookup.innerHTML = lookup.innerHTML
+		.replace('{player}', player)
+		.replace('{about}', about)
+		.replace('{online-color}', isOnline ? 'green' : 'red')
+		.replace('{online}', isOnline ? '⚫︎ Online' : '○ Offline')
+		.replace('{rank}', rank)
+		.replace('{balance}', balance)
+
+	document.querySelector('#player-lookup-close')
+		.addEventListener('click', event => { event.target.parentElement.remove() })
+}
+
+async function fetchJSON(url) {
+	const response = await fetch(url)
+	if (response.status == 404) return false
+	else if (response.ok) return response.json()
+	else return null
+}
+
+async function getAlliances() {
+	const alliances = await fetchJSON('https://emctoolkit.vercel.app/api/aurora/alliances')
+	if (!alliances) {
+		const cache = JSON.parse(localStorage.getItem('emcdynmapplus-alliances'))
+		if (cache == null) {
+			sendAlert('Service responsible for alliances is currently unavailable, please try later.')
+			return []
+		}
+		sendAlert('Service responsible for alliances is currently unavailable - locally-saved alliance data has been loaded.')
+		return cache
+	}
+
+	const finalArray = []
+	for (const alliance of alliances) {
+		let allianceType = alliance.type.toLowerCase() || 'mega'
+		if (allianceType == 'sub') continue
+		finalArray.push({
 			name: alliance.fullName || alliance.allianceName,
-			type: allianceType,
+			type: allianceType == 'mega' ? 'meganations' : 'alliances',
 			nations: alliance.nations,
-			colours: alliance.colours || { fill: '#000000', outline: '#000000' }
-		});
-	});
+			colours: alliance.colours || { fill: '#000000', outline: '#000000' } // Black
+		})
+	}
 
-	localStorage.setItem('emcdynmap-alliances-' + map, JSON.stringify(alliancesArray));
-	return alliancesArray;
+	localStorage.setItem('emcdynmapplus-alliances', JSON.stringify(finalArray))
+	return finalArray
 }
 
-async function getArchive(url) {
-	sendAlert('Fetching archive, please wait.');
-	const archiveURL = await fetch(endpointsURL)
-		.then(resp => resp.json())
-		.then(json => json.proxy.replace('{url}', url).replace('{decoded_url}', encodeURIComponent(url)))
-		.catch(() => sendAlert(`Couldn't get needed data, try again later.`, `Attempted to fetch data from: ${endpointsURL}`));
-	const archive = await fetch(archiveURL)
-		.then(resp => resp.json())
-		.catch(() => {
-			sendAlert(`Couldn't get archive, try again later.`, `Attempted to fetch data from: ${archiveURL}`);
-		});
-	sendAlert('Fetched archive, reloading page.');
-	return JSON.stringify(archive);
-}
+// Replace the default fetch() with ours to intercept responses
+window.fetch = async (...args) => {
+    let [resource, config] = args
+    let response = await originalFetch(resource, config)
 
-function setDescription(town, data, jsonPath) {
-	const { desc, icon, label, x, z } = town,
-		date = sessionStorage.getItem('emcdynmap-date') || '0';
-	const townName = (desc.includes('%"><a ')) ? desc.match(townWikiRegex)[0] : desc.match(townRegex)[0],
-		nationName = (desc.includes('(<a ')) ? desc.match(nationWikiRegex)[0] : desc.match(nationRegex)[0],
-		nationWiki = (desc.includes('(<a ')) ? desc.match(nationWikiLinkRegex)[0] : null,
-		townWiki = (desc.includes('%"><a ')) ? desc.match(townWikiLinkRegex)[0] : null,
-		membersTitle = (date !== '0' && parseInt(date) < serverChangedates.membersTitle) ? 'Associates' : 'Members',
-		memberList = desc.split(`${membersTitle} <span style="font-weight:bold">`)[1].split('</span><br />Flags')[0],
-		memberSize = (memberList.match(/,/g) || []).length + 1,
-		isCapital = desc.includes('capital: true');
-	let area = getArea(x, z, x.length);
+	// Modify contents of markers.json and minecraft_overworld/settings.json
+    if (response.url.includes('markers.json') || response.url.includes('minecraft_overworld/settings.json')) {
 
-	if (icon) {
-		const towns = Object.values(data.sets[jsonPath].areas);
-		const matchingTowns = towns.filter(town1 => town1.label === label);
-		const mappedTowns = matchingTowns.map(town1 => getArea(town1.x, town1.z, town1.x.length));
-		area = Math.max(...mappedTowns);
-	}
+        const modifiedJson = await response.clone().json().then(data => {
+			if (response.url.includes('markers.json')) data = main(data)
+			if (response.url.includes('minecraft_overworld/settings.json')) data = modifySettings(data)
+            return data
+        })
+        return new Response(JSON.stringify(modifiedJson))
 
-	// Modify description
-	if (nationWiki) town.desc = town.desc.replace(/\(.*\)/,
-		`(${nationName}) <a target="_blank" title="Open nation's wiki article." href="${nationWiki}" rel="nofollow">📖</a>`);
-	if (townWiki) town.desc = town.desc.replace(/(?<!\()<a[^%">][^<]+<\/a>/,
-		`${townName} <a target="_blank" title="Open town's wiki article." href="${townWiki}" rel="nofollow">📖</a>`);
-	if (isCapital) town.desc = town.desc.replace('120%">', '120%">★ ');
-	if (date !== '0' && parseInt(date) < serverChangedates.hasUpkeepRemoval) {
-		town.desc = town.desc.replace(/">hasUpkeep:.+?(?<=<br \/>)/, '; white-space:pre">');
-	}
-	else town.desc = town.desc.replace('">pvp:', '; white-space:pre">pvp:');
+    }
 
-	town.desc = town.desc.replace('Flags<br />', '<br>Flags<br>')
-		.replace('>pvp:', '>PVP allowed:')
-		.replace('>mobs:', '>Mob spawning:')
-		.replace('>public:', '>Public status:')
-		.replace('>explosion:', '>Explosions:&#9;')
-		.replace('>fire:', '>Fire spread:&#9;')
-		.replace(/<br \/>capital:.*<\/span>/, '</span>')
-		.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
-		.replaceAll('false<', '&#9;<span style="color:red">No</span><')
-		.replace(`${membersTitle} <span`, `${membersTitle} <b>[${memberSize}]</b> <span`)
-		.replace(`</span><br /> ${membersTitle}`, `</span><br>Size<span style="font-weight:bold"> ${area} </span><br> ${membersTitle}`);
-
-	// Scrollable list of members
-	if (memberSize > 50) {
-		town.desc = town.desc
-			.replace(`<b>[${memberSize}]</b> <span style="font-weight:bold">`,
-				`<b>[${memberSize}]</b> <div style="overflow:auto;height:200px"><span style="font-weight:bold">`)
-			.replace('<br>Flags', '</div><br>Flags');
-	}
-	return town.desc;
-}
-
-// Main code
-const _open = XMLHttpRequest.prototype.open;
-XMLHttpRequest.prototype.open = async function (_method, URL) {
-
-	let alliances = [],
-		archiveData = null,
-		_onreadystatechange = this.onreadystatechange;
-	const date = sessionStorage.getItem('emcdynmap-date') || '0',
-		mapMode = sessionStorage.getItem('emcdynmap-mapMode') || 'meganations',
-		_this = this;
-
-	// Detect XMLHttpRequest client readyState changes
-	_this.onreadystatechange = async function () {
-		const XMLstate = _this.readyState;
-		const map = (location.href.includes('nova')) ? 'nova' : 'aurora';
-
-		// State of XMLHttpRequest client: opened
-		if (XMLstate === 1 && URL.includes('marker')) {
-			if (date === '0') {
-				if (mapMode !== 'default') alliances = await getAlliances(map);
-			} else {
-				// Current map mode is archive
-				const prefixArchiveURL = `https://web.archive.org/web/${date}id_/https://earthmc.net/map`;
-				let archiveURL;
-				if (parseInt(date) < serverChangedates.newMap) archiveURL = `${prefixArchiveURL}/tiles/_markers_/marker_earth.json`;
-				else archiveURL = `${prefixArchiveURL}/${map}/tiles/_markers_/marker_earth.json`;
-				if (parseInt(date) > serverChangedates.newMarkersPath) {
-					archiveURL = `${prefixArchiveURL}/${map}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`;
-				}
-				if (localStorage.getItem(`emcdynmap-latestArchiveDate-${map}`) !== date) {
-					try {
-						localStorage.setItem(`emcdynmap-latestArchiveDate-${map}`, date);
-						localStorage.setItem(`emcdynmap-latestArchive-${map}`, await getArchive(archiveURL));
-						location.reload();
-					} catch (exception) {
-						sendAlert(`Archive is too big and can't be handled (see console for solution).`,
-							`For more information, view https://arty.name/localstorage.html for possible solution.`);
-					}
-				} else archiveData = JSON.parse(localStorage.getItem(`emcdynmap-latestArchive-${map}`));
-			}
-		}
-
-		// State of XMLHttpRequest client: completed
-		if (XMLstate === 4 && URL.match(/marker|update/)) {
-			const response = JSON.parse(_this.responseText);
-			(URL.includes('marker')) ? mapUpdate() : playerUpdate();
-
-			function playerUpdate() {
-				if (date !== '0') _this.abort();
-				// If size of response is big enough, it has unwanted map updates
-				if (JSON.stringify(response).length < 130672) return;
-				response.updates = null;
-				Object.defineProperty(_this, 'responseText', { value: JSON.stringify(response) });
-				return;
-			}
-
-			function mapUpdate() {
-				if (date === '0' || !archiveData) execute(response, 'townyPlugin.markerset');
-				else {
-					const jsonPath = (parseInt(date) < serverChangedates.newMarkerJsonPath) ? 'towny.markerset' : 'townyPlugin.markerset';
-					execute(archiveData, jsonPath);
-				}
-
-				function execute(data, jsonPath) {
-					// Fix a bug with toggling markers
-					const stars = data.sets[jsonPath].markers;
-					Object.values(stars).forEach(star => star.desc = setDescription(star, data, jsonPath));
-					delete data.sets[jsonPath].markers;
-					data.sets.markers.markers = stars;
-
-					// Delete shop areas
-					Object.keys(data.sets[jsonPath].areas).forEach(area => {
-						if (area.includes('_Shop')) delete data.sets[jsonPath].areas[area];
-					});
-
-					Object.values(data.sets[jsonPath].areas).forEach(town => {
-						town.desc = setDescription(town, data, jsonPath);
-						town.weight = 1.5;
-						town.opacity = 1;
-						town.fillopacity = 0.33;
-					});
-
-					if (mapMode === 'archive' || mapMode === 'default') {
-						Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
-						return;
-					}
-
-					// Specific town modifications
-					alliances = JSON.parse(localStorage.getItem(`emcdynmap-alliances-${map}`));
-					Object.values(data.sets[jsonPath].areas).forEach(town => {
-						const nation = town.desc.match(/\(.*\)/)[0];
-						if (town.color === '#3FB4FF' && town.fillcolor === '#3FB4FF') {
-							town.color = '#363636';
-							town.fillcolor = hashCode(nation);
-						} else town.color = '#bFFF00';
-						if (nation === '()') town.fillcolor = town.color = '#FF00FF';
-						if (town.desc.match(/NPC[0-9]+/) && nation === '()') town.fillcolor = town.color = '#7B00FF';
-						if (mapMode === 'alliances') {
-							town.color = town.fillcolor = '#000000';
-							town.weight = 0.75;
-						}
-					});
-
-					if (!alliances) {
-						Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
-						return;
-					};
-
-					// Add alliances to map
-					Object.values(data.sets[jsonPath].areas).forEach(town => {
-						const nation = (town.desc.includes('(<a ')) ? desc.match(nationWikiRegex)[0] : town.desc.match(nationRegex)[0];
-						let meganationList = '';
-						let id = '';
-						const alliancesOutlines = [];
-						alliances.forEach(alliance => {
-							if (alliance.nations.includes(nation) && mapMode === alliance.type) {
-								town.color = alliance.colours.outline.toUpperCase();
-								town.fillcolor = alliance.colours.fill.toUpperCase();
-								if (mapMode === 'alliances') town.weight = 1.5;
-								meganationList += (meganationList.length < 1) ? alliance.name : ', ' + alliance.name;
-								id += alliance.name;
-								alliancesOutlines.push(alliance.colours.outline.toUpperCase());
-							}
-						});
-
-						// Add lands shared with multiple alliances
-						id = id.replaceAll(' ', '').replaceAll("'", '');
-						if (meganationList.includes(',')) {
-							const interval = setInterval(() => {
-								if (document.querySelector('svg')) {
-									clearInterval(interval);
-									if (!document.querySelector(`#${id}`)) {
-										const condominium = `<pattern id="${id}" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-										<rect class="checker" x="0" width="10" height="10" y="0" fill="${alliancesOutlines[0]}"/>
-										<rect class="checker" x="10" width="10" height="10" y="10" fill="${alliancesOutlines[0]}"/>
-										<rect class="checker" x="10" width="10" height="10" y="0" fill="${alliancesOutlines[1]}"/>
-										<rect class="checker" x="0" width="10" height="10" y="10" fill="${alliancesOutlines[1]}"/>
-										</pattern>`;
-										document.querySelector('svg').insertAdjacentHTML('afterbegin', condominium);
-									}
-								}
-							}, 1);
-							town.fillcolor = `url(#${id})`;
-							town.color = "#FF00FF";
-							town.weight = 1.5;
-						}
-
-						// Add "Part of" label
-						if (meganationList.length > 0) {
-							const meganationListText = `<br> <span style="font-size:85%">Part of <b>${meganationList}</b></span> <br> Mayor`;
-							town.desc = town.desc.replace('<br /> Mayor', meganationListText);
-							const marker = data.sets.markers.markers[town.label + '__home'];
-							if (marker !== undefined && !marker.desc.includes('85%')) {
-								marker.desc = marker.desc.replace('<br /> Mayor', meganationListText);
-							}
-						}
-					});
-					Object.defineProperty(_this, 'responseText', { value: JSON.stringify(data) });
-				}
-			}
-		}
-		if (_onreadystatechange) _onreadystatechange.apply(this, arguments);
-	}
-
-	Object.defineProperty(this, 'onreadystatechange', {
-		get: function () { return _onreadystatechange; },
-		set: function (value) { _onreadystatechange = value; },
-	});
-	return _open.apply(_this, arguments);
+    return response
 }

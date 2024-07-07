@@ -1,6 +1,0 @@
-{
-    "markers": "https://earthmc.net/map/{map}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json",
-	"onlineplayers": "https://emctoolkit.vercel.app/api/{map}/onlineplayers/{player}",
-	"alliances": "https://emctoolkit.vercel.app/api/{map}/alliances",
-	"proxy": "https://api.codetabs.com/v1/proxy/?quest={url}"
-}

@@ -4,33 +4,34 @@
 A web extension for all browsers. Designed specifically for EarthMC's dynamic map, coming with great multitude of useful and cosmetic features.
 
 ## Features
-When creating the extension, the main idea was to connect the countries on the map into their respective organizations and "meganations". Later on, in the natural course of things, the number of new features began to grow with new releases.
-* Three map modes to switch between: alliances, meganations, default
+When creating the extension, the main idea was to group the countries together into their respective organizations and "meganations". Later on, in the natural course of things, the number of new features began to grow with new releases.
+* Three map modes to switch between: alliances, meganations and default
 * Archive mode to view old claims and statistics (from the Wayback Machine)
 * Search towns and nations by name
 * Total revamp of the aesthetics
 * Notifications about new releases
-* More information about towns
-* And players - to view a player's information, click the username on map
-* Bugfix: Markers layer now can be toggled
-* Dark mode
+* Look up a player by clicking their name in town's statistics
+* A few bug fixes
 * Regularly updated with new stuff you'll like
 
 ## Contribution <a href="https://discord.gg/AVtgkcRgFs"><img src="https://img.shields.io/discord/966271635894190090?logo=discord"></a>
-We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats" Discord bot and more), which provide the latest alliances data. You can help by registering a new alliance or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs) 
+We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats" Discord bot and more), which provide the latest alliances data. You can help by registering a new alliance or requesting a change. [Click here to join.](https://discord.gg/AVtgkcRgFs)
 
-## Installation
-### Chromium-based (Chrome, Opera, Edge, Brave)
-1. Download the latest "extension.zip" file from [the release page](https://github.com/3meraldK/earthmc-dynmapcolor/releases/latest).
-2. Unpack/unzip the file's contents. If you use context menu, don't click "Unpack to chromium/"!
-3. Go to your browser's extensions manager and turn on developer mode (it's mandatory, because the add-on is unsigned).
-4. Click "Load the unpacked/unzipped folder". It's recommended to keep the directory somewhere, otherwise you will have to reinstall extension.
+## Getting started
+### Extension (recommended)
+> [!IMPORTANT]
+> Only for Chromium browsers (Chrome, Opera, Edge, Brave, etc.). Other browsers users please go to the next section.
+Unfortunately, this extension can't be downloaded normally, because introducing it to the marketplace costs money. You can still install this extension in an easy way:
+1. Download the latest version by clicking here.
+2. Unpack/unzip the file contents.
+3. Go to your browser extensions manager and turn on developer mode.
+4. Click "Load the unpacked folder" and select the unpacked folder.
+> [!NOTE]
+> You must keep the folder on your computer, otherwise you will have to re-install.
 
 ### Userscript (Other browsers, like Firefox)
-1. Install Tampermonkey extension.
-2. Install the latest "userscript.user.js" file from [the release page](https://github.com/3meraldK/earthmc-dynmapcolor/releases/latest).
+1. Install Tampermonkey extension for your browser.
+2. Install EarthMC Dynmap+ by clicking here.
 
 ## Screenshots
-![image](https://user-images.githubusercontent.com/48335651/223814076-56ca9015-800b-4ed0-a55e-0e7c3017f876.png)
-![image](https://user-images.githubusercontent.com/48335651/223814282-913a1871-1d04-4f4a-91a4-68536ceefc1c.png)
-![image](https://user-images.githubusercontent.com/48335651/223813990-7d701630-4c8e-4ed6-9802-764abb8fb73b.png)
+
