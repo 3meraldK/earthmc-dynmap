@@ -258,7 +258,7 @@ function modifyDescription(marker) {
 	councillors = councillors.filter(councillor => councillor != 'None')
 	const residents = marker.popup.match(/<\/summary>\n    \t(.*)\n   \t<\/details>/)[1]
 	const residentNum = residents.split(', ').length
-	const wealth = marker.popup.match(/Wealth: <b>(\d+)G/)[1]
+	// Deprecated: const wealth = marker.popup.match(/Wealth: <b>(\d+)G/)[1]
 	const isCapital = marker.tooltip.match(/\(Capital of (.*)\)/) != null
 	const nationAlliances = getNationAlliances(nation)
 
@@ -286,8 +286,8 @@ function modifyDescription(marker) {
 	marker.popup = marker.popup
 		.replace('</details>\n   \t<br>', '</details>') // Remove line break
 		.replace('Councillors:', `Size: <b>${area} chunks</b><br/>Councillors:`) // Add size info
-		.replace(/Wealth: <b>(\d+)G/, `Wealth: <b>${wealth} gold`) // Replace 'G' with 'gold'
-		.replace('Wealth: <b>0 gold</b>\n\t<br>', '') // Remove 0 gold wealth info
+		// Deprecated: .replace(/Wealth: <b>(\d+)G/, `Wealth: <b>${wealth} gold`) // Replace 'G' with 'gold'
+		// Deprecated: .replace('Wealth: <b>0 gold</b>\n\t<br>', '') // Remove 0 gold wealth info
 		.replace('<i>/town set board [msg]</i>', '<i></i>') // Remove default town board
 		.replace('<i></i> \n    <br>\n', '') // Remove empty town board
 		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`) // Lookup mayor
