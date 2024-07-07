@@ -210,7 +210,7 @@ async function lookupPlayer(player) {
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
 
 	if (document.querySelector('#player-lookup') != null) document.querySelector('#player-lookup').remove()
-	document.querySelector('div.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', htmlCode.playerLookup)
+	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', htmlCode.playerLookup)
 	const lookup = document.querySelector('#player-lookup')
 
 	const isOnline = data[0].status.isOnline

@@ -11,6 +11,7 @@ const htmlCode = {
 	switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
 }
+const apiURL = 'https://api.earthmc.net/v3/aurora'
 
 function sendAlert(message) {
 	if (document.querySelector('#alert') != null) document.querySelector('#alert').remove()
@@ -112,24 +113,24 @@ function switchMapMode() {
 	location.reload()
 }
 
-function desaturateMap(elements) {
-	elements.forEach(layer => { layer.style.filter = 'brightness(50%)' })
+function darkenMap(element) {
+	element.style.filter = `brightness(50%)`
 }
 
 function init() {
 	injectMainScript()
 	localStorage.setItem('emcdynmapplus-mapmode', localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations')
 
-	waitForHTMLelement('div.leaflet-top.leaflet-left').then(element => {
+	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
 		addMainMenu(element)
 		checkForUpdate(element)
 	})
-	waitForHTMLelement('.leaflet-layer ', true).then(elements => desaturateMap(elements))
+	waitForHTMLelement('.leaflet-tile-pane').then(elements => darkenMap(elements))
 	waitForHTMLelement('#update-notification-close').then(element => {
 		element.addEventListener('click', () => { element.parentElement.remove() })
 	})
 	// Fix nameplates appearing over popups
-	waitForHTMLelement('.leaflet-pane.leaflet-nameplate-pane').then(element => element.style = '')
+	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 }
 
 async function fetchJSON(url) {
@@ -155,7 +156,7 @@ async function locateTown(town) {
 	town = town.trim().toLowerCase()
 	if (town == '') return
 
-	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/towns?query=' + town)
+	const data = await fetchJSON(apiURL + '/towns?query=' + town)
 	if (data == false) return sendAlert('The searched town has not been found.')
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
 
@@ -168,12 +169,12 @@ async function locateNation(nation) {
 	nation = nation.trim().toLowerCase()
 	if (nation == '') return
 
-	const nationData = await fetchJSON('https://api.earthmc.net/v3/aurora/nations?query=' + nation)
+	const nationData = await fetchJSON(apiURL + '/nations?query=' + nation)
 	if (nationData == false) return sendAlert('The searched nation has not been found.')
 	if (nationData == null) return sendAlert('Service is currently unavailable, please try later.')
 
 	const capital = nationData[0].capital.name
-	const townData = await fetchJSON('https://api.earthmc.net/v3/aurora/towns?query=' + capital)
+	const townData = await fetchJSON(apiURL + '/towns?query=' + capital)
 	if (townData == false) return sendAlert('Some unexpected error occurred while searching for nation, please try later.')
 	if (townData == null) return sendAlert('Service is currently unavailable, please try later.')
 
