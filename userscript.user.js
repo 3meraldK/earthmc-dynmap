@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         EarthMC Dynmap+
-// @version      1.14
+// @version      1.14.1
 // @description  Extension to enrich the EarthMC map experience
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
