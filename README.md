@@ -19,7 +19,7 @@ When creating the extension, the main idea was to group the countries together i
 We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats" Discord bot and more), which provide the latest alliances data. You can help by registering a new alliance or requesting a change. [Click here to join](https://discord.gg/AVtgkcRgFs).
 
 ## Getting started
-> [!NOTE]
+> [!TIP]
 > Extension works for desktop and mobile! For the best experience, it is also recommended to use ad-blockers.
 
 ### Userscript (recommended)
