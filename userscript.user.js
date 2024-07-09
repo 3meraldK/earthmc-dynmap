@@ -8,13 +8,13 @@
 // ==/UserScript==
 
 const htmlCode = {
-	playerLookup: '<div class="leaflet-control-layers leaflet-control" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span id="player-lookup-close">🗙</span></div>',
+	playerLookup: '<div class="leaflet-control-layers leaflet-control" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span id="player-lookup-close">X</span></div>',
 	partOf: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
 	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>',
 	residentList: '<span id="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div id="scrollable-resident-list">\t{list}</div>',
 	sidebar: '<div id="emcdynmapplus-sidebar" class="leaflet-control-layers leaflet-control"></div>',
-	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">🗙</span></div>',
+	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">X</span></div>',
 	optionContainer: '<div class="option-container"></div>',
 	locateTownInput: '<input class="sidebar-input" id="locate-town-input" placeholder="London">',
 	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',

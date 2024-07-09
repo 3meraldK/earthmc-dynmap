@@ -1,6 +1,6 @@
 const htmlCode = {
 	sidebar: '<div id="emcdynmapplus-sidebar" class="leaflet-control-layers leaflet-control"></div>',
-	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">🗙</span></div>',
+	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">X</span></div>',
 	optionContainer: '<div class="option-container"></div>',
 	locateTownInput: '<input class="sidebar-input" id="locate-town-input" placeholder="London">',
 	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',
