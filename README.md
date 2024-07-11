@@ -22,26 +22,18 @@ We don't work alone! We cooperate with EMC Toolkit (developers of "EarthMC Stats
 > [!TIP]
 > Extension works for desktop and mobile! For the best experience, it is also recommended to use ad-blockers.
 
-### Userscript (recommended)
+### Extension (recommended)
+> [!IMPORTANT]
+> Only for Chromium browsers (Chrome, Microsoft Edge, Opera, Brave, etc.). Other browsers users, please install the userscript.
+
+Install the extension in Chrome Web Store by [clicking here](https://chromewebstore.google.com/detail/earthmc-dynmap+/hgfdjfdkneceljokdelhiikgnndpmcgh).
+
+### Userscript
 1. Install Tampermonkey extension for your browser.
     - [For Chrome, Microsoft Edge, Opera and Brave](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
     - [For Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
     - [For Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089)
 2. Install EarthMC Dynmap+ by [clicking here](https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/userscript.user.js).
 
-### Extension
-> [!IMPORTANT]
-> Only for Chromium browsers (Chrome, Microsoft Edge, Opera, Brave, etc.). Other browsers users, please install the userscript.
-
-Unfortunately, this extension can't be downloaded normally, because introducing it to the marketplace costs money. You can still install this extension in an easy way.
-1. Download the latest version by [clicking here](https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/extension.zip).
-2. Unpack/unzip the file contents.
-3. Go to your browser extensions manager and turn on developer mode.
-4. Click "Load the unpacked folder" and select the unpacked folder.
-
-> [!NOTE]
-> You must keep the folder on your computer in the same location, otherwise you will have to re-install.
-
 ## Screenshots
 ![image](https://github.com/3meraldK/earthmc-dynmap/assets/48335651/fa846f7e-c222-4af3-8fdd-d45d9f757dd5)
-
