@@ -183,7 +183,7 @@ function colorTowns(marker) {
 	if (currentMapMode == 'alliances') {
 		marker.color = '#000000' // Black
 		marker.fillColor = '#000000'
-		marker.weight = 1
+		marker.weight = 0.5
 	} else {
 		if (nationHasDefaultColor) {
 			marker.color = '#363636' // Dark gray
@@ -200,7 +200,7 @@ function colorTowns(marker) {
 	marker.fillColor = nationAlliances[0].colours.fill
 	marker.color = nationAlliances[0].colours.outline
 	if (nationAlliances.length < 2) return marker
-	marker.opacity = 0
+	marker.weight = 0.5
 
 	return marker
 }
