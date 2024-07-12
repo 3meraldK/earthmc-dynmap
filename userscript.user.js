@@ -428,11 +428,17 @@ function colorTowns(marker) {
 unsafeWindow.lookupPlayerFunc = lookupPlayer
 
 async function lookupPlayer(player) {
+
+	if (document.querySelector('#player-lookup') != null) document.querySelector('#player-lookup').remove()
+	if (document.querySelector('#player-lookup-loading') != null) document.querySelector('#player-lookup-loading').remove()
+	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', htmlCode.playerLookupLoading)
+	const loading = document.querySelector('#player-lookup-loading')
+
 	const data = await fetchJSON(apiURL + '/players?query=' + player)
 	if (data == false) return sendAlert('Unexpected error occurred while looking up the player, please try later.')
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
 
-	if (document.querySelector('#player-lookup') != null) document.querySelector('#player-lookup').remove()
+	loading.remove()
 	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', htmlCode.playerLookup)
 	const lookup = document.querySelector('#player-lookup')
 
@@ -456,8 +462,10 @@ async function lookupPlayer(player) {
 		.replace('{rank}', rank)
 		.replace('{balance}', balance)
 
-	document.querySelector('#player-lookup-close')
-		.addEventListener('click', event => { event.target.parentElement.remove() })
+	for (const closer of document.querySelectorAll('.close-container')) {
+		closer.addEventListener('click', event => { event.target.parentElement.remove() })
+	}
+
 }
 
 async function getAlliances() {
