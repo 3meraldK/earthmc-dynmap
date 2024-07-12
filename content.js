@@ -1,6 +1,6 @@
 const htmlCode = {
-	sidebar: '<div id="emcdynmapplus-sidebar" class="leaflet-control-layers leaflet-control"></div>',
-	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">X</span></div>',
+	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
+	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span class="close-container">X</span></div>',
 	optionContainer: '<div class="option-container"></div>',
 	locateTownInput: '<input class="sidebar-input" id="locate-town-input" placeholder="London">',
 	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',
@@ -137,10 +137,10 @@ function init() {
 	})
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
-	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') initDarkMode()
+	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') enableDarkMode()
 }
 
-function initDarkMode() {
+function enableDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
 		`<style id="dark-mode"> .leaflet-control,#alert,.sidebar-input,.sidebar-button,.leaflet-bar > a,.leaflet-tooltip-top,.leaflet-popup-content-wrapper { background: #111 !important; color: #bbb !important; box-shadow: 0 0 2px 1px #bbb !important; } </style>`)
 	waitForHTMLelement('.leaflet-map-pane').then(element => darkenMap(element))
@@ -150,7 +150,7 @@ function toggleDarkMode() {
 	const darkMode = localStorage.getItem('emcdynmapplus-darkmode') ?? 'false'
 	if (darkMode == 'false') {
 		localStorage.setItem('emcdynmapplus-darkmode', 'true')
-		initDarkMode()
+		enableDarkMode()
 	} else {
 		localStorage.setItem('emcdynmapplus-darkmode', 'false')
 		document.querySelector('#dark-mode').remove()

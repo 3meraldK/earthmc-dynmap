@@ -7,14 +7,16 @@
 // @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/icon.png
 // ==/UserScript==
 
+// Both files
+
 const htmlCode = {
-	playerLookup: '<div class="leaflet-control-layers leaflet-control" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span id="player-lookup-close">X</span></div>',
+	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span class="close-container">X</span></div>',
 	partOf: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
 	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>',
-	residentList: '<span id="resident-list">\t{list}</span>',
-	scrollableResidentList: '<div id="scrollable-resident-list">\t{list}</div>',
-	sidebar: '<div id="emcdynmapplus-sidebar" class="leaflet-control-layers leaflet-control"></div>',
-	updateNotification: '<div id="update-notification" class="leaflet-control-layers leaflet-control">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span id="update-notification-close">X</span></div>',
+	residentList: '<span class="resident-list">\t{list}</span>',
+	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
+	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
+	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span class="close-container">X</span></div>',
 	optionContainer: '<div class="option-container"></div>',
 	locateTownInput: '<input class="sidebar-input" id="locate-town-input" placeholder="London">',
 	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',
@@ -24,12 +26,10 @@ const htmlCode = {
 	archiveButton: '<button class="sidebar-button" id="archive-button" type="submit">Search archive</button>',
 	switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
 	toggleDarkMode: '<button class="sidebar-input" id="toggle-dark-mode">Toggle dark mode</button>',
+	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width:auto">Loading...</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
 }
-const { fetch: originalFetch } = unsafeWindow
 const apiURL = 'https://api.earthmc.net/v3/aurora'
-
-// Both files
 
 function sendAlert(message) {
 	if (document.querySelector('#alert') != null) document.querySelector('#alert').remove()
@@ -156,10 +156,10 @@ function init() {
 	})
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
-	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') initDarkMode()
+	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') enableDarkMode()
 }
 
-function initDarkMode() {
+function enableDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
 		`<style id="dark-mode"> .leaflet-control,#alert,.sidebar-input,.sidebar-button,.leaflet-bar > a,.leaflet-tooltip-top,.leaflet-popup-content-wrapper { background: #111 !important; color: #bbb !important; box-shadow: 0 0 2px 1px #bbb !important; } </style>`)
 	waitForHTMLelement('.leaflet-map-pane').then(element => darkenMap(element))
@@ -169,7 +169,7 @@ function toggleDarkMode() {
 	const darkMode = localStorage.getItem('emcdynmapplus-darkmode') ?? 'false'
 	if (darkMode == 'false') {
 		localStorage.setItem('emcdynmapplus-darkmode', 'true')
-		initDarkMode()
+		enableDarkMode()
 	} else {
 		localStorage.setItem('emcdynmapplus-darkmode', 'false')
 		document.querySelector('#dark-mode').remove()
@@ -231,10 +231,13 @@ async function checkForUpdate(parent) {
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{latestVersion}', latestVersion)
 }
 
+init()
+
 // main.js
 
-let alliances = null
+const { fetch: originalFetch } = unsafeWindow
 const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
+let alliances = null
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 
 function modifySettings(data) {
@@ -509,42 +512,28 @@ unsafeWindow.fetch = async (...args) => {
 
 function appendStyle() {
 	const css = `
-	/* Update notification */
-
-	#update-notification {
+	.left-container {
 		width: 150px;
 		text-align: justify;
 		font-size: larger;
 		padding: 5px;
 		box-sizing: border-box;
 	}
+
+	.close-container {
+		position: relative;
+		left: 120px;
+		cursor: pointer;
+	}
+
+	/* Update notification */
 
 	#update-download-link {
 		font-weight: bold;
 		text-decoration: none;
 	}
 
-	#update-notification-close {
-		position: relative;
-		left: 120px;
-		cursor: pointer;
-	}
-
 	/* Player lookup */
-
-	#player-lookup {
-		width: 150px;
-		text-align: justify;
-		font-size: larger;
-		padding: 5px;
-		box-sizing: border-box;
-	}
-
-	#player-lookup-close {
-		position: relative;
-		left: 120px;
-		cursor: pointer;
-	}
 
 	#player-lookup-online {
 		position: absolute;
@@ -580,13 +569,12 @@ function appendStyle() {
 
 	/* Town popup */
 
-	#scrollable-resident-list {
+	#scrollable-list {
 		overflow: auto;
 		max-height: 200px;
-		white-space: pre-wrap;
 	}
 
-	#resident-list {
+	.resident-list {
 		white-space: pre-wrap;
 	}
 
@@ -629,5 +617,3 @@ function appendStyle() {
 	style.type = 'text/css'
 	style.appendChild(document.createTextNode(css))
 }
-
-init()

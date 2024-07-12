@@ -1,39 +1,25 @@
-/* Update notification */
-
-#update-notification {
+.left-container {
 	width: 150px;
 	text-align: justify;
 	font-size: larger;
 	padding: 5px;
 	box-sizing: border-box;
 }
+
+.close-container {
+	position: relative;
+	left: 120px;
+	cursor: pointer;
+}
+
+/* Update notification */
 
 #update-download-link {
 	font-weight: bold;
 	text-decoration: none;
 }
 
-#update-notification-close {
-	position: relative;
-	left: 120px;
-	cursor: pointer;
-}
-
 /* Player lookup */
-
-#player-lookup {
-	width: 150px;
-	text-align: justify;
-	font-size: larger;
-	padding: 5px;
-	box-sizing: border-box;
-}
-
-#player-lookup-close {
-	position: relative;
-	left: 120px;
-	cursor: pointer;
-}
 
 #player-lookup-online {
 	position: absolute;
@@ -69,13 +55,12 @@
 
 /* Town popup */
 
-#scrollable-resident-list {
+#scrollable-list {
 	overflow: auto;
 	max-height: 200px;
-	white-space: pre-wrap;
 }
 
-#resident-list {
+.resident-list {
 	white-space: pre-wrap;
 }
 

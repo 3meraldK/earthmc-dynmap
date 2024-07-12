@@ -1,10 +1,11 @@
 const { fetch: originalFetch } = window
 const htmlCode = {
-	playerLookup: '<div class="leaflet-control-layers leaflet-control" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span id="player-lookup-close">X</span></div>',
+	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span class="close-container">X</span></div>',
 	partOf: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
 	residentClickable: '<span class="resident-clickable" onclick="lookupPlayer(\'{player}\')">{player}</span>',
-	residentList: '<span id="resident-list">\t{list}</span>',
-	scrollableResidentList: '<div id="scrollable-resident-list">\t{list}</div>',
+	residentList: '<span class="resident-list">\t{list}</span>',
+	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
+	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width:auto">Loading...</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
 }
 
