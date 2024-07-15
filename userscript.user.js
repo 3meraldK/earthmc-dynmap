@@ -10,7 +10,7 @@
 // Both files
 
 const htmlCode = {
-	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span class="close-container">X</span></div>',
+	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"><span id="player-lookup-online" style="color: {online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span class="close-container">X</span></div>',
 	partOf: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
 	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>',
 	residentList: '<span class="resident-list">\t{list}</span>',
@@ -26,6 +26,9 @@ const htmlCode = {
 	archiveButton: '<button class="sidebar-button" id="archive-button" type="submit">Search archive</button>',
 	switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
 	toggleDarkMode: '<button class="sidebar-input" id="toggle-dark-mode">Toggle dark mode</button>',
+	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width: auto">Loading...</button>',
+	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>',
+	currentMapModeLabel: '<div class="option-container" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width:auto">Loading...</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
 }
@@ -115,13 +118,13 @@ function addMainMenu(parent) {
 	toggleDarkModeButton.addEventListener('click', () => toggleDarkMode())
 
 	// Current map mode label
-	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
-	const currentMapModeLabel = parent.querySelectorAll('.option-container')[3]
+	sidebar.insertAdjacentHTML('beforeend', '<hr style="margin: 0">')
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.currentMapModeLabel)
+	const currentMapModeLabel = parent.querySelector('#current-map-mode-label')
 	const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
-	currentMapModeLabel.style.fontSize = 'larger'
-	currentMapModeLabel.style.boxSizing = 'border-box'
-	currentMapModeLabel.style.padding = '5px'
-	currentMapModeLabel.textContent = 'Current map mode: ' + currentMapMode
+	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
+}
+
 }
 
 function switchMapMode() {
@@ -154,22 +157,28 @@ function init() {
 	waitForHTMLelement('#update-notification-close').then(element => {
 		element.addEventListener('click', () => { element.parentElement.remove() })
 	})
+	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') loadDarkMode()
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') enableDarkMode()
 }
 
-function enableDarkMode() {
+function loadDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
-		`<style id="dark-mode"> .leaflet-control,#alert,.sidebar-input,.sidebar-button,.leaflet-bar > a,.leaflet-tooltip-top,.leaflet-popup-content-wrapper { background: #111 !important; color: #bbb !important; box-shadow: 0 0 2px 1px #bbb !important; } </style>`)
-	waitForHTMLelement('.leaflet-map-pane').then(element => darkenMap(element))
+		`<style id="dark-mode">
+		.leaflet-control, #alert, .sidebar-input, .sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top, .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+			background: #111;
+			color: #bbb;
+			box-shadow: 0 0 2px 1px #bbb; }
+		</style>`
+	)
 }
 
 function toggleDarkMode() {
 	const darkMode = localStorage.getItem('emcdynmapplus-darkmode') ?? 'false'
 	if (darkMode == 'false') {
 		localStorage.setItem('emcdynmapplus-darkmode', 'true')
-		enableDarkMode()
+		loadDarkMode()
 	} else {
 		localStorage.setItem('emcdynmapplus-darkmode', 'false')
 		document.querySelector('#dark-mode').remove()
@@ -322,11 +331,11 @@ function modifyDescription(marker) {
 		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
 		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorsList}</b>`) // Lookup councillors
 		.replace('Size: <b>0 chunks</b><br/>', '') // Remove 0 chunks town size info
-		.replaceAll('<b>false</b>', '<b><span style="color:red">No</span></b>') // False
-		.replaceAll('<b>true</b>', '<b><span style="color:green">Yes</span></b>') // True
+		.replaceAll('<b>false</b>', '<b><span style="color: red">No</span></b>') // False
+		.replaceAll('<b>true</b>', '<b><span style="color: green">Yes</span></b>') // True
 
 	if (isCapital) marker.popup = marker.popup
-		.replace('<span style="font-size:120%;">', '<span style="font-size:120%;">★ ') // Add capital star
+		.replace('<span style="font-size:120%;">', '<span style="font-size: 120%">★ ') // Add capital star
 
 	// Modify tooltip
 	marker.tooltip = marker.tooltip
@@ -574,7 +583,13 @@ function appendStyle() {
 	.sidebar-button {
 		min-width: 75px;
 	}
-
+	
+	#current-map-mode-label {
+		font-size: larger;
+		padding: 5px;
+		box-sizing: border-box;
+	}
+	
 	/* Town popup */
 
 	#scrollable-list {

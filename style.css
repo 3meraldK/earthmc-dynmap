@@ -52,6 +52,12 @@
 .sidebar-button {
 	min-width: 75px;
 }
+	
+#current-map-mode-label {
+	font-size: larger;
+	padding: 5px;
+	box-sizing: border-box;
+}
 
 /* Town popup */
 

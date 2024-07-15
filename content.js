@@ -10,7 +10,8 @@ const htmlCode = {
 	archiveButton: '<button class="sidebar-button" id="archive-button" type="submit">Search archive</button>',
 	switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
 	toggleDarkMode: '<button class="sidebar-input" id="toggle-dark-mode">Toggle dark mode</button>',
-	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
+	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>',
+	currentMapModeLabel: '<div class="option-container" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 }
 const apiURL = 'https://api.earthmc.net/v3/aurora'
 
@@ -96,13 +97,13 @@ function addMainMenu(parent) {
 	toggleDarkModeButton.addEventListener('click', () => toggleDarkMode())
 
 	// Current map mode label
-	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
-	const currentMapModeLabel = parent.querySelectorAll('.option-container')[3]
+	sidebar.insertAdjacentHTML('beforeend', '<hr style="margin: 0">')
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.currentMapModeLabel)
+	const currentMapModeLabel = parent.querySelector('#current-map-mode-label')
 	const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
-	currentMapModeLabel.style.fontSize = 'larger'
-	currentMapModeLabel.style.boxSizing = 'border-box'
-	currentMapModeLabel.style.padding = '5px'
-	currentMapModeLabel.textContent = 'Current map mode: ' + currentMapMode
+	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
+}
+
 }
 
 function switchMapMode() {
@@ -135,22 +136,28 @@ function init() {
 	waitForHTMLelement('#update-notification-close').then(element => {
 		element.addEventListener('click', () => { element.parentElement.remove() })
 	})
+	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') loadDarkMode()
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') enableDarkMode()
 }
 
-function enableDarkMode() {
+function loadDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
-		`<style id="dark-mode"> .leaflet-control,#alert,.sidebar-input,.sidebar-button,.leaflet-bar > a,.leaflet-tooltip-top,.leaflet-popup-content-wrapper { background: #111 !important; color: #bbb !important; box-shadow: 0 0 2px 1px #bbb !important; } </style>`)
-	waitForHTMLelement('.leaflet-map-pane').then(element => darkenMap(element))
+		`<style id="dark-mode">
+		.leaflet-control, #alert, .sidebar-input, .sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top, .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+			background: #111;
+			color: #bbb;
+			box-shadow: 0 0 2px 1px #bbb; }
+		</style>`
+	)
 }
 
 function toggleDarkMode() {
 	const darkMode = localStorage.getItem('emcdynmapplus-darkmode') ?? 'false'
 	if (darkMode == 'false') {
 		localStorage.setItem('emcdynmapplus-darkmode', 'true')
-		enableDarkMode()
+		loadDarkMode()
 	} else {
 		localStorage.setItem('emcdynmapplus-darkmode', 'false')
 		document.querySelector('#dark-mode').remove()

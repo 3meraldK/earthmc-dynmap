@@ -1,11 +1,11 @@
 const { fetch: originalFetch } = window
 const htmlCode = {
-	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"><span id="player-lookup-online" style="color:{online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span class="close-container">X</span></div>',
+	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"><span id="player-lookup-online" style="color: {online-color}">{online}</span><br><img id="player-lookup-avatar"/><center><b id="player-lookup-name">{player}</b>{about}</center><hr>Rank: <b>{rank}</b><br>Balance: <b>{balance} gold</b><br><span class="close-container">X</span></div>',
 	partOf: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
 	residentClickable: '<span class="resident-clickable" onclick="lookupPlayer(\'{player}\')">{player}</span>',
 	residentList: '<span class="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
-	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width:auto">Loading...</button>',
+	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width: auto">Loading...</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
 }
 
@@ -103,11 +103,11 @@ function modifyDescription(marker) {
 		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
 		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorsList}</b>`) // Lookup councillors
 		.replace('Size: <b>0 chunks</b><br/>', '') // Remove 0 chunks town size info
-		.replaceAll('<b>false</b>', '<b><span style="color:red">No</span></b>') // False
-		.replaceAll('<b>true</b>', '<b><span style="color:green">Yes</span></b>') // True
+		.replaceAll('<b>false</b>', '<b><span style="color: red">No</span></b>') // False
+		.replaceAll('<b>true</b>', '<b><span style="color: green">Yes</span></b>') // True
 
 	if (isCapital) marker.popup = marker.popup
-		.replace('<span style="font-size:120%;">', '<span style="font-size:120%;">★ ') // Add capital star
+		.replace('<span style="font-size:120%;">', '<span style="font-size: 120%">★ ') // Add capital star
 
 	// Modify tooltip
 	marker.tooltip = marker.tooltip
