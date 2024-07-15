@@ -162,7 +162,7 @@ function init() {
 	localStorage.setItem('emcdynmapplus-mapmode', localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations')
 	localStorage.setItem('emcdynmapplus-darkened', localStorage.getItem('emcdynmapplus-darkened') ?? 'true')
 
-	waitForHTMLelement('.leaflet-tile-pane').then(element => {
+	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage.getItem('emcdynmapplus-darkened') == 'true') decreaseBrightness(true)
 	})
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
@@ -180,7 +180,7 @@ function init() {
 function loadDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
 		`<style id="dark-mode">
-		.leaflet-control, #alert, .sidebar-input, .sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top, .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+		.leaflet-control, #alert, .sidebar-input, .sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top, .leaflet-popup-content-wrapper, .leaflet-popup-tip, .leaflet-bar > a.leaflet-disabled {
 			background: #111;
 			color: #bbb;
 			box-shadow: 0 0 2px 1px #bbb; }
