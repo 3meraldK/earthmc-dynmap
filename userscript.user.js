@@ -29,8 +29,7 @@ const htmlCode = {
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width: auto">Loading...</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>',
 	currentMapModeLabel: '<div class="option-container" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
-	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading" style="width:auto">Loading...</button>',
-	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
+	decreaseBrightness: '<label for="decrease-brightness" style="display: unset; padding: 5px">Decrease brightness</label><input id="decrease-brightness" type="checkbox" name="decrease-brightness">',
 }
 const apiURL = 'https://api.earthmc.net/v3/aurora'
 
@@ -113,9 +112,16 @@ function addMainMenu(parent) {
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
 	// Dark mode button
-	sidebar.insertAdjacentHTML('beforeend', htmlCode.toggleDarkMode)
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.toggleDarkMode + '<br>')
 	const toggleDarkModeButton = parent.querySelector('#toggle-dark-mode')
 	toggleDarkModeButton.addEventListener('click', () => toggleDarkMode())
+
+	// Decrease brightness
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.decreaseBrightness)
+	const decreaseBrightnessCheckbox = parent.querySelector('#decrease-brightness')
+	const isChecked = localStorage.getItem('emcdynmapplus-darkened') == 'true' ? true : false
+	decreaseBrightnessCheckbox.checked = isChecked
+	decreaseBrightnessCheckbox.addEventListener('change', (event) => decreaseBrightness(event.target.checked))
 
 	// Current map mode label
 	sidebar.insertAdjacentHTML('beforeend', '<hr style="margin: 0">')
@@ -125,6 +131,16 @@ function addMainMenu(parent) {
 	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
 }
 
+function decreaseBrightness(isChecked) {
+	const element = document.querySelector('.leaflet-tile-pane')
+	if (isChecked) {
+		element.style.filter = 'brightness(50%)'
+		localStorage.setItem('emcdynmapplus-darkened', 'true')
+	}
+	else {
+		element.style.filter = ''
+		localStorage.setItem('emcdynmapplus-darkened', 'false')
+	}
 }
 
 function switchMapMode() {
@@ -141,26 +157,24 @@ function switchMapMode() {
 	location.reload()
 }
 
-function darkenMap(element) {
-	element.style.filter = `brightness(50%)`
-}
-
 function init() {
 	appendStyle()
 	localStorage.setItem('emcdynmapplus-mapmode', localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations')
+	localStorage.setItem('emcdynmapplus-darkened', localStorage.getItem('emcdynmapplus-darkened') ?? 'true')
 
+	waitForHTMLelement('.leaflet-tile-pane').then(element => {
+		if (localStorage.getItem('emcdynmapplus-darkened') == 'true') decreaseBrightness(true)
+	})
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
 		addMainMenu(element)
 		checkForUpdate(element)
 	})
-	waitForHTMLelement('.leaflet-tile-pane').then(elements => darkenMap(elements))
 	waitForHTMLelement('#update-notification-close').then(element => {
 		element.addEventListener('click', () => { element.parentElement.remove() })
 	})
 	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') loadDarkMode()
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
-	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') enableDarkMode()
 }
 
 function loadDarkMode() {
