@@ -134,7 +134,7 @@ function main(data) {
 		}
 	}
 
-	if (data?.[0]?.markers?.length == 0) {
+	if (data?.[0]?.markers?.length == 0 || !data?.[0]?.markers?.length) {
 		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
 		return data
 	}
