@@ -23,6 +23,7 @@ function sendAlert(message) {
 
 function modifySettings(data) {
 	data['player_tracker'].nameplates['show_heads'] = true
+	data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
 	data.zoom.def = 0
 	// Set camera on Europe
 	data.spawn.x = 2000
