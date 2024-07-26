@@ -367,6 +367,38 @@ function modifyDescription(marker) {
 	return marker
 }
 
+function addChunksLayer(data) {
+	const chunkLines = []
+	for (let x = -33280; x <= 33088; x += 16) {
+		chunkLines.push([
+			{ "x": x, "z": -16640 },
+			{ "x": x, "z": +16508 },
+			{ "x": x, "z": -16640 }
+		])
+	}
+	for (let z = -16640; z <= 16512; z += 16) {
+		chunkLines.push([
+			{ "x": -33280, "z": z },
+			{ "x": +33088, "z": z },
+			{ "x": -33280, "z": z }
+		])
+	}
+
+	data[2] = {
+		"hide": true,
+		"name": "Chunks",
+		"control": true,
+		"id": "chunks",
+		"markers": [{
+			"weight": 0.33,
+			"color": "#000000",
+			"type": "polyline",
+			"points": chunkLines
+		}]
+	}
+	return data
+}
+
 function main(data) {
 	if (currentMapMode == 'archive') {
 		if (localStorage.getItem('emcdynmapplus-archive') == null) {
@@ -381,6 +413,8 @@ function main(data) {
 		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
 		return data
 	}
+
+	data = addChunksLayer(data)
 
 	for (const index in data[0].markers) {
 		let marker = data[0]['markers'][index]
