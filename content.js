@@ -100,7 +100,7 @@ function addMainMenu(parent) {
 	// Decrease brightness
 	sidebar.insertAdjacentHTML('beforeend', htmlCode.decreaseBrightness)
 	const decreaseBrightnessCheckbox = parent.querySelector('#decrease-brightness')
-	const isChecked = localStorage.getItem('emcdynmapplus-darkened') == 'true' ? true : false
+	const isChecked = (localStorage['emcdynmapplus-darkened'] == 'true')
 	decreaseBrightnessCheckbox.checked = isChecked
 	decreaseBrightnessCheckbox.addEventListener('change', (event) => decreaseBrightness(event.target.checked))
 
@@ -108,7 +108,7 @@ function addMainMenu(parent) {
 	sidebar.insertAdjacentHTML('beforeend', '<hr style="margin: 0">')
 	sidebar.insertAdjacentHTML('beforeend', htmlCode.currentMapModeLabel)
 	const currentMapModeLabel = parent.querySelector('#current-map-mode-label')
-	const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
+	const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
 }
 
@@ -116,35 +116,32 @@ function decreaseBrightness(isChecked) {
 	const element = document.querySelector('.leaflet-tile-pane')
 	if (isChecked) {
 		element.style.filter = 'brightness(50%)'
-		localStorage.setItem('emcdynmapplus-darkened', 'true')
+		localStorage['emcdynmapplus-darkened'] = true
 	}
 	else {
 		element.style.filter = ''
-		localStorage.setItem('emcdynmapplus-darkened', 'false')
+		localStorage['emcdynmapplus-darkened'] = false
 	}
 }
 
 function switchMapMode() {
-	const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode')
-	if (currentMapMode == 'meganations') {
-		localStorage.setItem('emcdynmapplus-mapmode', 'alliances')
+	const currentMapMode = localStorage['emcdynmapplus-mapmode']
+	const nextMapMode = {
+		meganations: 'alliances',
+		alliances: 'default',
+		default: 'meganations'
 	}
-	else if (currentMapMode == 'alliances') {
-		localStorage.setItem('emcdynmapplus-mapmode', 'default')
-	}
-	else {
-		localStorage.setItem('emcdynmapplus-mapmode', 'meganations')
-	}
+	localStorage['emcdynmapplus-mapmode'] = nextMapMode[currentMapMode] ?? 'meganations'
 	location.reload()
 }
 
 function init() {
 	injectMainScript()
-	localStorage.setItem('emcdynmapplus-mapmode', localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations')
-	localStorage.setItem('emcdynmapplus-darkened', localStorage.getItem('emcdynmapplus-darkened') ?? 'true')
+	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
+	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
 
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
-		if (localStorage.getItem('emcdynmapplus-darkened') == 'true') decreaseBrightness(true)
+		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
 	})
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
 		addMainMenu(element)
@@ -153,7 +150,7 @@ function init() {
 	waitForHTMLelement('#update-notification-close').then(element => {
 		element.addEventListener('click', () => { element.parentElement.remove() })
 	})
-	if (localStorage.getItem('emcdynmapplus-darkmode') == 'true') loadDarkMode()
+	if (localStorage['emcdynmapplus-darkmode'] == 'true') loadDarkMode()
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 }
@@ -170,12 +167,12 @@ function loadDarkMode() {
 }
 
 function toggleDarkMode() {
-	const darkMode = localStorage.getItem('emcdynmapplus-darkmode') ?? 'false'
-	if (darkMode == 'false') {
-		localStorage.setItem('emcdynmapplus-darkmode', 'true')
+	const isDarkModeOn = localStorage.getItem('emcdynmapplus-darkmode') ?? 'false'
+	if (isDarkModeOn == 'false') {
+		localStorage['emcdynmapplus-darkmode'] = true
 		loadDarkMode()
 	} else {
-		localStorage.setItem('emcdynmapplus-darkmode', 'false')
+		localStorage['emcdynmapplus-darkmode'] = false
 		document.querySelector('#dark-mode').remove()
 		waitForHTMLelement('.leaflet-map-pane').then(element => element.style.filter = '')
 	}
@@ -195,8 +192,8 @@ async function searchArchive(date) {
 	const markersURL = `https://web.archive.org/web/${URLDate}id_/https://map.earthmc.net/tiles/minecraft_overworld/markers.json`
 	const archive = await fetchJSON('https://api.codetabs.com/v1/proxy/?quest=' + markersURL)
 	if (!archive) return sendAlert('Archive service is currently unavailable, please try later.')
-	localStorage.setItem('emcdynmapplus-archive', JSON.stringify(archive))
-	localStorage.setItem('emcdynmapplus-mapmode', 'archive')
+	localStorage['emcdynmapplus-archive'] = JSON.stringify(archive)
+	localStorage['emcdynmapplus-mapmode'] = 'archive'
 	location.reload()
 }
 

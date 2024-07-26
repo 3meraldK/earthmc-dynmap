@@ -10,7 +10,7 @@ const htmlCode = {
 }
 
 let alliances = null
-const currentMapMode = localStorage.getItem('emcdynmapplus-mapmode') ?? 'meganations'
+const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 
 function sendAlert(message) {
@@ -127,10 +127,10 @@ function modifyDescription(marker) {
 
 function main(data) {
 	if (currentMapMode == 'archive') {
-		if (localStorage.getItem('emcdynmapplus-archive') == null) {
+		if (localStorage['emcdynmapplus-archive'] == undefined) {
 			sendAlert('Unexpected error occurred while setting the map mode to archive, maybe the service is unavailable? Try again later.')
 		} else {
-			const archive = localStorage.getItem('emcdynmapplus-archive')
+			const archive = localStorage['emcdynmapplus-archive']
 			data = JSON.parse(archive)
 		}
 	}
@@ -312,7 +312,7 @@ async function getAlliances() {
 		})
 	}
 
-	localStorage.setItem('emcdynmapplus-alliances', JSON.stringify(finalArray))
+	localStorage['emcdynmapplus-alliances'] = JSON.stringify(finalArray)
 	return finalArray
 }
 
