@@ -275,10 +275,7 @@ async function lookupPlayer(player) {
 		.replace('{rank}', rank)
 		.replace('{balance}', balance)
 
-	for (const closer of document.querySelectorAll('.close-container')) {
-		closer.addEventListener('click', event => { event.target.parentElement.remove() })
-	}
-
+	lookup.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
 async function fetchJSON(url) {

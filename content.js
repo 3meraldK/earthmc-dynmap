@@ -237,6 +237,7 @@ async function checkForUpdate(parent) {
 	const updateNotification = parent.querySelector('#update-notification')
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{localVersion}', localVersion)
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{latestVersion}', latestVersion)
+	updateNotification.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
 init()

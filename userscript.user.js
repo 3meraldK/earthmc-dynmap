@@ -249,6 +249,7 @@ async function checkForUpdate(parent) {
 	const updateNotification = parent.querySelector('#update-notification')
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{localVersion}', localVersion)
 	updateNotification.innerHTML = updateNotification.innerHTML.replace('{latestVersion}', latestVersion)
+	updateNotification.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
 init()
@@ -517,9 +518,7 @@ async function lookupPlayer(player) {
 		.replace('{rank}', rank)
 		.replace('{balance}', balance)
 
-	for (const closer of document.querySelectorAll('.close-container')) {
-		closer.addEventListener('click', event => { event.target.parentElement.remove() })
-	}
+	lookup.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
 
 }
 
@@ -589,6 +588,10 @@ function appendStyle() {
 		cursor: pointer;
 	}
 
+	.close-container:hover {
+		background-color: rgba(127, 127, 125, 0.5);
+	}
+
 	/* Update notification */
 
 	#update-download-link {
@@ -652,7 +655,7 @@ function appendStyle() {
 	}
 
 	.resident-clickable:hover {
-		background-color: #ddd;
+		background-color: rgba(127, 127, 127, 0.5);
 		cursor: pointer;
 	}
 
