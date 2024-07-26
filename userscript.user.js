@@ -22,7 +22,7 @@ const htmlCode = {
 	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',
 	locateNationInput: '<input class="sidebar-input" id="locate-nation-input" placeholder="Germany">',
 	locateNationButton: '<button class="sidebar-button" id="locate-nation-button" type="submit">Locate nation</button>',
-	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2024-07-04" max="${new Date().toLocaleDateString('en-ca')}">`,
+	archiveInput: `<input class="sidebar-input" id="archive-input" style="width: 70px" type="date" min="2024-07-04" max="${new Date().toLocaleDateString('en-ca')}">`,
 	archiveButton: '<button class="sidebar-button" id="archive-button" type="submit">Search archive</button>',
 	switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
 	toggleDarkMode: '<button class="sidebar-input" id="toggle-dark-mode">Toggle dark mode</button>',
