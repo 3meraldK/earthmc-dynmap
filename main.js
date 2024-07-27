@@ -100,6 +100,7 @@ function modifyDescription(marker) {
 		// Deprecated: .replace('Wealth: <b>0 gold</b>\n\t<br>', '') // Remove 0 gold wealth info
 		.replace('<i>/town set board [msg]</i>', '<i></i>') // Remove default town board
 		.replace('<i></i> \n    <br>\n', '') // Remove empty town board
+		.replace('\n    <i>', '\n    <i style="overflow-wrap: break-word">') // Wrap long town board
 		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`) // Lookup mayor
 		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
 		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorsList}</b>`) // Lookup councillors
