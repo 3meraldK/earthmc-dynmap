@@ -248,7 +248,11 @@ async function lookupPlayer(player) {
 	document.querySelector('.leaflet-top.leaflet-left').insertAdjacentHTML('beforeend', htmlCode.playerLookupLoading)
 	const loading = document.querySelector('#player-lookup-loading')
 
-	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/players?query=' + player)
+	const query = { query: [player], template: {
+		status: true, stats: true, town: true, nation: true,
+		timestamps: true, about: true, ranks: true, uuid: true
+	}}
+	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/players', { method: 'POST', body: JSON.stringify(query) })
 	if (data == false) return sendAlert('Unexpected error occurred while looking up the player, please try later.')
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
 
@@ -279,8 +283,8 @@ async function lookupPlayer(player) {
 	lookup.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
-async function fetchJSON(url) {
-	const response = await fetch(url)
+async function fetchJSON(url, options = null) {
+	const response = await fetch(url, options)
 	if (response.status == 404) return false
 	else if (response.ok) return response.json()
 	else return null

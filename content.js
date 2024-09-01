@@ -178,8 +178,8 @@ function toggleDarkMode() {
 	}
 }
 
-async function fetchJSON(url) {
-	const response = await fetch(url)
+async function fetchJSON(url, options = null) {
+	const response = await fetch(url, options)
 	if (response.status == 404) return false
 	else if (response.ok) return response.json()
 	else return null
@@ -201,7 +201,8 @@ async function locateTown(town) {
 	town = town.trim().toLowerCase()
 	if (town == '') return
 
-	const data = await fetchJSON(apiURL + '/towns?query=' + town)
+	const query = { query: [encodeURIComponent(town)], template: { coordinates: true } }
+	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
 	if (data == false) return sendAlert('The searched town has not been found.')
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
 
@@ -214,12 +215,14 @@ async function locateNation(nation) {
 	nation = nation.trim().toLowerCase()
 	if (nation == '') return
 
-	const nationData = await fetchJSON(apiURL + '/nations?query=' + nation)
+	const nationQuery = { query: [encodeURIComponent(nation)], template: { capital: true } }
+	const nationData = await fetchJSON(apiURL + '/nations', {method: 'POST', body: JSON.stringify(nationQuery)})
 	if (nationData == false) return sendAlert('The searched nation has not been found.')
 	if (nationData == null) return sendAlert('Service is currently unavailable, please try later.')
 
 	const capital = nationData[0].capital.name
-	const townData = await fetchJSON(apiURL + '/towns?query=' + capital)
+	const townQuery = { query: [encodeURIComponent(capital)], template: { coordinates: true } }
+	const townData = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(townQuery)})
 	if (townData == false) return sendAlert('Some unexpected error occurred while searching for nation, please try later.')
 	if (townData == null) return sendAlert('Service is currently unavailable, please try later.')
 
