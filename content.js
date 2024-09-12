@@ -12,7 +12,7 @@ const htmlCode = {
 	toggleDarkMode: '<button class="sidebar-input" id="toggle-dark-mode">Toggle dark mode</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>',
 	currentMapModeLabel: '<div class="option-container" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
-	decreaseBrightness: '<label for="decrease-brightness" style="display: unset; padding: 5px">Decrease brightness</label><input id="decrease-brightness" type="checkbox" name="decrease-brightness">'
+	// menuButton: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-menu-button" style="width: 44px; height: 44px"><img src="https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/icon.png" style="width: 44px; image-rendering: unset"></div>'
 }
 const apiURL = 'https://api.earthmc.net/v3/aurora'
 
@@ -51,7 +51,12 @@ function addMainMenu(parent) {
 	parent.insertAdjacentHTML('beforeend', htmlCode.sidebar)
 	const sidebar = parent.querySelector('#emcdynmapplus-sidebar')
 
-	// Locate town button
+	/* Attempt to add main menu button for extension
+	parent.insertAdjacentHTML('beforeend', htmlCode.menuButton)
+	const menuButton = parent.querySelector('#emcdynmapplus-menu-button')
+	menuButton.addEventListener('click', () => {
+		sidebar.style.display = (sidebar.style.display == 'none') ? '' : 'none'
+	})*/
 	sidebar.insertAdjacentHTML('beforeend', htmlCode.optionContainer)
 	const findTownContainer = parent.querySelector('.option-container')
 	findTownContainer.insertAdjacentHTML('beforeend', htmlCode.locateTownButton)
