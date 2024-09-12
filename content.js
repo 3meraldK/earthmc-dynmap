@@ -1,6 +1,5 @@
 const htmlCode = {
 	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
-	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">EarthMC Dynmap+ update from {localVersion} to {latestVersion} is available. <a id="update-download-link" href="https://github.com/3meraldK/earthmc-dynmap/releases/latest">Click here to download!</a><br><span class="close-container">X</span></div>',
 	optionContainer: '<div class="option-container"></div>',
 	locateTownInput: '<input class="sidebar-input" id="locate-town-input" placeholder="London">',
 	locateTownButton: '<button class="sidebar-button" id="locate-town-button" type="submit">Locate town</button>',
@@ -12,7 +11,8 @@ const htmlCode = {
 	toggleDarkMode: '<button class="sidebar-input" id="toggle-dark-mode">Toggle dark mode</button>',
 	alert: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>',
 	currentMapModeLabel: '<div class="option-container" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
-	// menuButton: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-menu-button" style="width: 44px; height: 44px"><img src="https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/icon.png" style="width: 44px; image-rendering: unset"></div>'
+	decreaseBrightnessLabel: '<label for="decrease-brightness" style="display: unset; padding: 5px">Decrease brightness</label>',
+	decreaseBrightnessCheckbox: '<input id="decrease-brightness" type="checkbox" name="decrease-brightness">',
 }
 const apiURL = 'https://api.earthmc.net/v3/aurora'
 
@@ -103,7 +103,8 @@ function addMainMenu(parent) {
 	toggleDarkModeButton.addEventListener('click', () => toggleDarkMode())
 
 	// Decrease brightness
-	sidebar.insertAdjacentHTML('beforeend', htmlCode.decreaseBrightness)
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.decreaseBrightnessLabel)
+	sidebar.insertAdjacentHTML('beforeend', htmlCode.decreaseBrightnessCheckbox)
 	const decreaseBrightnessCheckbox = parent.querySelector('#decrease-brightness')
 	const isChecked = (localStorage['emcdynmapplus-darkened'] == 'true')
 	decreaseBrightnessCheckbox.checked = isChecked
