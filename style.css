@@ -16,14 +16,11 @@
 	background-color: rgba(127, 127, 125, 0.5);
 }
 
-/* Update notification */
-
-#update-download-link {
-	font-weight: bold;
-	text-decoration: none;
-}
-
 /* Player lookup */
+
+#player-lookup {
+	text-align: unset;
+}
 
 #player-lookup-online {
 	position: absolute;
@@ -44,7 +41,7 @@
 
 /* Main sidebar */
 
-.option-container {
+.sidebar-option {
 	width: 150px;
 	display: flex;
 }
@@ -56,11 +53,34 @@
 .sidebar-button {
 	min-width: 75px;
 }
-	
+
 #current-map-mode-label {
 	font-size: larger;
 	padding: 5px;
 	box-sizing: border-box;
+}
+
+#sidebar {
+	padding: 3px;
+}
+
+#locate-menu {
+	padding-bottom: 5px;
+	display: block;
+}
+
+#locate-button, #options-button, #options-menu {
+	width: 150px;
+}
+
+.option {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+#archive-input {
+	width: 70px;
 }
 
 /* Town popup */
@@ -68,6 +88,13 @@
 #scrollable-list {
 	overflow: auto;
 	max-height: 200px;
+}
+
+#clamped-board {
+	max-width: 400px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: inline-block;
 }
 
 .resident-list {
@@ -104,4 +131,19 @@
 #alert-message {
 	margin-block: 0;
 	text-align: justify;
+}
+
+/* Clickable nameplates */
+
+.leaflet-tooltip {
+	pointer-events: unset !important;
+}
+
+.leaflet-tooltip:hover {
+	background-color: rgba(127, 127, 127, 0.5);
+	cursor: pointer;
+}
+
+#player-lookup-loading {
+	width: auto;
 }
