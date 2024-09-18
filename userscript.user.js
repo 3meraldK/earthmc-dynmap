@@ -757,7 +757,7 @@ async function getArchive(data) {
 
 	// Structure of markers.json changed
 	if (archiveDate < 20240701) {
-		data[0].markers = convertOldMarkersStructure(archive['sets']['townyPlugin.markerset'])
+		data[0].markers = convertOldMarkersStructure(archive.sets['townyPlugin.markerset'])
 		actualArchiveDate = archive.timestamp
 	} else {
 		data = archive

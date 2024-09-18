@@ -7,11 +7,12 @@ A web extension for all browsers. Designed specifically for EarthMC's dynamic ma
 When creating the extension, the main idea was to group the countries together into their respective organizations and "meganations". Later on, in the natural course of things, the number of new features began to grow with new releases.
 * Three map modes to switch between: alliances, meganations and default
 * Archive mode to view old claims and statistics (from the Wayback Machine)
-* Search towns and nations by name
+* Locate towns, players and nations quickly
 * Total revamp of the aesthetics
 * Notifications about new releases
 * Look up a player by clicking their name in town's statistics
 * Dark mode
+* View chunks and real country borders
 * Regularly updated with new stuff you'll like
 * **Read what has been added to the latest release by clicking [this link](https://github.com/3meraldK/earthmc-dynmap/releases/latest).**
 
