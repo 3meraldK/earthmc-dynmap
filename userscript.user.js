@@ -529,8 +529,7 @@ function colorTowns(marker) {
 			marker.color = '#363636' // Dark gray
 			marker.fillColor = hashCode(nation)
 		}
-		else marker.color = '#bfff00' // Default green
-		if (isNationless) marker.fillColor = marker.color = '#ff00ff' // Magenta
+		else marker.color = '#89c500' // Default green
 	}
 	if (isRuin) return marker.fillColor = marker.color = '#000000' // Black
 
