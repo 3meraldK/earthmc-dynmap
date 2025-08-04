@@ -315,9 +315,7 @@ async function main(data) {
 	}
 
 	data = addChunksLayer(data)
-	if (localStorage['emcdynmapplus-load-borders'] == 'true') {
-		data = await addCountryLayer(data)
-	}
+	data = await addCountryLayer(data)
 
 	if (!data?.[0]?.markers?.length) {
 		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
@@ -346,37 +344,49 @@ async function main(data) {
 
 async function addCountryLayer(data) {
 
-	const loadingMessage = addElement(document.body, htmlCode.message.replace('{message}', 'Loading country borders...'), '.message')
-	const markersURL = 'https://web.archive.org/web/2id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
-	const fetch = await fetchJSON(proxyURL + markersURL)
-	loadingMessage.remove()
-	if (!fetch) return data
-	const points = []
-	const countries = fetch.sets['borders.Country Borders'].lines
-
-	for (const line of Object.values(countries)) {
-		const linePoints = []
-		for (const x in line.x) {
-			if (isNaN(parseInt(line.x[x]))) continue
-			linePoints.push({ "x": line.x[x], "z": line.z[x] })
+	if (!localStorage['emcdynmapplus-borders']) {
+		const loadingMessage = addElement(document.body, htmlCode.message.replace('{message}', 'Downloading country borders...'), '.message')
+		const markersURL = 'https://web.archive.org/web/2id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
+		const fetch = await fetchJSON(proxyURL + markersURL)
+		loadingMessage.remove()
+		if (!fetch) {
+			sendAlert('Could not download an optional external resource of country borders, you could try again later.')
+			return data
 		}
-		points.push(linePoints)
+		localStorage['emcdynmapplus-borders'] = JSON.stringify(fetch.sets['borders.Country Borders'].lines)
 	}
 
-	data[3] = {
-		"hide": true,
-		"name": "Country Borders",
-		"control": true,
-		"id": "borders",
-		"order": 999,
-		"markers": [{
-			"weight": 1,
-			"color": "#ffffff",
-			"type": "polyline",
-			"points": points
-		}]
+
+	try {
+		const points = []
+		const countries = JSON.parse(localStorage['emcdynmapplus-borders'])
+		for (const line of Object.values(countries)) {
+			const linePoints = []
+			for (const x in line.x) {
+				if (isNaN(parseInt(line.x[x]))) continue
+				linePoints.push({ "x": line.x[x], "z": line.z[x] })
+			}
+			points.push(linePoints)
+		}
+
+		data[3] = {
+			"hide": true,
+			"name": "Country Borders",
+			"control": true,
+			"id": "borders",
+			"order": 999,
+			"markers": [{
+				"weight": 1,
+				"color": "#ffffff",
+				"type": "polyline",
+				"points": points
+			}]
+		}
+		return data
+	} catch (error) {
+		sendAlert(`Could not set up a layer of country borders. You may need to clear this website's data. If problem persists, contact the developer.`)
+		return data
 	}
-	return data
 }
 
 async function lookupPlayer(player, showOnlineStatus = true) {

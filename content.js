@@ -169,16 +169,11 @@ function addOptions(sidebar) {
 
 	const checkbox = {
 		decreaseBrightness: addOption(0, 'decrease-brightness', 'Decrease brightness', 'darkened'),
-		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
-		loadBorders: addOption(2, 'load-borders', 'Load country borders', 'load-borders')
+		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode')
 	}
 
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
 	checkbox.darkMode.addEventListener('change', event => toggleDarkMode(event.target.checked))
-	checkbox.loadBorders.addEventListener('change', event => {
-		localStorage['emcdynmapplus-load-borders'] = event.target.checked
-		location.reload()
-	})
 }
 
 function searchArchive(date) {
