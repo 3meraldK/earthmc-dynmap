@@ -22,13 +22,13 @@ The maintainer actively cooperates with EMC Toolkit (developers of "EarthMC Stat
 > [!TIP]
 > Extension works for desktop and mobile! For the best experience, it is also recommended to use ad-blockers.
 
-### Extension (recommended)
+### 1. Extension (recommended)
 > [!IMPORTANT]
 > Only for Chromium browsers (Chrome, Microsoft Edge, Opera, Brave, etc.). Other browsers users, please install the userscript.
 
 Install the extension in Chrome Web Store by [clicking here](https://chromewebstore.google.com/detail/earthmc-dynmap+/hgfdjfdkneceljokdelhiikgnndpmcgh).
 
-### Userscript
+### 2. Userscript
 1. Install Tampermonkey extension for your browser.
     - [For Chrome, Microsoft Edge, Opera and Brave](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
     - [For Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
