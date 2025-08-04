@@ -718,7 +718,7 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 async function getAlliances() {
 	const alliances = await fetchJSON('https://emctoolkit.vercel.app/api/aurora/alliances')
 	if (!alliances) {
-		const cache = JSON.parse(localStorage.getItem('emcdynmapplus-alliances'))
+		const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 		if (cache == null) {
 			sendAlert('Service responsible for loading alliances will be available later.')
 			return []

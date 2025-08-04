@@ -259,29 +259,29 @@ function addChunksLayer(data) {
 	const chunkLines = []
 	for (let x = -33280; x <= 33088; x += 16) {
 		chunkLines.push([
-			{ "x": x, "z": -16640 },
-			{ "x": x, "z": +16512 },
-			{ "x": x, "z": -16640 }
+			{ 'x': x, 'z': -16640 },
+			{ 'x': x, 'z': +16512 },
+			{ 'x': x, 'z': -16640 }
 		])
 	}
 	for (let z = -16640; z <= 16512; z += 16) {
 		chunkLines.push([
-			{ "x": -33280, "z": z },
-			{ "x": +33088, "z": z },
-			{ "x": -33280, "z": z }
+			{ 'x': -33280, 'z': z },
+			{ 'x': +33088, 'z': z },
+			{ 'x': -33280, 'z': z }
 		])
 	}
 
 	data[2] = {
-		"hide": true,
-		"name": "Chunks",
-		"control": true,
-		"id": "chunks",
-		"markers": [{
-			"weight": 0.33,
-			"color": "#000000",
-			"type": "polyline",
-			"points": chunkLines
+		'hide': true,
+		'name': 'Chunks',
+		'control': true,
+		'id': 'chunks',
+		'markers': [{
+			'weight': 0.33,
+			'color': '#000000',
+			'type': 'polyline',
+			'points': chunkLines
 		}]
 	}
 	return data
@@ -356,7 +356,6 @@ async function addCountryLayer(data) {
 		localStorage['emcdynmapplus-borders'] = JSON.stringify(fetch.sets['borders.Country Borders'].lines)
 	}
 
-
 	try {
 		const points = []
 		const countries = JSON.parse(localStorage['emcdynmapplus-borders'])
@@ -364,22 +363,22 @@ async function addCountryLayer(data) {
 			const linePoints = []
 			for (const x in line.x) {
 				if (isNaN(parseInt(line.x[x]))) continue
-				linePoints.push({ "x": line.x[x], "z": line.z[x] })
+				linePoints.push({ 'x': line.x[x], 'z': line.z[x] })
 			}
 			points.push(linePoints)
 		}
 
 		data[3] = {
-			"hide": true,
-			"name": "Country Borders",
-			"control": true,
-			"id": "borders",
-			"order": 999,
-			"markers": [{
-				"weight": 1,
-				"color": "#ffffff",
-				"type": "polyline",
-				"points": points
+			'hide': true,
+			'name': 'Country Borders',
+			'control': true,
+			'id': 'borders',
+			'order': 999,
+			'markers': [{
+				'weight': 1,
+				'color': '#ffffff',
+				'type': 'polyline',
+				'points': points
 			}]
 		}
 		return data
@@ -455,7 +454,7 @@ async function fetchJSON(url, options = null) {
 async function getAlliances() {
 	const alliances = await fetchJSON('https://emctoolkit.vercel.app/api/aurora/alliances')
 	if (!alliances) {
-		const cache = JSON.parse(localStorage.getItem('emcdynmapplus-alliances'))
+		const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 		if (cache == null) {
 			sendAlert('Service responsible for loading alliances will be available later.')
 			return []
