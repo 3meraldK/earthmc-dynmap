@@ -38,17 +38,17 @@ function injectMainScript() {
 }
 
 function waitForHTMLelement(selector) {
-    return new Promise(resolve => {
-        if (document.querySelector(selector)) return resolve(document.querySelector(selector))
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) return resolve(document.querySelector(selector))
 
-        const observer = new MutationObserver(() => {
-            if (document.querySelector(selector)) {
-                resolve(document.querySelector(selector))
-                observer.disconnect()
-            }
-        })
-        observer.observe(document.body, { childList: true, subtree: true })
-    })
+		const observer = new MutationObserver(() => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector))
+				observer.disconnect()
+			}
+		})
+		observer.observe(document.body, { childList: true, subtree: true })
+	})
 }
 
 function addMainMenu(parent) {
@@ -164,7 +164,7 @@ function addOptions(sidebar) {
 	const optionsMenu = addElement(sidebar, htmlCode.options.menu, '#options-menu')
 	optionsMenu.style.display = 'none'
 	optionsButton.addEventListener('click', () => {
-        optionsMenu.style.display = (optionsMenu.style.display == 'none') ? 'unset' : 'none'
+		optionsMenu.style.display = (optionsMenu.style.display == 'none') ? 'unset' : 'none'
 	})
 
 	const checkbox = {

@@ -56,17 +56,17 @@ function hashCode(string) {
 
 // Shoelace formula
 function getArea(vertices) {
-    const n = vertices.length
-    let area = 0
+	const n = vertices.length
+	let area = 0
 
 	// Vertices need rounding to 16 because data has imprecise coordinates
-    for (let i = 0; i < n; i++) {
-        const j = (i + 1) % n
-        area += roundTo16(vertices[i].x) * roundTo16(vertices[j].z)
-        area -= roundTo16(vertices[j].x) * roundTo16(vertices[i].z)
-    }
+	for (let i = 0; i < n; i++) {
+		const j = (i + 1) % n
+		area += roundTo16(vertices[i].x) * roundTo16(vertices[j].z)
+		area -= roundTo16(vertices[j].x) * roundTo16(vertices[i].z)
+	}
 
-    return (Math.abs(area) / 2) / (16 * 16)
+	return (Math.abs(area) / 2) / (16 * 16)
 }
 
 // Modify town descriptions for Dynmap archives
@@ -287,19 +287,19 @@ function addChunksLayer(data) {
 }
 
 function waitForHTMLelement(selector) {
-    return new Promise(resolve => {
-        if (document.querySelector(selector)) {
-            return resolve(document.querySelector(selector))
-        }
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector))
+		}
 
-        const observer = new MutationObserver(() => {
-            if (document.querySelector(selector)) {
-                resolve(document.querySelector(selector))
-                observer.disconnect()
-            }
-        })
-        observer.observe(document.body, { childList: true, subtree: true })
-    })
+		const observer = new MutationObserver(() => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector))
+				observer.disconnect()
+			}
+		})
+		observer.observe(document.body, { childList: true, subtree: true })
+	})
 }
 
 function addElement(parent, element, returnWhat, all = false) {
@@ -517,15 +517,15 @@ async function getArchive(data) {
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
 window.fetch = async (...args) => {
-    let [resource, config] = args
-    let response = await originalFetch(resource, config)
+	let [resource, config] = args
+	let response = await originalFetch(resource, config)
 
 	if (response.url.includes('web.archive.org')) return response
 
 	// Modify contents of markers.json and settings.json
-    if (response.url.includes('markers.json') || response.url.includes('minecraft_overworld/settings.json')) {
+	if (response.url.includes('markers.json') || response.url.includes('minecraft_overworld/settings.json')) {
 
-        const modifiedJson = await response.clone().json().then(data => {
+		const modifiedJson = await response.clone().json().then(data => {
 
 			// markers.json
 			if (response.url.includes('markers.json')) {
@@ -538,10 +538,10 @@ window.fetch = async (...args) => {
 
 			// settings.json
 			if (response.url.includes('minecraft_overworld/settings.json')) return modifySettings(data)
-        })
-        return new Response(JSON.stringify(modifiedJson))
+		})
+		return new Response(JSON.stringify(modifiedJson))
 
-    }
+	}
 
-    return response
+	return response
 }
