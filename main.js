@@ -188,6 +188,8 @@ function modifyDescription(marker) {
 		.replace('\n    <i>', '\n    <i style="overflow-wrap: break-word">') // Wrap long town board
 		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
 		.replace('Size: <b>0 chunks</b><br/>', '') // Remove 0 chunks town size info
+		.replace(town, names.town)
+		.replace(nation, names.nation)
 		.replaceAll('<b>false</b>', '<b><span style="color: red">No</span></b>') // 'False' flag
 		.replaceAll('<b>true</b>', '<b><span style="color: green">Yes</span></b>') // 'True' flag
 	if (currentMapMode != 'archive') {

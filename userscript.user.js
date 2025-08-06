@@ -265,7 +265,7 @@ async function locateNation(nation) {
 	nation = nation.trim().toLowerCase()
 	if (nation == '') return
 
-	const query = { query: [encodeURIComponent(nation)], template: { capital: true } }
+	const query = { query: [nation], template: { capital: true } }
 	const data = await fetchJSON(apiURL + '/nations', {method: 'POST', body: JSON.stringify(query)})
 	if (data == false) return sendAlert('Searched nation has not been found.')
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
@@ -281,7 +281,7 @@ async function locateResident(resident) {
 	resident = resident.trim().toLowerCase()
 	if (resident == '') return
 
-	const query = { query: [encodeURIComponent(resident)], template: { town: true } }
+	const query = { query: [resident], template: { town: true } }
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
 	if (data == false) return sendAlert('Searched resident has not been found.')
 	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
@@ -295,7 +295,7 @@ async function locateResident(resident) {
 }
 
 async function getTownSpawn(town) {
-	const query = { query: [encodeURIComponent(town)], template: { coordinates: true } }
+	const query = { query: [town], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
 	if (data == false || data == undefined) return false
 	if (data == null) return null
@@ -400,6 +400,8 @@ function modifyOldDescription(marker) {
 		.replace('>explosion:', '>Explosions:&#9;')
 		.replace('>fire:', '>Fire spread:&#9;')
 		.replace(/<br \/>capital:.*<\/span>/, '</span>')
+		.replace(town, names.town)
+		.replace(nation, names.nation)
 		.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
 		.replaceAll('false<', '&#9;<span style="color:red">No</span><')
 		.replace(`Members <span`, `Members <b>[${residentNum}]</b> <span`)
