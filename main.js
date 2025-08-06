@@ -69,17 +69,31 @@ function getArea(vertices) {
 	return (Math.abs(area) / 2) / (16 * 16)
 }
 
+// By James Halliday (substack)
+function pointInPolygon(vertex, polygon) {
+	let x = vertex.x, z = vertex.z
+	let n = polygon.length
+	let inside = false
+	for (let i = 0, j = n - 1; i < n; j = i++ ) {
+		let xi = polygon[i].x
+		let zi = polygon[i].z
+		let xj = polygon[j].x
+		let zj = polygon[j].z
+
+		let intersect = ((zi > z) != (zj > z))
+			&& (x < (xj - xi) * (z - zi) / (zj - zi) + xi)
+		if (intersect) inside = !inside
+	}
+	return inside
+}
+
 // Modify town descriptions for Dynmap archives
 function modifyOldDescription(marker) {
 	// Gather some information
 	const residents = marker.popup.match(/Members <span style="font-weight:bold">(.*)<\/span><br \/>Flags/)?.[1]
 	const residentNum = residents?.split(', ')?.length || 0
 	const isCapital = marker.popup.match(/capital: true/) != null
-
-	// Calculate area
-	const vertices = []
-	for (const vertex of marker.points) { vertices.push(vertex) }
-	const area = getArea(vertices)
+	const area = getArea(marker.points)
 
 	// Modify description
 	if (isCapital) marker.popup = marker.popup.replace('120%">', '120%">★ ')
@@ -132,11 +146,24 @@ function modifyDescription(marker) {
 
 	// Calculate town's area
 	let area = 0
+	const iteratedRegions = []
 	if (marker.type == 'polygon') {
-		for (const region of marker.points) {
-			const vertices = []
-			for (const vertex of region[0]) { vertices.push(vertex) }
-			area += getArea(vertices)
+		for (const regionVertices of marker.points[0]) {
+
+			// Exclude non-affiliated regions entirely inside town
+			if (iteratedRegions.length > 0) {
+				let isInsidePolygon = false
+				for (const vertex of regionVertices) {
+					for (const lastPolygon of iteratedRegions) {
+						if (pointInPolygon(vertex, lastPolygon)) isInsidePolygon = true
+					}
+				}
+				if (isInsidePolygon) area -= getArea(regionVertices)
+				else area += getArea(regionVertices)
+			}
+			else area += getArea(regionVertices)
+			iteratedRegions.push(regionVertices)
+
 		}
 	}
 
@@ -149,10 +176,10 @@ function modifyDescription(marker) {
 	// Modify description
 	if (residentNum > 50) {
 		marker.popup = marker.popup.replace(residents, htmlCode.scrollableResidentList.replace('{list}', residentList))
-	}
-	else {
+	} else {
 		marker.popup = marker.popup.replace(residents + '\n', htmlCode.residentList.replace('{list}', residentList) + '\n')
 	}
+
 	marker.popup = marker.popup
 		.replace('</details>\n   \t<br>', '</details>') // Remove line break
 		.replace('Councillors:', `Size: <b>${area} chunks</b><br/>Councillors:`) // Add size info
@@ -345,11 +372,11 @@ async function addCountryLayer(data) {
 
 	if (!localStorage['emcdynmapplus-borders']) {
 		const loadingMessage = addElement(document.body, htmlCode.message.replace('{message}', 'Downloading country borders...'), '.message')
-		const markersURL = 'https://web.archive.org/web/2id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
+		const markersURL = 'https://web.archive.org/web/2024id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
 		const fetch = await fetchJSON(proxyURL + markersURL)
 		loadingMessage.remove()
 		if (!fetch) {
-			sendAlert('Could not download an optional external resource of country borders, you could try again later.')
+			sendAlert('Could not download optional country borders layer, you could try again later.')
 			return data
 		}
 		localStorage['emcdynmapplus-borders'] = JSON.stringify(fetch.sets['borders.Country Borders'].lines)
