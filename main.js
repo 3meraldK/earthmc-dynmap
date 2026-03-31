@@ -546,8 +546,11 @@ async function getArchive(data) {
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
 window.fetch = async (...args) => {
-	let [resource, config] = args
-	let response = await originalFetch(resource, config)
+	const playerList = document.querySelector('fieldset#players')
+	if (response.url.includes('players.json') && playerList) {
+		const scroll = playerList.scrollTop
+		setTimeout(() => playerList.scrollTop = scroll, 1)
+	}
 
 	if (response.url.includes('web.archive.org')) return response
 

@@ -22,7 +22,8 @@ const htmlCode = {
 		locate: '<button class="sidebar-button" id="locate-button">Locate</button>',
 		searchArchive: '<button class="sidebar-button" id="archive-button">Search archive</button>',
 		options: '<button class="sidebar-button" id="options-button">Options</button>',
-		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>'
+		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
+		togglePlayerList: '<button class="sidebar-input" id="toggle-player-list">Toggle player list</button>'
 	},
 	options: {
 		menu: '<div id="options-menu"></div>',
@@ -36,6 +37,7 @@ const htmlCode = {
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
 	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2022-05-01" max="${new Date().toLocaleDateString('en-ca')}">`,
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
+	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	// For userscript
 	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">{text}<br><span class="close-container">×</span></div>',
 }
@@ -99,6 +101,18 @@ function addMainMenu(parent) {
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
+	const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')
+	togglePlayerListButton.addEventListener('click', () => {
+		if (currentMapMode == 'archive') return sendMessage(`Can't view player list in archive mode.`)
+        const playerList = document.getElementById('players')
+        const isVisible = playerList.style.display == 'grid'
+        playerList.style.display = isVisible ? 'none' : 'grid'
+		if (!isVisible && !localStorage['emcdynmapplus-first-time-player-list']) {
+			localStorage['emcdynmapplus-first-time-player-list'] = 'false'
+			sendMessage('If tracking players functionality breaks, refresh the website. You will see this message once.')
+		}
+    })
+
 	addOptions(sidebar)
 
 	// Current map mode label
@@ -122,6 +136,16 @@ function switchMapMode() {
 	location.reload()
 }
 
+function addPlayerList() {
+	waitForHTMLelement('#players').then(() => {
+		const playerList = document.getElementById('players')
+		const mapElement = document.getElementById('map')
+		mapElement.appendChild(playerList)
+		playerList.addEventListener('wheel', (event) => {event.stopImmediatePropagation()})
+	})
+	addElement(document.body, htmlCode.followingPlayer, '#followingWarning')
+}
+
 function init() {
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
@@ -137,6 +161,12 @@ function init() {
 	if (localStorage['emcdynmapplus-darkmode'] == 'true') loadDarkMode()
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
+
+	addPlayerList()
+function tick() {
+    const isFollowingPlayer = document.querySelector('.following') != null
+    document.querySelector('#followingWarning').style.display = isFollowingPlayer ? 'unset' : 'none'
+    requestAnimationFrame(tick)
 }
 
 function loadDarkMode() {
@@ -811,9 +841,11 @@ async function getArchive(data) {
 
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
-unsafeWindow.fetch = async (...args) => {
-	let [resource, config] = args
-	let response = await originalFetch(resource, config)
+	const playerList = document.querySelector('fieldset#players')
+	if (response.url.includes('players.json') && playerList) {
+		const scroll = playerList.scrollTop
+		setTimeout(() => playerList.scrollTop = scroll, 1)
+	}
 
 	if (response.url.includes('web.archive.org')) return response
 
@@ -1001,6 +1033,53 @@ function appendStyle() {
 
 	#player-lookup-loading {
 		width: auto;
+	}
+
+	/* Player list */
+
+	fieldset#players {
+        z-index: 999;
+        position: fixed;
+        background-color: rgba(0,0,0,.5);
+        color: white;
+        display: none;
+        overflow-y: scroll;
+        height: stretch;
+        right: 0;
+        margin: 10px 0 10px 0;
+        scrollbar-width: thin;
+		scrollbar-color: #aaa rgba(0,0,0,0.1);
+	}
+
+    fieldset#players > legend {
+        font-weight: bold;
+    }
+
+    fieldset#players > a {
+        color: white;
+        padding: 5px 0;
+        display: inline-flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    fieldset#players > a:hover {
+		background-color: rgba(127, 127, 125, 0.5);
+		cursor: pointer;
+	}
+
+    .following {
+		background-color: rgba(0, 255, 0, 0.5);
+	}
+
+	#followingWarning {
+		position: fixed;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 99999;
+		color: white;
+		font-family: Arial;
 	}
 
 	/* Update notification - for userscript */

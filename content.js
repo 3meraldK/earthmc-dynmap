@@ -3,7 +3,8 @@ const htmlCode = {
 		locate: '<button class="sidebar-button" id="locate-button">Locate</button>',
 		searchArchive: '<button class="sidebar-button" id="archive-button">Search archive</button>',
 		options: '<button class="sidebar-button" id="options-button">Options</button>',
-		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>'
+		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
+		togglePlayerList: '<button class="sidebar-input" id="toggle-player-list">Toggle player list</button>'
 	},
 	options: {
 		menu: '<div id="options-menu"></div>',
@@ -17,6 +18,7 @@ const htmlCode = {
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
 	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2022-05-01" max="${new Date().toLocaleDateString('en-ca')}">`,
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
+	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
 const apiURL = 'https://api.earthmc.net/v3/aurora'
@@ -24,10 +26,10 @@ const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 
 init()
 
-function sendAlert(message) {
-	if (document.querySelector('#alert') != null) document.querySelector('#alert').remove()
-	document.body.insertAdjacentHTML('beforeend', htmlCode.alertBox.replace('{message}', message))
-	document.querySelector('#alert-close').addEventListener('click', event => { event.target.parentElement.remove() })
+function sendMessage(message) {
+	if (document.querySelector('#message-box') != null) document.querySelector('#message-box').remove()
+	document.body.insertAdjacentHTML('beforeend', htmlCode.messageBox.replace('{message}', message))
+	document.querySelector('#message-close').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
 function injectMainScript() {
@@ -69,6 +71,18 @@ function addMainMenu(parent) {
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
+	const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')
+	togglePlayerListButton.addEventListener('click', () => {
+		if (currentMapMode == 'archive') return sendMessage(`Can't view player list in archive mode.`)
+        const playerList = document.getElementById('players')
+        const isVisible = playerList.style.display == 'grid'
+        playerList.style.display = isVisible ? 'none' : 'grid'
+		if (!isVisible && !localStorage['emcdynmapplus-first-time-player-list']) {
+			localStorage['emcdynmapplus-first-time-player-list'] = 'false'
+			sendMessage('If tracking players functionality breaks, refresh the website. You will see this message once.')
+		}
+    })
+
 	addOptions(sidebar)
 
 	// Current map mode label
@@ -92,6 +106,16 @@ function switchMapMode() {
 	location.reload()
 }
 
+function addPlayerList() {
+	waitForHTMLelement('#players').then(() => {
+		const playerList = document.getElementById('players')
+		const mapElement = document.getElementById('map')
+		mapElement.appendChild(playerList)
+		playerList.addEventListener('wheel', (event) => {event.stopImmediatePropagation()})
+	})
+	addElement(document.body, htmlCode.followingPlayer, '#followingWarning')
+}
+
 function init() {
 	injectMainScript()
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
@@ -106,7 +130,13 @@ function init() {
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 
+	addPlayerList()
 	checkForUpdate()
+}
+function tick() {
+    const isFollowingPlayer = document.querySelector('.following') != null
+    document.querySelector('#followingWarning').style.display = isFollowingPlayer ? 'unset' : 'none'
+    requestAnimationFrame(tick)
 }
 
 function loadDarkMode() {
