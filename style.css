@@ -10,10 +10,7 @@
 	position: relative;
 	left: 120px;
 	cursor: pointer;
-}
-
-.close-container:hover {
-	background-color: rgba(127, 127, 125, 0.5);
+	font: 16px/24px Tahoma, Verdana, sans-serif;
 }
 
 /* Player lookup */

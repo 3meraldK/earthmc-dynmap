@@ -438,7 +438,7 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	lookup.insertAdjacentHTML('beforeend', 'Rank: <b>{rank}</b><br>')
 	lookup.insertAdjacentHTML('beforeend', 'Balance: <b>{balance} gold</b><br>')
 	lookup.insertAdjacentHTML('beforeend', '{last-online}')
-	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">X</span>')
+	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">×</span>')
 
 	// Gather data
 	const isOnline = data[0].status.isOnline

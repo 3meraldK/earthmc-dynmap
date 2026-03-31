@@ -37,7 +37,7 @@ const htmlCode = {
 	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2022-05-01" max="${new Date().toLocaleDateString('en-ca')}">`,
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	// For userscript
-	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">{text}<br><span class="close-container">X</span></div>'
+	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">{text}<br><span class="close-container">×</span></div>',
 }
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 
@@ -709,7 +709,7 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	lookup.insertAdjacentHTML('beforeend', 'Rank: <b>{rank}</b><br>')
 	lookup.insertAdjacentHTML('beforeend', 'Balance: <b>{balance} gold</b><br>')
 	lookup.insertAdjacentHTML('beforeend', '{last-online}')
-	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">X</span>')
+	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">×</span>')
 
 	// Gather data
 	const isOnline = data[0].status.isOnline
