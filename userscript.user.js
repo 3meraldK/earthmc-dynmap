@@ -18,7 +18,7 @@ const htmlCode = {
 	residentList: '<span class="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading">Loading...</button>',
-	promptBox: '<div id="message-box"><p id="message">{message}</p></div>',
+	promptBox: '<div id="prompt-box"><p id="message">{message}</p></div>',
 	// content.js
 	buttons: {
 		locate: '<button class="sidebar-button" id="locate-button">Locate</button>',
