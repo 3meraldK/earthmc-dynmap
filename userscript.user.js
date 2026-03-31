@@ -47,6 +47,10 @@ const htmlCode = {
 }
 
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
+const isNostra = location.href.includes('nostra')
+const apiURL = 'https://api.earthmc.net/v4/aurora'
+const proxyURL = 'https://proxy.killcors.com/?url='
+const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 function sendMessage(message) {
 	if (document.querySelector('#message-box') != null) document.querySelector('#message-box').remove()
@@ -76,6 +80,38 @@ function addElement(parent, element, returnWhat, all = false) {
 }
 
 async function fetchJSON(url, options = null) {
+function getArchiveURL() {
+	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
+	let date = chosenArchiveDate
+	if (date < 20220428) {
+		markersURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json'
+	} else if (date < 20230212) {
+		markersURL = `https://earthmc.net/map/${server}/tiles/_markers_/marker_earth.json`
+	} else if (date < 20240623) {
+		markersURL = `https://earthmc.net/map/${server}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`
+	} else if (date < 20240704) {
+		date = 20240704 // Skip frequent changes that week
+	}
+	const archiveWebsite = `https://web.archive.org/web/${date}id_/`
+	return archiveWebsite + markersURL
+}
+
+function convertOldMarkersStructure(markers) {
+	return Object.entries(markers.areas).map(([key, value]) => {
+
+		if (key.includes('_Shop')) return undefined // Remove shop areas
+		const points = value.x.map((x, index) => ({ x, z: value.z[index] }))
+		return {
+			fillColor: value.fillcolor,
+			color: value.color,
+			popup: value.desc ?? `<div><b>${value.label}</b></div>`,
+			weight: value.weight,
+			opacity: value.opacity,
+			type: 'polygon',
+			points: points
+		}
+
+	}).filter(Boolean)
 }
 
 // content.js
@@ -157,7 +193,7 @@ function init() {
 
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
 		addMainMenu(element)
-		checkForUpdate(element) // For userscript
+		checkForUpdateUserscript(element) // For userscript
 	})
 
 	if (localStorage['emcdynmapplus-darkmode'] == 'true') loadDarkMode()
@@ -212,19 +248,8 @@ function locate(selectValue, inputValue) {
 	}
 }
 
-async function checkForUpdate(parent) {
-	const localVersion = GM_info.script.version
-	const manifest = await fetchJSON('https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/manifest.json')
-	if (!manifest) return console.log('EarthMC Dynmap+ could not check for update.')
-	const latestVersion = manifest.version
-	if (!latestVersion || latestVersion == localVersion) return
-	parent.insertAdjacentHTML('beforeend', htmlCode.updateNotification)
-	const updateNotification = parent.querySelector('#update-notification')
-	const repoURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
-	const text = `EarthMC Dynmap+ update from ${localVersion} to ${latestVersion} is available. <a id="update-download-link" target="_blank" href="${repoURL}">Click here to download!</a>`
-	updateNotification.innerHTML = updateNotification.innerHTML.replace('{text}', text)
-	updateNotification.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
-}
+// For extension only
+// function checkForUpdate()
 
 function addOptions(sidebar) {
 	const optionsButton = addElement(sidebar, htmlCode.buttons.options, '#options-button')
@@ -542,24 +567,6 @@ function modifyDescription(marker) {
 	}
 
 	return marker
-}
-
-function convertOldMarkersStructure(markers) {
-	return Object.entries(markers.areas).map(([key, value]) => {
-
-		if (key.includes('_Shop')) return undefined // Remove shop areas
-		const points = value.x.map((x, index) => ({ x, z: value.z[index] }))
-		return {
-			fillColor: value.fillcolor,
-			color: value.color,
-			popup: value.desc ?? `<div><b>${value.label}</b></div>`,
-			weight: value.weight,
-			opacity: value.opacity,
-			type: 'polygon',
-			points: points
-		}
-
-	}).filter(Boolean)
 }
 
 function getNationAlliances(nation) {
@@ -918,6 +925,24 @@ unsafeWindow.fetch = async (...args) => { // unsafeWindow in userscript
 
 	return response
 }
+
+// Userscript
+
+async function checkForUpdateUserscript(parent) {
+	const localVersion = GM_info.script.version
+	const manifest = await fetchJSON('https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/manifest.json')
+	if (!manifest.ok) return console.log('EarthMC Dynmap+ could not check for update.')
+	const latestVersion = manifest?.data?.version
+	if (!latestVersion || latestVersion == localVersion) return
+	parent.insertAdjacentHTML('beforeend', htmlCode.updateNotification)
+	const updateNotification = parent.querySelector('#update-notification')
+	const repoURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
+	const text = `EarthMC Dynmap+ update from ${localVersion} to ${latestVersion} is available. <a id="update-download-link" target="_blank" href="${repoURL}">Click here to download!</a>`
+	updateNotification.innerHTML = updateNotification.innerHTML.replace('{text}', text)
+	updateNotification.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
+}
+
+appendStyle()
 
 // style.css
 
