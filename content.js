@@ -293,10 +293,14 @@ function addOption(index, optionId, optionName, variable) {
 }
 
 async function fetchJSON(url, options = null) {
-	const response = await fetch(url, options)
-	if (response.status == 404) return false
-	else if (response.ok) return response.json()
-	else return null
+	try {
+		const response = await fetch(url, options)
+		let data = null
+		try { data = await response.json() }
+		finally { return {ok: response.ok, code: response.status, data: data} }
+	} catch {
+		return {ok: false, code: null, data: null}
+	}
 }
 
 async function locateTown(town) {
@@ -319,7 +323,8 @@ async function locateNation(nation) {
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 	if (!data.data) return sendMessage('Searched nation has not been found.')
 
-	const capital = data[0].capital.name
+	let capital
+	try { capital = data.data[0].capital.name }
 	const coords = await getTownSpawn(capital)
 	if (coords == false) return sendMessage('Unexpected error occurred while searching for nation, please try later.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')

@@ -80,6 +80,16 @@ function addElement(parent, element, returnWhat, all = false) {
 }
 
 async function fetchJSON(url, options = null) {
+	try {
+		const response = await fetch(url, options)
+		let data = null
+		try { data = await response.json() }
+		finally { return {ok: response.ok, code: response.status, data: data} }
+	} catch {
+		return {ok: false, code: null, data: null}
+	}
+}
+
 function getArchiveURL() {
 	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
 	let date = chosenArchiveDate
@@ -292,6 +302,7 @@ function addOptions(sidebar) {
 	const checkbox = {
 		decreaseBrightness: addOption(0, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
+		terraNovaArchive: addOption(2, 'terra-nova-archive', '<abbr title="If checked, archive mode will display Terra Nova towns">Terra Nova archives</abbr>', 'terra-nova-archive'),
 		cacheArchives: addOption(3, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives')
 	}
 
@@ -834,22 +845,22 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">×</span>')
 
 	// Gather data
-	const isOnline = data[0].status.isOnline
-	const balance = data[0].stats.balance
-	const town = data[0].town.name
-	const nation = data[0].nation.name
-	const lastOnline = new Date(data[0].timestamps.lastOnline).toLocaleDateString('fr')
+	const isOnline = data.data[0].status.isOnline
+	const balance = data.data[0].stats.balance
+	const town = data.data[0].town.name
+	const nation = data.data[0].nation.name
+	const lastOnline = new Date(data.data[0].timestamps.lastOnline).toLocaleDateString('fr')
 	let onlineStatus = '<span id="player-lookup-online" style="color: {online-color}">{online}</span>'
-	const about = (!data[0].about || data[0].about == '/res set about [msg]') ? '' : `<br><i>${data[0].about}</i>`
+	const about = (!data.data[0].about || data.data[0].about == '/res set about [msg]') ? '' : `<br><i>${data.data[0].about}</i>`
 	let rank = 'Townless'
-	if (data[0].status.hasTown) rank = 'Resident'
-	if (data[0].ranks.townRanks.includes('Councillor')) rank = 'Councillor'
-	if (data[0].status.isMayor) rank = 'Mayor'
-	if (data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
-	if (data[0].status.isKing) rank = 'Leader'
+	if (data.data[0].status.hasTown) rank = 'Resident'
+	if (data.data[0].ranks.townRanks.includes('Councillor')) rank = 'Councillor'
+	if (data.data[0].status.isMayor) rank = 'Mayor'
+	if (data.data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
+	if (data.data[0].status.isKing) rank = 'Leader'
 
 	// Modify HTML
-	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data[0].uuid.replaceAll('-', '')
+	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data.data[0].uuid.replaceAll('-', '')
 	document.querySelector('#player-lookup-avatar').setAttribute('src', playerAvatarURL)
 	lookup.innerHTML = lookup.innerHTML
 		.replace('{player}', player)

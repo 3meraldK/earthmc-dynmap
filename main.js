@@ -96,7 +96,7 @@ function modifyOldDescription(marker) {
 
 	// Modify description
 	if (isCapital) marker.popup = marker.popup.replace('120%">', '120%">★ ')
-	if (archiveDate < 20220906) {
+	if (chosenArchiveDate < 20220906) {
 		marker.popup = marker.popup.replace(/">hasUpkeep:.+?(?<=<br \/>)/, '; white-space:pre">')
 	}
 	else marker.popup = marker.popup.replace('">pvp:', '; white-space:pre">pvp:')
@@ -484,22 +484,22 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">×</span>')
 
 	// Gather data
-	const isOnline = data[0].status.isOnline
-	const balance = data[0].stats.balance
-	const town = data[0].town.name
-	const nation = data[0].nation.name
-	const lastOnline = new Date(data[0].timestamps.lastOnline).toLocaleDateString('fr')
+	const isOnline = data.data[0].status.isOnline
+	const balance = data.data[0].stats.balance
+	const town = data.data[0].town.name
+	const nation = data.data[0].nation.name
+	const lastOnline = new Date(data.data[0].timestamps.lastOnline).toLocaleDateString('fr')
 	let onlineStatus = '<span id="player-lookup-online" style="color: {online-color}">{online}</span>'
-	const about = (!data[0].about || data[0].about == '/res set about [msg]') ? '' : `<br><i>${data[0].about}</i>`
+	const about = (!data.data[0].about || data.data[0].about == '/res set about [msg]') ? '' : `<br><i>${data.data[0].about}</i>`
 	let rank = 'Townless'
-	if (data[0].status.hasTown) rank = 'Resident'
-	if (data[0].ranks.townRanks.includes('Councillor')) rank = 'Councillor'
-	if (data[0].status.isMayor) rank = 'Mayor'
-	if (data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
-	if (data[0].status.isKing) rank = 'Leader'
+	if (data.data[0].status.hasTown) rank = 'Resident'
+	if (data.data[0].ranks.townRanks.includes('Councillor')) rank = 'Councillor'
+	if (data.data[0].status.isMayor) rank = 'Mayor'
+	if (data.data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
+	if (data.data[0].status.isKing) rank = 'Leader'
 
 	// Modify HTML
-	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data[0].uuid.replaceAll('-', '')
+	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data.data[0].uuid.replaceAll('-', '')
 	document.querySelector('#player-lookup-avatar').setAttribute('src', playerAvatarURL)
 	lookup.innerHTML = lookup.innerHTML
 		.replace('{player}', player)
@@ -519,10 +519,14 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 }
 
 async function fetchJSON(url, options = null) {
-	const response = await fetch(url, options)
-	if (response.status == 404) return false
-	else if (response.ok) return response.json()
-	else return null
+	try {
+		const response = await fetch(url, options)
+		let data = null
+		try { data = await response.json() }
+		finally { return {ok: response.ok, code: response.status, data: data} }
+	} catch {
+		return {ok: false, code: null, data: null}
+	}
 }
 
 async function getAlliances() {
