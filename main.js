@@ -342,7 +342,7 @@ async function main(data) {
 	data = await addCountryLayer(data)
 
 	if (!data?.[0]?.markers?.length) {
-		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
+		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
 		return data
 	}
 
@@ -409,7 +409,7 @@ async function addCountryLayer(data) {
 		}
 		return data
 	} catch (error) {
-		sendAlert(`Could not set up a layer of country borders. You may need to clear this website's data. If problem persists, contact the developer.`)
+		sendMessage(`Could not set up a layer of country borders. You may need to clear this website's data.`)
 		return data
 	}
 }
@@ -485,10 +485,10 @@ async function getAlliances() {
 	if (!alliances) {
 		const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 		if (cache == null) {
-			sendAlert('Service responsible for loading alliances will be available later.')
+			sendMessage('Service responsible for loading alliances will be available later.')
 			return []
 		}
-		sendAlert('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
+			sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
 		return cache
 	}
 

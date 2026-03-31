@@ -290,8 +290,8 @@ async function locateTown(town) {
 	if (town == '') return
 
 	const coords = await getTownSpawn(town)
-	if (coords == false) return sendAlert('Searched town has not been found.')
-	if (coords == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (coords == false) return sendMessage('Searched town has not been found.')
+	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
 
 }
@@ -302,13 +302,13 @@ async function locateNation(nation) {
 
 	const query = { query: [nation], template: { capital: true } }
 	const data = await fetchJSON(apiURL + '/nations', {method: 'POST', body: JSON.stringify(query)})
-	if (data == false) return sendAlert('Searched nation has not been found.')
-	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
+	if (!data.data) return sendMessage('Searched nation has not been found.')
 
 	const capital = data[0].capital.name
 	const coords = await getTownSpawn(capital)
-	if (coords == false) return sendAlert('Unexpected error occurred while searching for nation, please try later.')
-	if (coords == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (coords == false) return sendMessage('Unexpected error occurred while searching for nation, please try later.')
+	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
 }
 
@@ -318,15 +318,10 @@ async function locateResident(resident) {
 
 	const query = { query: [resident], template: { town: true } }
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
-	if (data == false) return sendAlert('Searched resident has not been found.')
-	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 
-	const town = data[0].town.name
-	if (!town) return sendAlert('The searched resident is townless.')
-	const coords = await getTownSpawn(town)
-	if (coords == false) return sendAlert('Unexpected error occurred while searching for resident, please try later.')
-	if (coords == null) return sendAlert('Service is currently unavailable, please try later.')
-	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
+		if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 }
 
 async function getTownSpawn(town) {
@@ -653,7 +648,7 @@ async function main(data) {
 	data = await addCountryLayer(data)
 
 	if (!data?.[0]?.markers?.length) {
-		sendAlert('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
+		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
 		return data
 	}
 
@@ -720,7 +715,7 @@ async function addCountryLayer(data) {
 		}
 		return data
 	} catch (error) {
-		sendAlert(`Could not set up a layer of country borders. You may need to clear this website's data. If problem persists, contact the developer.`)
+		sendMessage(`Could not set up a layer of country borders. You may need to clear this website's data.`)
 		return data
 	}
 }
@@ -789,10 +784,10 @@ async function getAlliances() {
 	if (!alliances) {
 		const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 		if (cache == null) {
-			sendAlert('Service responsible for loading alliances will be available later.')
+			sendMessage('Service responsible for loading alliances will be available later.')
 			return []
 		}
-		sendAlert('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
+			sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
 		return cache
 	}
 

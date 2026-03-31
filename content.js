@@ -184,7 +184,7 @@ function checkForUpdate() {
 	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
 	if (version.cached != version.latest) {
 		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/v' + version.latest
-		sendAlert(`Extension has been automatically updated from ${version.cached} to ${version.latest}. Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
+		sendMessage(`Extension has been automatically updated from ${version.cached} to ${version.latest}. Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
 	}
 	localStorage['emcdynmapplus-version'] = version.latest
 }
@@ -265,8 +265,8 @@ async function locateTown(town) {
 	if (town == '') return
 
 	const coords = await getTownSpawn(town)
-	if (coords == false) return sendAlert('Searched town has not been found.')
-	if (coords == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (coords == false) return sendMessage('Searched town has not been found.')
+	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
 
 }
@@ -277,13 +277,13 @@ async function locateNation(nation) {
 
 	const query = { query: [nation], template: { capital: true } }
 	const data = await fetchJSON(apiURL + '/nations', {method: 'POST', body: JSON.stringify(query)})
-	if (data == false) return sendAlert('Searched nation has not been found.')
-	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
+	if (!data.data) return sendMessage('Searched nation has not been found.')
 
 	const capital = data[0].capital.name
 	const coords = await getTownSpawn(capital)
-	if (coords == false) return sendAlert('Unexpected error occurred while searching for nation, please try later.')
-	if (coords == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (coords == false) return sendMessage('Unexpected error occurred while searching for nation, please try later.')
+	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
 }
 
@@ -293,15 +293,10 @@ async function locateResident(resident) {
 
 	const query = { query: [resident], template: { town: true } }
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
-	if (data == false) return sendAlert('Searched resident has not been found.')
-	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 
-	const town = data[0].town.name
-	if (!town) return sendAlert('The searched resident is townless.')
-	const coords = await getTownSpawn(town)
-	if (coords == false) return sendAlert('Unexpected error occurred while searching for resident, please try later.')
-	if (coords == null) return sendAlert('Service is currently unavailable, please try later.')
-	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
+		if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 }
 
 async function getTownSpawn(town) {
