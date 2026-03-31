@@ -6,12 +6,9 @@ const htmlCode = {
 	residentList: '<span class="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading">Loading...</button>',
-	alertBox: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>',
-	message: '<div class="message" id="alert"><p id="alert-message">{message}</p></div>'
+	promptBox: '<div id="prompt-box"><p id="message">{message}</p></div>',
+	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
-const proxyURL = 'https://api.codetabs.com/v1/proxy/?quest='
-
-let alliances = null
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 const archiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
@@ -24,10 +21,10 @@ waitForHTMLelement('.leaflet-nameplate-pane').then(element => {
 	})
 })
 
-function sendAlert(message) {
-	if (document.querySelector('#alert') != null) document.querySelector('#alert').remove()
-	document.body.insertAdjacentHTML('beforeend', htmlCode.alertBox.replace('{message}', message))
-	document.querySelector('#alert-close').addEventListener('click', event => { event.target.parentElement.remove() })
+function sendMessage(message) {
+	if (document.querySelector('#message-box') != null) document.querySelector('#message-box').remove()
+	document.body.insertAdjacentHTML('beforeend', htmlCode.messageBox.replace('{message}', message))
+	document.querySelector('#message-close').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
 function modifySettings(data) {
@@ -373,12 +370,12 @@ async function main(data) {
 async function addCountryLayer(data) {
 
 	if (!localStorage['emcdynmapplus-borders']) {
-		const loadingMessage = addElement(document.body, htmlCode.message.replace('{message}', 'Downloading country borders...'), '.message')
+		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Downloading country borders...'), '#prompt-box')
 		const markersURL = 'https://web.archive.org/web/2024id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
 		const fetch = await fetchJSON(proxyURL + markersURL)
-		loadingMessage.remove()
-		if (!fetch) {
-			sendAlert('Could not download optional country borders layer, you could try again later.')
+		prompt.remove()
+		if (!fetch.ok || !fetch.data) {
+			sendMessage('Could not download optional country borders layer, you could try again later.')
 			return data
 		}
 		localStorage['emcdynmapplus-borders'] = JSON.stringify(fetch.sets['borders.Country Borders'].lines)

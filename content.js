@@ -17,7 +17,7 @@ const htmlCode = {
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
 	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2022-05-01" max="${new Date().toLocaleDateString('en-ca')}">`,
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
-	alertBox: '<div id="alert"><p id="alert-message">{message}</p><br><button id="alert-close">OK</button></div>'
+	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
 const apiURL = 'https://api.earthmc.net/v3/aurora'
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
@@ -112,7 +112,7 @@ function init() {
 function loadDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
 		`<style id="dark-mode">
-		.leaflet-control, #alert, .sidebar-input,
+		.leaflet-control, #message-box, #prompt-box, .sidebar-input,
 		.sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top,
 		.leaflet-popup-content-wrapper, .leaflet-popup-tip,
 		.leaflet-bar > a.leaflet-disabled {
