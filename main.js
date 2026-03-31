@@ -94,7 +94,8 @@ function pointInPolygon(vertex, polygon) {
 // Modify town descriptions for archives
 function modifyOldDescription(marker) {
 	// Gather some information
-	const residents = marker.popup.match(/Members <span style="font-weight:bold">(.*)<\/span><br \/>Flags/)?.[1]
+	let membersTitle = marker.popup.match(/Members <span/) ? 'Members' : 'Associates'
+	let residents = marker.popup.match(`${membersTitle} <span style="font-weight:bold">(.*)<\/span><br \/>Flags`)?.[1]
 	const residentNum = residents?.split(', ')?.length || 0
 	const isCapital = marker.popup.match(/capital: true/) != null
 	const area = getArea(marker.points)
@@ -115,10 +116,10 @@ function modifyOldDescription(marker) {
 		.replace(/<br \/>capital:.*<\/span>/, '</span>')
 		.replaceAll('true<', '&#9;<span style="color:green">Yes</span><')
 		.replaceAll('false<', '&#9;<span style="color:red">No</span><')
-		.replace(`Members <span`, `Members <b>[${residentNum}]</b> <span`)
+		.replace(`${membersTitle} <span`, `${membersTitle} <b>[${residentNum}]</b> <span`)
 	if (area > 0) {
 		marker.popup = marker.popup
-		.replace(`</span><br /> Members`, `</span><br>Size<span style="font-weight:bold"> ${area} </span><br> Members`)
+		.replace(`</span><br /> ${membersTitle}`, `</span><br>Size<span style="font-weight:bold"> ${area} </span><br> ${membersTitle}`)
 	}
 	// Scrollable resident list
 	if (residentNum > 50) {
