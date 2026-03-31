@@ -923,15 +923,16 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 async function getAlliances() {
 	const response = await fetchJSON(alliancesURL)
 	if (!response.ok || !response.data) {
-		const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
-		if (cache == null) {
+		try {
+			const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
+			if (response.code != 429) { // 429 = too many requests, ignore
+				sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
+			}
+			return cache
+		} catch (e) {
 			sendMessage('Service responsible for loading alliances will be available later.')
 			return []
 		}
-		if (response.code != 429) { // 429 = too many requests
-			sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
-		}
-		return cache
 	}
 	const alliances = response.data
 
