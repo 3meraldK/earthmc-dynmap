@@ -160,6 +160,9 @@ function decreaseBrightness(isChecked) {
 	localStorage['emcdynmapplus-darkened'] = isChecked
 	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
+function toggleCacheArchives(isChecked) {
+	localStorage['emcdynmapplus-cache-archives'] = isChecked
+}
 
 function switchMapMode() {
 	const nextMapMode = {
@@ -186,6 +189,7 @@ function init() {
 	// Initialize some variables
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
+	localStorage['emcdynmapplus-cache-archives'] = localStorage['emcdynmapplus-cache-archives'] ?? true
 
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
@@ -202,6 +206,9 @@ function init() {
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 
 	addPlayerList()
+
+
+    tick()
 
 	// For extension only
 	// checkForUpdate()
@@ -261,7 +268,8 @@ function addOptions(sidebar) {
 
 	const checkbox = {
 		decreaseBrightness: addOption(0, 'decrease-brightness', 'Decrease brightness', 'darkened'),
-		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode')
+		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
+		cacheArchives: addOption(3, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives')
 	}
 
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
@@ -444,7 +452,7 @@ function modifyOldDescription(marker) {
 
 	// Modify description
 	if (isCapital) marker.popup = marker.popup.replace('120%">', '120%">★ ')
-	if (archiveDate < 20220906) {
+	if (chosenArchiveDate < 20220906) {
 		marker.popup = marker.popup.replace(/">hasUpkeep:.+?(?<=<br \/>)/, '; white-space:pre">')
 	}
 	else marker.popup = marker.popup.replace('">pvp:', '; white-space:pre">pvp:')
@@ -662,7 +670,7 @@ async function main(data) {
 	for (let marker of data[0].markers) {
 		if (marker.type != 'polygon' && marker.type != 'icon') continue
 
-		marker = (currentMapMode != 'archive' || archiveDate >= 20240701)
+		marker = (currentMapMode != 'archive' || chosenArchiveDate >= 20240701)
 		? modifyDescription(marker) : modifyOldDescription(marker)
 
 		if (marker.type != 'polygon') continue
@@ -857,37 +865,96 @@ async function getAlliances() {
 	return finalArray
 }
 
+async function cacheArchiveSnapshot(data, timestamp) {
+	try {
+		const fileSystem = await navigator.storage.getDirectory()
+		let fileHandle
+		try { fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`) }
+		catch (e) {fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`, {create: true}) }
+		const writable = await fileHandle.createWritable()
+		await writable.write(JSON.stringify({data: data, timestamp: timestamp}))
+		await writable.close()
+	} catch (e) {
+		sendMessage("Couldn't cache archive snapshot.")
+		return null
+	}
+}
+
+// Returns {data:.., timestamp:..}
+async function getArchiveSnapshot() {
+	try {
+		const fileSystem = await navigator.storage.getDirectory()
+		let fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`)
+		const file = await fileHandle.getFile()
+		const text = await file.text()
+		return JSON.parse(text)
+	} catch (e) {
+		return null
+	}
+}
+
 async function getArchive(data) {
-	const loadingMessage = addElement(document.body, htmlCode.message.replace('{message}', 'Loading archive, please wait...'), '.message')
 
-	const archiveWebsite = `https://web.archive.org/web/${archiveDate}id_/`
-	// markers.json URL changed over time
-	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
-	if (archiveDate < 20230212) {
-		markersURL = 'https://earthmc.net/map/aurora/tiles/_markers_/marker_earth.json'
-	} else if (archiveDate < 20240701) {
-		markersURL = 'https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
+	let timestamp
+	let cached = ''
+	let cache = await getArchiveSnapshot()
+
+	// Create town layer if there isn't
+	if (!data.some(layer => layer.name == 'Territory')) {
+		data.unshift({
+			hide: true,
+			name: 'Territory',
+			control: true,
+			id: 'towny',
+			markers: null
+		})
 	}
-	markersURL = archiveWebsite + markersURL
 
-	let archive = await fetchJSON(proxyURL + markersURL)
-	if (!archive) return sendAlert('Archive service is currently unavailable, please try later.')
-	let actualArchiveDate
-
-	// Structure of markers.json changed
-	if (archiveDate < 20240701) {
-		data[0].markers = convertOldMarkersStructure(archive.sets['townyPlugin.markerset'])
-		actualArchiveDate = archive.timestamp
+	if (cache) {
+		data[0] = cache.data
+		timestamp = cache.timestamp
+		cached = ', cached'
 	} else {
-		data = archive
-		actualArchiveDate = archive[0].timestamp
+		// Download snapshot
+		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
+		markersURL = getArchiveURL()
+		let archive = await fetchJSON(proxyURL + markersURL)
+		if (!archive.ok || !archive.data) return sendMessage('Archive service is currently unavailable, please try later.')
+		prompt.remove()
+
+		// Convert old JSON to new
+		if (chosenArchiveDate < 20200322) {
+			data[0].markers = convertOldMarkersStructure(archive.data.sets['towny.markerset'])
+			timestamp = archive.data.timestamp
+		} else if (chosenArchiveDate < 20240623) {
+			data[0].markers = convertOldMarkersStructure(archive.data.sets['townyPlugin.markerset'])
+			timestamp = archive.data.timestamp
+		} else {
+			data[0] = archive.data[0]
+			timestamp = archive.data[0].timestamp
+		}
+
+		// Try to cache
+		if (localStorage['emcdynmapplus-cache-archives'] == 'true') {
+			const isCached = await cacheArchiveSnapshot(data[0], timestamp)
+			if (isCached) cached = ', cached'
+		}
 	}
 
-	actualArchiveDate = new Date(parseInt(actualArchiveDate)).toLocaleDateString('en-ca')
-	document.querySelector('#current-map-mode-label').textContent += ` (${actualArchiveDate})`
-	loadingMessage.remove()
-	if (actualArchiveDate.replaceAll('-', '') != archiveDate) {
-		sendAlert(`The closest archive to your prompt comes from ${actualArchiveDate}.`)
+	readableDate = new Date(parseInt(timestamp)).toLocaleDateString('en-ca')
+	actualArchiveDate = parseInt(readableDate.replaceAll('-', ''))
+
+	document.querySelector('#current-map-mode-label').textContent += ` (${readableDate}${cached})`
+
+	if (actualArchiveDate != chosenArchiveDate) {
+		sendMessage(`The closest archive to your query comes from ${readableDate}.`)
+	}
+
+	// Star icons on Nostra map don't display
+	if (isNostra) {
+		data[0].markers.forEach(marker => {
+			if (marker.type == 'icon') marker.type = null
+		})
 	}
 
 	return data

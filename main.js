@@ -10,8 +10,9 @@ const htmlCode = {
 	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
+const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
+
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
-const archiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 // Clickable player nameplates
 waitForHTMLelement('.leaflet-nameplate-pane').then(element => {
@@ -349,7 +350,7 @@ async function main(data) {
 	for (let marker of data[0].markers) {
 		if (marker.type != 'polygon' && marker.type != 'icon') continue
 
-		marker = (currentMapMode != 'archive' || archiveDate >= 20240701)
+		marker = (currentMapMode != 'archive' || chosenArchiveDate >= 20240701)
 		? modifyDescription(marker) : modifyOldDescription(marker)
 
 		if (marker.type != 'polygon') continue
@@ -551,37 +552,113 @@ async function getAlliances() {
 	return finalArray
 }
 
-async function getArchive(data) {
-	const loadingMessage = addElement(document.body, htmlCode.message.replace('{message}', 'Loading archive, please wait...'), '.message')
-
-	const archiveWebsite = `https://web.archive.org/web/${archiveDate}id_/`
-	// markers.json URL changed over time
+function getArchiveURL() {
 	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
-	if (archiveDate < 20230212) {
-		markersURL = 'https://earthmc.net/map/aurora/tiles/_markers_/marker_earth.json'
-	} else if (archiveDate < 20240701) {
-		markersURL = 'https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
+	let date = chosenArchiveDate
+	if (date < 20220428) {
+		markersURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json'
+	} else if (date < 20230212) {
+		markersURL = `https://earthmc.net/map/${server}/tiles/_markers_/marker_earth.json`
+	} else if (date < 20240623) {
+		markersURL = `https://earthmc.net/map/${server}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`
+	} else if (date < 20240704) {
+		date = 20240704 // skip frequent changes that week
 	}
-	markersURL = archiveWebsite + markersURL
+	const archiveWebsite = `https://web.archive.org/web/${date}id_/`
+	return archiveWebsite + markersURL
+}
 
-	let archive = await fetchJSON(proxyURL + markersURL)
-	if (!archive) return sendAlert('Archive service is currently unavailable, please try later.')
-	let actualArchiveDate
+async function cacheArchiveSnapshot(data, timestamp) {
+	try {
+		const fileSystem = await navigator.storage.getDirectory()
+		let fileHandle
+		try { fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`) }
+		catch (e) {fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`, {create: true}) }
+		const writable = await fileHandle.createWritable()
+		await writable.write(JSON.stringify({data: data, timestamp: timestamp}))
+		await writable.close()
+		return true
+	} catch (e) {
+		sendMessage("Couldn't cache archive snapshot.")
+		return null
+	}
+}
 
-	// Structure of markers.json changed
-	if (archiveDate < 20240701) {
-		data[0].markers = convertOldMarkersStructure(archive.sets['townyPlugin.markerset'])
-		actualArchiveDate = archive.timestamp
+// Returns {data:.., timestamp:..}
+async function getArchiveSnapshot() {
+	try {
+		const fileSystem = await navigator.storage.getDirectory()
+		let fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`)
+		const file = await fileHandle.getFile()
+		const text = await file.text()
+		return JSON.parse(text)
+	} catch (e) {
+		return null
+	}
+}
+
+async function getArchive(data) {
+
+	let timestamp
+	let cached = ''
+	let cache = await getArchiveSnapshot()
+
+	// Create town layer if there isn't
+	if (!data.some(layer => layer.name == 'Territory')) {
+		data.unshift({
+			hide: true,
+			name: 'Territory',
+			control: true,
+			id: 'towny',
+			markers: null
+		})
+	}
+
+	if (cache) {
+		data[0] = cache.data
+		timestamp = cache.timestamp
+		cached = ', cached'
 	} else {
-		data = archive
-		actualArchiveDate = archive[0].timestamp
+		// Download snapshot
+		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
+		markersURL = getArchiveURL()
+		let archive = await fetchJSON(proxyURL + markersURL)
+		if (!archive.ok || !archive.data) return sendMessage('Archive service is currently unavailable, please try later.')
+		prompt.remove()
+
+		// Convert old JSON to new
+		if (chosenArchiveDate < 20200322) {
+			data[0].markers = convertOldMarkersStructure(archive.data.sets['towny.markerset'])
+			timestamp = archive.data.timestamp
+		} else if (chosenArchiveDate < 20240623) {
+			data[0].markers = convertOldMarkersStructure(archive.data.sets['townyPlugin.markerset'])
+			timestamp = archive.data.timestamp
+		} else {
+			data[0] = archive.data[0]
+			timestamp = archive.data[0].timestamp
+		}
+
+		// Try to cache
+		if (localStorage['emcdynmapplus-cache-archives'] == 'true') {
+			const isCached = await cacheArchiveSnapshot(data[0], timestamp)
+			if (isCached) cached = ', cached'
+		}
 	}
 
-	actualArchiveDate = new Date(parseInt(actualArchiveDate)).toLocaleDateString('en-ca')
-	document.querySelector('#current-map-mode-label').textContent += ` (${actualArchiveDate})`
-	loadingMessage.remove()
-	if (actualArchiveDate.replaceAll('-', '') != archiveDate) {
-		sendAlert(`The closest archive to your prompt comes from ${actualArchiveDate}.`)
+	readableDate = new Date(parseInt(timestamp)).toLocaleDateString('en-ca')
+	actualArchiveDate = parseInt(readableDate.replaceAll('-', ''))
+
+	document.querySelector('#current-map-mode-label').textContent += ` (${readableDate}${cached})`
+
+	if (actualArchiveDate != chosenArchiveDate) {
+		sendMessage(`The closest archive to your query comes from ${readableDate}.`)
+	}
+
+	// Star icons on Nostra map don't display
+	if (isNostra) {
+		data[0].markers.forEach(marker => {
+			if (marker.type == 'icon') marker.type = null
+		})
 	}
 
 	return data

@@ -23,6 +23,7 @@ const htmlCode = {
 }
 
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
+const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 init()
 
@@ -93,6 +94,10 @@ function decreaseBrightness(isChecked) {
 	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
 
+function toggleCacheArchives(isChecked) {
+	localStorage['emcdynmapplus-cache-archives'] = isChecked
+}
+
 function switchMapMode() {
 	const nextMapMode = {
 		meganations: 'alliances',
@@ -131,6 +136,9 @@ function init() {
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 
 	addPlayerList()
+
+    tick()
+
 	checkForUpdate()
 }
 function tick() {
@@ -199,11 +207,13 @@ function addOptions(sidebar) {
 
 	const checkbox = {
 		decreaseBrightness: addOption(0, 'decrease-brightness', 'Decrease brightness', 'darkened'),
-		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode')
+		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
+		cacheArchives: addOption(3, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives')
 	}
 
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
 	checkbox.darkMode.addEventListener('change', event => toggleDarkMode(event.target.checked))
+	checkbox.cacheArchives.addEventListener('change', event => toggleCacheArchives(event.target.checked))
 }
 
 function searchArchive(date) {
@@ -302,7 +312,19 @@ async function locateResident(resident) {
 async function getTownSpawn(town) {
 	const query = { query: [town], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
-	if (data == false || data == undefined) return false
-	if (data == null) return null
-	return { x: Math.round(data[0].coordinates.spawn.x), z: Math.round(data[0].coordinates.spawn.z) }
+function getArchiveURL() {
+	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
+	let date = chosenArchiveDate
+	if (date < 20220428) {
+		markersURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json'
+	} else if (date < 20230212) {
+		markersURL = `https://earthmc.net/map/${server}/tiles/_markers_/marker_earth.json`
+	} else if (date < 20240623) {
+		markersURL = `https://earthmc.net/map/${server}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`
+	} else if (date < 20240704) {
+		date = 20240704  // skip frequent changes that week
+	}
+	const archiveWebsite = `https://web.archive.org/web/${date}id_/`
+	return archiveWebsite + markersURL
+}
 }
