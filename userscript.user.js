@@ -373,6 +373,10 @@ async function locateNation(nation) {
 	nation = nation.trim().toLowerCase()
 	if (nation == '') return
 
+	if (currentMapMode == 'archive') {
+		return sendMessage(`Can't search for archived nations. Exit archive mode to proceed.`)
+	}
+
 	const query = { query: [nation], template: { capital: true } }
 	const data = await fetchJSON(apiURL + '/nations', {method: 'POST', body: JSON.stringify(query)})
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
@@ -389,6 +393,10 @@ async function locateResident(resident) {
 	resident = resident.trim().toLowerCase()
 	if (resident == '') return
 
+	if (currentMapMode == 'archive') {
+		return sendMessage(`Can't search for archived residents. Exit archive mode to proceed.`)
+	}
+
 	const query = { query: [resident], template: { town: true } }
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
@@ -398,6 +406,28 @@ async function locateResident(resident) {
 }
 
 async function getTownSpawn(town) {
+	// Archive mode works with towns only
+	if (currentMapMode == 'archive') {
+		markersURL = getArchiveURL()
+		let archive = await fetchJSON(proxyURL + markersURL)
+
+		if (!archive.ok) return null
+		if (!archive.data) return false
+
+		archive = {data: [{markers: []}]}
+
+		if (chosenArchiveDate < 20200322) {
+			archive.data[0].markers = convertOldMarkersStructure(archive.data.sets['towny.markerset'])
+		} else if (chosenArchiveDate < 20240623) {
+			archive.data[0].markers = convertOldMarkersStructure(archive.data.sets['townyPlugin.markerset'])
+		}
+
+		let townObject = archive.data[0].markers.find(el => el.popup.toLowerCase().includes(`>${town} (`))
+		if (!townObject) return false
+		let points = townObject.points.flat(Infinity)
+		let coords = { x: points[0].x, z: points[0].z }
+		return coords
+	}
 	const query = { query: [town], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
 	if (data == false || data == undefined) return false
