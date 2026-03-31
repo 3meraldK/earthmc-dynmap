@@ -11,14 +11,15 @@
 // Both files
 
 const htmlCode = {
+	// main.js
 	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"></div>',
 	partOfLabel: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
-	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>',
+	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>', // Different function than in main.js
 	residentList: '<span class="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading">Loading...</button>',
 	promptBox: '<div id="message-box"><p id="message">{message}</p></div>',
-	message: '<div id="alert" class="message"><p id="alert-message">{message}</p></div>',
+	// content.js
 	buttons: {
 		locate: '<button class="sidebar-button" id="locate-button">Locate</button>',
 		searchArchive: '<button class="sidebar-button" id="archive-button">Search archive</button>',
@@ -41,8 +42,12 @@ const htmlCode = {
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	// For userscript
 	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">{text}<br><span class="close-container">×</span></div>',
+	// For both
+	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
+
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
+
 function sendMessage(message) {
 	if (document.querySelector('#message-box') != null) document.querySelector('#message-box').remove()
 	document.body.insertAdjacentHTML('beforeend', htmlCode.messageBox.replace('{message}', message))
@@ -71,25 +76,20 @@ function addElement(parent, element, returnWhat, all = false) {
 }
 
 async function fetchJSON(url, options = null) {
-	const response = await fetch(url, options)
-	if (response.status == 404) return false
-	else if (response.ok) return response.json()
-	else return null
 }
 
 // content.js
 
-const apiURL = 'https://api.earthmc.net/v3/aurora'
-
 init()
-appendStyle()
+
+// For extension only
+// injectMainScript()
 
 function addMainMenu(parent) {
 	const sidebar = addElement(parent, htmlCode.sidebar, '#emcdynmapplus-sidebar')
 
 	addLocateMenu(sidebar)
 
-	// Search archive
 	const archiveContainer = addElement(sidebar, htmlCode.sidebarOption, '.sidebar-option', true)[2]
 	const archiveButton = addElement(archiveContainer, htmlCode.buttons.searchArchive, '#archive-button')
 	const archiveInput = addElement(archiveContainer, htmlCode.archiveInput, '#archive-input')
@@ -98,7 +98,6 @@ function addMainMenu(parent) {
 		if (event.key == 'Enter') searchArchive(archiveInput.value)
 	})
 
-	// Switch map mode button
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
@@ -116,7 +115,6 @@ function addMainMenu(parent) {
 
 	addOptions(sidebar)
 
-	// Current map mode label
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
 	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
 }
@@ -148,22 +146,29 @@ function addPlayerList() {
 }
 
 function init() {
+	// injectMainScript() - for extension only
+	// Initialize some variables
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
 
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
 	})
+
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
 		addMainMenu(element)
 		checkForUpdate(element) // For userscript
 	})
 
 	if (localStorage['emcdynmapplus-darkmode'] == 'true') loadDarkMode()
+
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 
 	addPlayerList()
+
+	// For extension only
+	// checkForUpdate()
 function tick() {
     const isFollowingPlayer = document.querySelector('.following') != null
     document.querySelector('#followingWarning').style.display = isFollowingPlayer ? 'unset' : 'none'
@@ -335,6 +340,7 @@ async function getTownSpawn(town) {
 // main.js
 
 const { fetch: originalFetch } = unsafeWindow
+
 // Make this function work in userscript
 unsafeWindow.lookupPlayerFunc = lookupPlayer
 const proxyURL = 'https://api.codetabs.com/v1/proxy/?quest='
@@ -343,7 +349,7 @@ let alliances = null
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 const archiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
-// Add clickable player nameplates
+// Clickable player nameplates
 waitForHTMLelement('.leaflet-nameplate-pane').then(element => {
 	element.addEventListener('click', event => {
 		const username = event.target.textContent || event.target.parentElement.parentElement.textContent
@@ -380,7 +386,7 @@ function getArea(vertices) {
 	const n = vertices.length
 	let area = 0
 
-	// Vertices need rounding to 16 because data has imprecise coordinates
+	// Data has imprecise coordinates; round vertices to 16
 	for (let i = 0; i < n; i++) {
 		const j = (i + 1) % n
 		area += roundTo16(vertices[i].x) * roundTo16(vertices[j].z)
@@ -408,7 +414,7 @@ function pointInPolygon(vertex, polygon) {
 	return inside
 }
 
-// Modify town descriptions for Dynmap archives
+// Modify town descriptions for archives
 function modifyOldDescription(marker) {
 	// Gather some information
 	const residents = marker.popup.match(/Members <span style="font-weight:bold">(.*)<\/span><br \/>Flags/)?.[1]
@@ -490,7 +496,7 @@ function modifyDescription(marker) {
 		}
 	}
 
-	// Create clickable resident lists
+	// Clickable resident lists
 	const residentList = (currentMapMode == 'archive') ? residents :
 		residents.split(', ').map(resident => htmlCode.residentClickable.replaceAll('{player}', resident)).join(', ')
 	const councillorList = (currentMapMode == 'archive') ? councillors :
@@ -504,33 +510,34 @@ function modifyDescription(marker) {
 	}
 
 	marker.popup = marker.popup
-		.replace('</details>\n   \t<br>', '</details>') // Remove line break
-		.replace('Councillors:', `Size: <b>${area} chunks</b><br/>Councillors:`) // Add size info
-		.replace('<i>/town set board [msg]</i>', '<i></i>') // Remove default town board
-		.replace('<i></i> \n    <br>\n', '') // Remove empty town board
-		.replace('\n    <i>', '\n    <i style="overflow-wrap: break-word">') // Wrap long town board
-		.replace('Councillors: <b>None</b>\n\t<br>', '') // Remove none councillors info
-		.replace('Size: <b>0 chunks</b><br/>', '') // Remove 0 chunks town size info
-		.replaceAll('<b>false</b>', '<b><span style="color: red">No</span></b>') // 'False' flag
-		.replaceAll('<b>true</b>', '<b><span style="color: green">Yes</span></b>') // 'True' flag
+		.replace(town, names.town)
+		.replace(nation, names.nation)
+		.replace('</details>\n   \t<br>', '</details>')
+		.replace('Councillors:', `Size: <b>${area} chunks</b><br/>Councillors:`)
+		.replace('<i>/town set board [msg]</i>', '<i></i>')
+		.replace('<i></i> \n    <br>\n', '')
+		.replace('\n    <i>', '\n    <i style="overflow-wrap: break-word">')
+		.replace('Councillors: <b>None</b>\n\t<br>', '')
+		.replace('Size: <b>0 chunks</b><br/>', '')
+		.replaceAll('<b>false</b>', '<b><span style="color: red">No</span></b>')
+		.replaceAll('<b>true</b>', '<b><span style="color: green">Yes</span></b>')
 	if (currentMapMode != 'archive') {
 		marker.popup = marker.popup
-		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`) // Lookup mayor
-		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`) // Lookup councillors
+		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`)
+		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
 	}
 	if (isCapital) marker.popup = marker.popup
-		.replace('<span style="font-size:120%;">', '<span style="font-size: 120%">★ ') // Add capital star
+		.replace('<span style="font-size:120%;">', '<span style="font-size: 120%">★ ')
 
 	// Modify tooltip
 	marker.tooltip = marker.tooltip
 		.replace('<i>/town set board [msg]</i>', '<i></i>')
 		.replace('<br>\n    <i></i>', '')
-		// Clamp long town board
 		.replace('\n    <i>', '\n    <i id="clamped-board">')
 		.replace(town, names.town)
 		.replace(nation, names.nation)
 
-	// Add 'Part of' label
+	// 'Part of' label
 	if (currentMapMode == 'archive' || currentMapMode == 'default') return marker
 	const nationAlliances = getNationAlliances(nation)
 	if (nationAlliances.length > 0) {
@@ -586,7 +593,7 @@ function colorTowns(marker) {
 	} else {
 		if (nationHasDefaultColor) {
 			marker.color = '#363636' // Dark gray
-			marker.fillColor = hashCode(nation)
+			marker.fillColor = hashCode(nation) // Random color // Random color
 		}
 		else marker.color = '#89c500' // Default green
 	}
@@ -672,6 +679,7 @@ async function main(data) {
 
 async function addCountryLayer(data) {
 
+	// Download & cache
 	if (!localStorage['emcdynmapplus-borders']) {
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Downloading country borders...'), '#prompt-box')
 		const markersURL = 'https://web.archive.org/web/2024id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
@@ -684,8 +692,8 @@ async function addCountryLayer(data) {
 		localStorage['emcdynmapplus-borders'] = JSON.stringify(fetch.sets['borders.Country Borders'].lines)
 	}
 
-
 	try {
+		// Assemble
 		const points = []
 		const countries = JSON.parse(localStorage['emcdynmapplus-borders'])
 		for (const line of Object.values(countries)) {
@@ -756,7 +764,7 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	if (data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
 	if (data[0].status.isKing) rank = 'Leader'
 
-	// Place data
+	// Modify HTML
 	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data[0].uuid.replaceAll('-', '')
 	document.querySelector('#player-lookup-avatar').setAttribute('src', playerAvatarURL)
 	lookup.innerHTML = lookup.innerHTML
@@ -840,8 +848,10 @@ async function getArchive(data) {
 	return data
 }
 
-// Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
+unsafeWindow.fetch = async (...args) => { // unsafeWindow in userscript
+	const response = await originalFetch(...args)
+
 	const playerList = document.querySelector('fieldset#players')
 	if (response.url.includes('players.json') && playerList) {
 		const scroll = playerList.scrollTop
@@ -850,12 +860,10 @@ let preventMapUpdate = false
 
 	if (response.url.includes('web.archive.org')) return response
 
-	// Modify contents of markers.json and settings.json
 	if (response.url.includes('markers.json') || response.url.includes('minecraft_overworld/settings.json')) {
 
 		const modifiedJson = await response.clone().json().then(data => {
 
-			// markers.json
 			if (response.url.includes('markers.json')) {
 				if (preventMapUpdate == false) {
 					preventMapUpdate = true
@@ -864,7 +872,6 @@ let preventMapUpdate = false
 				else return null
 			}
 
-			// settings.json
 			if (response.url.includes('minecraft_overworld/settings.json')) return modifySettings(data)
 		})
 		return new Response(JSON.stringify(modifiedJson))

@@ -21,7 +21,7 @@ const htmlCode = {
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
-const apiURL = 'https://api.earthmc.net/v3/aurora'
+
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 
 init()
@@ -58,7 +58,6 @@ function addMainMenu(parent) {
 
 	addLocateMenu(sidebar)
 
-	// Search archive
 	const archiveContainer = addElement(sidebar, htmlCode.sidebarOption, '.sidebar-option', true)[2]
 	const archiveButton = addElement(archiveContainer, htmlCode.buttons.searchArchive, '#archive-button')
 	const archiveInput = addElement(archiveContainer, htmlCode.archiveInput, '#archive-input')
@@ -67,7 +66,6 @@ function addMainMenu(parent) {
 		if (event.key == 'Enter') searchArchive(archiveInput.value)
 	})
 
-	// Switch map mode button
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
@@ -85,7 +83,6 @@ function addMainMenu(parent) {
 
 	addOptions(sidebar)
 
-	// Current map mode label
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
 	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
 }
@@ -118,12 +115,15 @@ function addPlayerList() {
 
 function init() {
 	injectMainScript()
+	// Initialize some variables
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
 
+	// Decrease brightness
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
 	})
+
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => addMainMenu(element))
 
 	if (localStorage['emcdynmapplus-darkmode'] == 'true') loadDarkMode()
