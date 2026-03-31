@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         EarthMC Dynmap+
-// @version      1.16
-// @description  Extension to enrich the EarthMC map experience
+// @version      26.1
+// @description  Enrich the EarthMC map exploration's experience
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
+// @match        https://nostra.earthmc.net/*
 // @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/icon.png
 // ==/UserScript==
 
