@@ -342,7 +342,7 @@ async function main(data) {
 		data = await getArchive(data)
 	}
 
-	data = addChunksLayer(data)
+	if (!isNostra) data = addChunksLayer(data)
 	data = await addCountryLayer(data)
 
 	if (!data?.[0]?.markers?.length) {

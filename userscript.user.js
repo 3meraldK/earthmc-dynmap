@@ -281,6 +281,8 @@ function toggleDarkMode(isChecked) {
 }
 
 function locate(selectValue, inputValue) {
+	// TODO: Remove in future
+	if (isNostra) return sendMessage(`Can't locate because EarthMC API for this world doesn't work yet.`)
 	switch (selectValue) {
 		case 'Town': locateTown(inputValue); break
 		case 'Nation': locateNation(inputValue); break
@@ -735,7 +737,7 @@ async function main(data) {
 		data = await getArchive(data)
 	}
 
-	data = addChunksLayer(data)
+	if (!isNostra) data = addChunksLayer(data)
 	data = await addCountryLayer(data)
 
 	if (!data?.[0]?.markers?.length) {
