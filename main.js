@@ -470,6 +470,9 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 		.replace('{balance}', balance)
 		.replace('{last-online}', !isOnline ? `Last online: <b>${lastOnline}</b><br>` : '')
 	lookup.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
+
+	// Enable scrolling the about section
+	lookup.querySelector('center > i')?.addEventListener('wheel', (event) => {event.stopImmediatePropagation()})
 }
 
 async function fetchJSON(url, options = null) {

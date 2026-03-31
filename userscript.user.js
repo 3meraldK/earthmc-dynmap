@@ -741,6 +741,9 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 		.replace('{balance}', balance)
 		.replace('{last-online}', !isOnline ? `Last online: <b>${lastOnline}</b><br>` : '')
 	lookup.querySelector('.close-container').addEventListener('click', event => { event.target.parentElement.remove() })
+
+	// Enable scrolling the about section
+	lookup.querySelector('center > i')?.addEventListener('wheel', (event) => {event.stopImmediatePropagation()})
 }
 
 async function getAlliances() {
@@ -855,16 +858,16 @@ function appendStyle() {
 		position: relative;
 		left: 120px;
 		cursor: pointer;
-	}
-
-	.close-container:hover {
-		background-color: rgba(127, 127, 125, 0.5);
+		font: 16px/24px Tahoma, Verdana, sans-serif;
 	}
 
 	/* Player lookup */
 
 	#player-lookup {
 		text-align: unset;
+		position: absolute;
+		top: 74px;
+		left: 170px;
 	}
 
 	#player-lookup-online {
@@ -882,6 +885,13 @@ function appendStyle() {
 
 	#player-lookup-name {
 		line-height: 40px;
+	}
+
+	#player-lookup > center > i {
+		overflow-y: auto;
+		scrollbar-width: thin;
+		max-height: 100px;
+		display: block;
 	}
 
 	/* Main sidebar */

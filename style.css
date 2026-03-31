@@ -17,6 +17,9 @@
 
 #player-lookup {
 	text-align: unset;
+	position: absolute;
+	top: 74px;
+	left: 170px;
 }
 
 #player-lookup-online {
@@ -34,6 +37,13 @@
 
 #player-lookup-name {
 	line-height: 40px;
+}
+
+#player-lookup > center > i {
+	overflow-y: auto;
+	scrollbar-width: thin;
+	max-height: 100px;
+	display: block;
 }
 
 /* Main sidebar */
