@@ -9,6 +9,12 @@ const htmlCode = {
 	promptBox: '<div id="prompt-box"><p id="message">{message}</p></div>',
 	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
+
+const server = localStorage['emcdynmapplus-terra-nova-archive'] == 'true' ? 'nova' : 'aurora'
+const alliancesURL = 'https://emcstats.bot.nu/aurora/alliances'
+const apiURL = 'https://api.earthmc.net/v4/aurora'
+const proxyURL = 'https://proxy.killcors.com/?url='
+const isNostra = location.href.includes('nostra')
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
@@ -33,9 +39,8 @@ function modifySettings(data) {
 	data['player_tracker'].nameplates['show_heads'] = true
 	data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
 	data.zoom.def = 0
-	// Set camera on Europe
-	data.spawn.x = 2000
-	data.spawn.z = -10000
+	data.spawn = { x: 2000, z: -10000 } // Set camera on Europe
+	if (currentMapMode == 'archive') data['player_tracker'].enabled = false
 	return data
 }
 
@@ -137,13 +142,7 @@ function modifyDescription(marker) {
 	const residentNum = residents.split(', ').length
 	const isCapital = marker.tooltip.match(/\(Capital of (.*)\)/) != null
 
-	// Fix bug with names wrapped in angle brackets
-	const names = {
-		town: town.replaceAll('<', '&lt;').replaceAll('>', '&gt;'),
-		nation: nation?.replaceAll('<', '&lt;').replaceAll('>', '&gt;') ?? nation
-	}
-
-	// Calculate town's area
+	// Town's area
 	let area = 0
 	const iteratedRegions = []
 	if (marker.type == 'polygon') {
@@ -177,6 +176,12 @@ function modifyDescription(marker) {
 		marker.popup = marker.popup.replace(residents, htmlCode.scrollableResidentList.replace('{list}', residentList))
 	} else {
 		marker.popup = marker.popup.replace(residents + '\n', htmlCode.residentList.replace('{list}', residentList) + '\n')
+	}
+
+	// Names wrapped in angle brackets
+	const names = {
+		town: town.replaceAll('<', '&lt;').replaceAll('>', '&gt;'),
+		nation: nation?.replaceAll('<', '&lt;').replaceAll('>', '&gt;') ?? nation
 	}
 
 	marker.popup = marker.popup
@@ -252,13 +257,11 @@ function colorTowns(marker) {
 	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.[1]
 	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)?.[1]
 	const isRuin = (mayor.match(/NPC[0-9]+/) != null)
-	const isNationless = (nation == null)
 	const nationHasDefaultColor = (marker.color == '#3fb4ff' && marker.fillColor == '#3fb4ff') // Default blue
 
 	// Universal properties for the map modes
 	if (currentMapMode == 'alliances') {
-		marker.color = '#000000' // Black
-		marker.fillColor = '#000000'
+		marker.fillColor = marker.color = '#000000' // Black
 		marker.weight = 0.5
 	} else {
 		if (nationHasDefaultColor) {
@@ -267,7 +270,7 @@ function colorTowns(marker) {
 		}
 		else marker.color = '#89c500' // Default green
 	}
-	if (isRuin) return marker.fillColor = marker.color = '#000000' // Black
+	if (isRuin) return marker.fillColor = marker.color = '#000000'
 
 	// Properties for alliances
 	const nationAlliances = getNationAlliances(nation)
@@ -275,8 +278,7 @@ function colorTowns(marker) {
 	marker.weight = 1.5
 	marker.fillColor = nationAlliances[0].colours.fill
 	marker.color = nationAlliances[0].colours.outline
-	if (nationAlliances.length < 2) return marker
-	marker.weight = 0.5
+	if (nationAlliances.length > 1) marker.weight = 0.5
 
 	return marker
 }
@@ -466,9 +468,15 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	const loading = addElement(document.querySelector('.leaflet-top.leaflet-left'), htmlCode.playerLookupLoading, '#player-lookup-loading')
 
 	const query = { query: [player] }
-	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/players', { method: 'POST', body: JSON.stringify(query) })
-	if (data == false) return sendAlert('Unexpected error occurred while looking the player up, please try later.')
-	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+	const data = await fetchJSON(apiURL + '/players', { method: 'POST', body: JSON.stringify(query) })
+	if (!data.ok) {
+		document.querySelector('#player-lookup-loading').remove()
+		return sendMessage('Service is currently unavailable, please try later.')
+	}
+	if (!data.data[0]) {
+		document.querySelector('#player-lookup-loading').remove()
+		return sendMessage(`This player opted out of being looked up.`)
+	}
 
 	loading.remove()
 	const lookup = addElement(document.querySelector('.leaflet-top.leaflet-left'), htmlCode.playerLookup, '#player-lookup')
@@ -691,6 +699,8 @@ async function getArchive(data) {
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
 window.fetch = async (...args) => {
+	const response = await originalFetch(...args)
+
 	const playerList = document.querySelector('fieldset#players')
 	if (response.url.includes('players.json') && playerList) {
 		const scroll = playerList.scrollTop

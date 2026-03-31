@@ -16,13 +16,16 @@ const htmlCode = {
 	sidebarOption: '<div class="sidebar-option"></div>',
 	locateInput: '<input class="sidebar-input" id="locate-input" placeholder="London">',
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
-	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2022-05-01" max="${new Date().toLocaleDateString('en-ca')}">`,
+	archiveInput: `<input class="sidebar-input" id="archive-input" type="date">`,
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
 
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
+const isNostra = location.href.includes('nostra')
+const apiURL = 'https://api.earthmc.net/v4/aurora'
+const proxyURL = 'https://proxy.killcors.com/?url='
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 init()
@@ -42,7 +45,9 @@ function injectMainScript() {
 
 function waitForHTMLelement(selector) {
 	return new Promise(resolve => {
-		if (document.querySelector(selector)) return resolve(document.querySelector(selector))
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector))
+		}
 
 		const observer = new MutationObserver(() => {
 			if (document.querySelector(selector)) {
@@ -214,7 +219,7 @@ function checkForUpdate() {
 	}
 	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
 	if (version.cached != version.latest) {
-		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/v' + version.latest
+		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
 		sendMessage(`Extension has been automatically updated from ${version.cached} to ${version.latest}. Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
 	}
 	localStorage['emcdynmapplus-version'] = version.latest
@@ -329,6 +334,7 @@ async function locateNation(nation) {
 
 	let capital
 	try { capital = data.data[0].capital.name }
+	catch { return sendMessage('Searched nation has not been found.') }
 	const coords = await getTownSpawn(capital)
 	if (coords == false) return sendMessage('Unexpected error occurred while searching for nation, please try later.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
@@ -348,8 +354,15 @@ async function locateResident(resident) {
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 
+	try {
+		const town = data.data[0].town.name
+		const coords = await getTownSpawn(town)
 		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
 		if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
+		location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+	} catch {
+		return sendMessage(`The searched resident is townless or they opted out of being looked up.`)
+	}
 }
 
 async function getTownSpawn(town) {
@@ -377,6 +390,11 @@ async function getTownSpawn(town) {
 	}
 	const query = { query: [town], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
+	if (!data.ok) return null
+	try { return { x: Math.round(data.data[0].coordinates.spawn.x), z: Math.round(data.data[0].coordinates.spawn.z) } }
+	catch { return false }
+}
+
 function getArchiveURL() {
 	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
 	let date = chosenArchiveDate

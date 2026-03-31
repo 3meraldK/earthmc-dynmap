@@ -37,7 +37,7 @@ const htmlCode = {
 	sidebarOption: '<div class="sidebar-option"></div>',
 	locateInput: '<input class="sidebar-input" id="locate-input" placeholder="London">',
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
-	archiveInput: `<input class="sidebar-input" id="archive-input" type="date" min="2022-05-01" max="${new Date().toLocaleDateString('en-ca')}">`,
+	archiveInput: `<input class="sidebar-input" id="archive-input" type="date">`,
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	// For userscript
@@ -382,7 +382,9 @@ async function locateNation(nation) {
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 	if (!data.data) return sendMessage('Searched nation has not been found.')
 
-	const capital = data[0].capital.name
+	let capital
+	try { capital = data.data[0].capital.name }
+	catch { return sendMessage('Searched nation has not been found.') }
 	const coords = await getTownSpawn(capital)
 	if (coords == false) return sendMessage('Unexpected error occurred while searching for nation, please try later.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
@@ -401,8 +403,15 @@ async function locateResident(resident) {
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 
+	try {
+		const town = data.data[0].town.name
+		const coords = await getTownSpawn(town)
 		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
 		if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
+		location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+	} catch {
+		return sendMessage(`The searched resident is townless or they opted out of being looked up.`)
+	}
 }
 
 async function getTownSpawn(town) {
@@ -430,9 +439,9 @@ async function getTownSpawn(town) {
 	}
 	const query = { query: [town], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
-	if (data == false || data == undefined) return false
-	if (data == null) return null
-	return { x: Math.round(data[0].coordinates.spawn.x), z: Math.round(data[0].coordinates.spawn.z) }
+	if (!data.ok) return null
+	try { return { x: Math.round(data.data[0].coordinates.spawn.x), z: Math.round(data.data[0].coordinates.spawn.z) } }
+	catch { return false }
 }
 
 // main.js
@@ -447,7 +456,6 @@ const server = localStorage['emcdynmapplus-terra-nova-archive'] == 'true' ? 'nov
 
 let alliances = null
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
-const archiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 // Clickable player nameplates
 waitForHTMLelement('.leaflet-nameplate-pane').then(element => {
@@ -461,9 +469,8 @@ function modifySettings(data) {
 	data['player_tracker'].nameplates['show_heads'] = true
 	data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
 	data.zoom.def = 0
-	// Set camera on Europe
-	data.spawn.x = 2000
-	data.spawn.z = -10000
+	data.spawn = { x: 2000, z: -10000 } // Set camera on Europe
+	if (currentMapMode == 'archive') data['player_tracker'].enabled = false
 	return data
 }
 
@@ -567,13 +574,7 @@ function modifyDescription(marker) {
 	const residentNum = residents.split(', ').length
 	const isCapital = marker.tooltip.match(/\(Capital of (.*)\)/) != null
 
-	// Fix bug with names wrapped in angle brackets
-	const names = {
-		town: town.replaceAll('<', '&lt;').replaceAll('>', '&gt;'),
-		nation: nation?.replaceAll('<', '&lt;').replaceAll('>', '&gt;') ?? nation
-	}
-
-	// Calculate town's area
+	// Town's area
 	let area = 0
 	const iteratedRegions = []
 	if (marker.type == 'polygon') {
@@ -607,6 +608,12 @@ function modifyDescription(marker) {
 		marker.popup = marker.popup.replace(residents, htmlCode.scrollableResidentList.replace('{list}', residentList))
 	} else {
 		marker.popup = marker.popup.replace(residents + '\n', htmlCode.residentList.replace('{list}', residentList) + '\n')
+	}
+
+	// Names wrapped in angle brackets
+	const names = {
+		town: town.replaceAll('<', '&lt;').replaceAll('>', '&gt;'),
+		nation: nation?.replaceAll('<', '&lt;').replaceAll('>', '&gt;') ?? nation
 	}
 
 	marker.popup = marker.popup
@@ -664,22 +671,20 @@ function colorTowns(marker) {
 	const nation = marker.tooltip.match(/\(\b(?:Member|Capital)\b of (.*)\)\n/)?.[1]
 	const mayor = marker.popup.match(/Mayor: <b>(.*)<\/b>/)?.[1]
 	const isRuin = (mayor.match(/NPC[0-9]+/) != null)
-	const isNationless = (nation == null)
 	const nationHasDefaultColor = (marker.color == '#3fb4ff' && marker.fillColor == '#3fb4ff') // Default blue
 
 	// Universal properties for the map modes
 	if (currentMapMode == 'alliances') {
-		marker.color = '#000000' // Black
-		marker.fillColor = '#000000'
+		marker.fillColor = marker.color = '#000000'
 		marker.weight = 0.5
 	} else {
 		if (nationHasDefaultColor) {
 			marker.color = '#363636' // Dark gray
-			marker.fillColor = hashCode(nation) // Random color // Random color
+			marker.fillColor = hashCode(nation) // Random color
 		}
 		else marker.color = '#89c500' // Default green
 	}
-	if (isRuin) return marker.fillColor = marker.color = '#000000' // Black
+	if (isRuin) return marker.fillColor = marker.color = '#000000'
 
 	// Properties for alliances
 	const nationAlliances = getNationAlliances(nation)
@@ -687,8 +692,7 @@ function colorTowns(marker) {
 	marker.weight = 1.5
 	marker.fillColor = nationAlliances[0].colours.fill
 	marker.color = nationAlliances[0].colours.outline
-	if (nationAlliances.length < 2) return marker
-	marker.weight = 0.5
+	if (nationAlliances.length > 1) marker.weight = 0.5
 
 	return marker
 }
@@ -857,9 +861,15 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	const loading = addElement(document.querySelector('.leaflet-top.leaflet-left'), htmlCode.playerLookupLoading, '#player-lookup-loading')
 
 	const query = { query: [player] }
-	const data = await fetchJSON('https://api.earthmc.net/v3/aurora/players', { method: 'POST', body: JSON.stringify(query) })
-	if (data == false) return sendAlert('Unexpected error occurred while looking the player up, please try later.')
-	if (data == null) return sendAlert('Service is currently unavailable, please try later.')
+	const data = await fetchJSON(apiURL + '/players', { method: 'POST', body: JSON.stringify(query) })
+	if (!data.ok) {
+		document.querySelector('#player-lookup-loading').remove()
+		return sendMessage('Service is currently unavailable, please try later.')
+	}
+	if (!data.data[0]) {
+		document.querySelector('#player-lookup-loading').remove()
+		return sendMessage(`This player opted out of being looked up.`)
+	}
 
 	loading.remove()
 	const lookup = addElement(document.querySelector('.leaflet-top.leaflet-left'), htmlCode.playerLookup, '#player-lookup')
