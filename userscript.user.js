@@ -30,7 +30,7 @@ const htmlCode = {
 		label: '<label for="{option}">{optionName}</label>',
 		checkbox: '<input id="{option}" type="checkbox" name="{option}">',
 	},
-	sidebar: '<div class="leaflet-control-layers leaflet-control" id="sidebar"></div>',
+	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
 	sidebarOption: '<div class="sidebar-option"></div>',
 	locateInput: '<input class="sidebar-input" id="locate-input" placeholder="London">',
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
@@ -83,7 +83,7 @@ init()
 appendStyle()
 
 function addMainMenu(parent) {
-	const sidebar = addElement(parent, htmlCode.sidebar, '#sidebar')
+	const sidebar = addElement(parent, htmlCode.sidebar, '#emcdynmapplus-sidebar')
 
 	addLocateMenu(sidebar)
 
@@ -915,7 +915,7 @@ function appendStyle() {
 		box-sizing: border-box;
 	}
 
-	#sidebar {
+	#emcdynmapplus-sidebar {
 		padding: 3px;
 	}
 
