@@ -610,31 +610,31 @@ function addChunksLayer(data) {
 	const chunkLines = []
 	for (let x = -33280; x <= 33088; x += 16) {
 		chunkLines.push([
-			{ "x": x, "z": -16640 },
-			{ "x": x, "z": +16512 },
-			{ "x": x, "z": -16640 }
+			{ x: x, z: -16640 },
+			{ x: x, z: +16512 },
+			{ x: x, z: -16640 }
 		])
 	}
 	for (let z = -16640; z <= 16512; z += 16) {
 		chunkLines.push([
-			{ "x": -33280, "z": z },
-			{ "x": +33088, "z": z },
-			{ "x": -33280, "z": z }
+			{ x: -33280, z: z },
+			{ x: +33088, z: z },
+			{ x: -33280, z: z }
 		])
 	}
 
-	data[2] = {
-		"hide": true,
-		"name": "Chunks",
-		"control": true,
-		"id": "chunks",
-		"markers": [{
-			"weight": 0.33,
-			"color": "#000000",
-			"type": "polyline",
-			"points": chunkLines
+	data.push({
+		hide: true,
+		name: 'Chunks',
+		control: true,
+		id: 'chunks',
+		markers: [{
+			weight: 0.33,
+			color: '#000000',
+			type: 'polyline',
+			points: chunkLines
 		}]
-	}
+	})
 	return data
 }
 
@@ -742,17 +742,18 @@ async function addCountryLayer(data) {
 			points.push(linePoints)
 		}
 
-		data[3] = {
-			"hide": true,
-			"name": "Country Borders",
-			"control": true,
-			"id": "borders",
-			"order": 999,
-			"markers": [{
-				"weight": 1,
-				"color": "#ffffff",
-				"type": "polyline",
-				"points": points
+		// Create
+		data.push({
+			hide: true,
+			name: 'Country Borders',
+			control: true,
+			id: 'borders',
+			order: 999,
+			markers: [{
+				weight: 1,
+				color: '#ffffff',
+				type: 'polyline',
+				points: points
 			}]
 		})
 		return data
