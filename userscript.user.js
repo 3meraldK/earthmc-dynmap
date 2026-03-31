@@ -160,6 +160,15 @@ function decreaseBrightness(isChecked) {
 	localStorage['emcdynmapplus-darkened'] = isChecked
 	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
+
+function toggleTerraNovaArchives(isChecked) {
+	const element = document.querySelector('#archive-input')
+	element.value = ''
+	localStorage['emcdynmapplus-terra-nova-archive'] = isChecked
+	element.min = (isChecked) ? '2018-12-17' : '2022-05-01'
+	element.max = (isChecked) ? '2024-06-17' : new Date().toLocaleDateString('en-ca')
+}
+
 function toggleCacheArchives(isChecked) {
 	localStorage['emcdynmapplus-cache-archives'] = isChecked
 }
@@ -288,7 +297,12 @@ function addOptions(sidebar) {
 
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
 	checkbox.darkMode.addEventListener('change', event => toggleDarkMode(event.target.checked))
+	checkbox.terraNovaArchive.addEventListener('change', event => toggleTerraNovaArchives(event.target.checked))
 	checkbox.cacheArchives.addEventListener('change', event => toggleCacheArchives(event.target.checked))
+
+	const terraNovaArchive = localStorage['emcdynmapplus-terra-nova-archive']
+	document.querySelector('#archive-input').min = terraNovaArchive == 'true' ? '2018-12-17' : '2022-05-01'
+	document.querySelector('#archive-input').max = terraNovaArchive == 'true' ? '2024-06-17' : new Date().toLocaleDateString('en-ca')
 }
 
 function searchArchive(date) {

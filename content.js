@@ -94,6 +94,14 @@ function decreaseBrightness(isChecked) {
 	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
 
+function toggleTerraNovaArchives(isChecked) {
+	const element = document.querySelector('#archive-input')
+	element.value = ''
+	localStorage['emcdynmapplus-terra-nova-archive'] = isChecked
+	element.min = (isChecked) ? '2018-12-17' : '2022-05-01'
+	element.max = (isChecked) ? '2024-06-17' : new Date().toLocaleDateString('en-ca')
+}
+
 function toggleCacheArchives(isChecked) {
 	localStorage['emcdynmapplus-cache-archives'] = isChecked
 }
@@ -223,12 +231,18 @@ function addOptions(sidebar) {
 	const checkbox = {
 		decreaseBrightness: addOption(0, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
+		terraNovaArchive: addOption(2, 'terra-nova-archive', '<abbr title="If checked, archive mode will display Terra Nova towns">Terra Nova archives</abbr>', 'terra-nova-archive'),
 		cacheArchives: addOption(3, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives')
 	}
 
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
 	checkbox.darkMode.addEventListener('change', event => toggleDarkMode(event.target.checked))
+	checkbox.terraNovaArchive.addEventListener('change', event => toggleTerraNovaArchives(event.target.checked))
 	checkbox.cacheArchives.addEventListener('change', event => toggleCacheArchives(event.target.checked))
+
+	const terraNovaArchive = localStorage['emcdynmapplus-terra-nova-archive']
+	document.querySelector('#archive-input').min = terraNovaArchive == 'true' ? '2018-12-17' : '2022-05-01'
+	document.querySelector('#archive-input').max = terraNovaArchive == 'true' ? '2024-06-17' : new Date().toLocaleDateString('en-ca')
 }
 
 function searchArchive(date) {
