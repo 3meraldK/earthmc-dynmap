@@ -189,7 +189,6 @@ function init() {
 	// Initialize some variables
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
-	localStorage['emcdynmapplus-cache-archives'] = localStorage['emcdynmapplus-cache-archives'] ?? true
 
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
@@ -207,11 +206,26 @@ function init() {
 
 	addPlayerList()
 
+	firstTimeMessage()
 
     tick()
 
 	// For extension only
 	// checkForUpdate()
+}
+
+function firstTimeMessage() {
+	if (!localStorage['emcdynmapplus-first-time']) {
+		const threadURL = 'https://discord.com/channels/219863747248914433/1047061595861286912'
+		sendMessage(`The extension's maintainers aren't affiliated with EarthMC and responsible for archiving maps.
+			Please keep in mind, that the extension may temporarily render unusable due to unexpected EarthMC
+			or third-party updates. If that was the case, the maintainers would address potential problems
+			sooner or later likely through the communications channel on
+			<a target="_blank" href="${threadURL}">EarthMC Discord thread</a>.`)
+		localStorage['emcdynmapplus-first-time'] = 'false'
+	}
+}
+
 function tick() {
     const isFollowingPlayer = document.querySelector('.following') != null
     document.querySelector('#followingWarning').style.display = isFollowingPlayer ? 'unset' : 'none'
