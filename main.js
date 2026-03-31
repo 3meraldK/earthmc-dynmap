@@ -12,6 +12,7 @@ const htmlCode = {
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
+let alliances = null
 if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 
 // Clickable player nameplates
@@ -525,26 +526,45 @@ async function fetchJSON(url, options = null) {
 }
 
 async function getAlliances() {
-	const alliances = await fetchJSON('https://emctoolkit.vercel.app/api/aurora/alliances')
-	if (!alliances) {
+	const response = await fetchJSON(alliancesURL)
+	if (!response.ok || !response.data) {
 		const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 		if (cache == null) {
 			sendMessage('Service responsible for loading alliances will be available later.')
 			return []
 		}
+		if (response.code != 429) { // 429 = too many requests, ignore
 			sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
+		}
 		return cache
 	}
+	const alliances = response.data
 
+	function getAllianceByName(name) {
+		return alliances.find(it => it.identifier == name)
+	}
+
+	function findRoot(alliance, isFirstSearch = true) {
+		if (!alliance.parentAlliance) return (isFirstSearch) ? null : alliance
+		return findRoot(getAllianceByName(alliance.parentAlliance), false)
+	}
+
+	const nationList = new Map()
 	const finalArray = []
 	for (const alliance of alliances) {
-		let allianceType = alliance.type.toLowerCase() || 'mega'
-		if (allianceType == 'sub') continue
+		const rootName = findRoot(alliance)?.identifier || alliance.identifier
+		nationList.set(rootName, [...nationList.get(rootName) || [], alliance.ownNations].flat())
+	}
+	for (const allianceMap of nationList) {
+		const alliance = getAllianceByName(allianceMap[0])
+		const allianceType = alliance?.type?.toLowerCase() || 'mega'
+		const fill = '#' + alliance?.optional?.colours?.fill || '#000000'
+		const outline = '#' + alliance?.optional?.colours?.outline || '#000000'
 		finalArray.push({
-			name: alliance.fullName || alliance.allianceName,
+			name: alliance?.label || allianceMap[0],
 			type: allianceType == 'mega' ? 'meganations' : 'alliances',
-			nations: alliance.nations,
-			colours: alliance.colours || { fill: '#000000', outline: '#000000' } // Black
+			nations: allianceMap[1],
+			colours: { fill: fill, outline: outline }
 		})
 	}
 
