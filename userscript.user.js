@@ -47,9 +47,9 @@ const htmlCode = {
 }
 
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
-const isNostra = location.href.includes('nostra')
-const apiURL = 'https://api.earthmc.net/v4/aurora'
-const proxyURL = 'https://proxy.killcors.com/?url='
+const isNostra = !location.href.includes('aurora')
+const apiURL = 'https://api.earthmc.net/v4'
+const proxyURL = 'https://api.codetabs.com/v1/proxy/?quest='
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 function sendMessage(message) {

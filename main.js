@@ -10,11 +10,9 @@ const htmlCode = {
 	messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>'
 }
 
-const server = localStorage['emcdynmapplus-terra-nova-archive'] == 'true' ? 'nova' : 'aurora'
-const alliancesURL = 'https://emcstats.bot.nu/aurora/alliances'
-const apiURL = 'https://api.earthmc.net/v4/aurora'
-const proxyURL = 'https://proxy.killcors.com/?url='
-const isNostra = location.href.includes('nostra')
+const isNostra = !location.href.includes('aurora')
+const apiURL = 'https://api.earthmc.net/v4'
+const proxyURL = 'https://api.codetabs.com/v1/proxy/?quest='
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
