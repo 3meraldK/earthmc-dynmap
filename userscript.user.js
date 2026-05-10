@@ -37,7 +37,7 @@ const htmlCode = {
 	sidebarOption: '<div class="sidebar-option"></div>',
 	locateInput: '<input class="sidebar-input" id="locate-input" placeholder="London">',
 	locateSelect: '<select class="sidebar-button" id="locate-select"><option>Town</option><option>Nation</option><option>Resident</option></select>',
-	archiveInput: `<input class="sidebar-input" id="archive-input" type="date">`,
+	archiveInput: '<input class="sidebar-input" id="archive-input" type="date">',
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
 	// For userscript
