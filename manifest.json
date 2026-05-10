@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "EarthMC Dynmap+",
-	"version": "26.1",
+	"version": "26.2",
 	"author": "3meraldK",
 	"description": "Enrich the EarthMC map exploration's experience",
 
@@ -11,12 +11,12 @@
 
     "web_accessible_resources": [{
         "resources": ["main.js"],
-        "matches": ["https://map.earthmc.net/*", "https://nostra.earthmc.net/*"]
+        "matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"]
     }],
 
 	"content_scripts": [{
 		"js": ["content.js"],
 		"css": ["style.css"],
-		"matches": ["https://map.earthmc.net/*", "https://nostra.earthmc.net/*"]
+		"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"]
 	}]
 }
