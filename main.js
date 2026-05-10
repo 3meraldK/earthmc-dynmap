@@ -11,7 +11,7 @@ const htmlCode = {
 }
 
 const server = localStorage['emcdynmapplus-terra-nova-archive'] == 'true' ? 'nova' : 'aurora'
-const alliancesURL = 'https://emcstats.bot.nu/aurora/alliances'
+const alliancesURL = 'https://emcstats.bot.nu/nostra/alliances'
 const apiURL = 'https://api.earthmc.net/v4'
 const proxyURL = 'https://proxy.killcors.com/?url='
 const isNostra = true
