@@ -453,7 +453,7 @@ const { fetch: originalFetch } = unsafeWindow
 // Make this function work in userscript
 unsafeWindow.lookupPlayerFunc = lookupPlayer
 
-const alliancesURL = 'https://emcstats.bot.nu/aurora/alliances'
+const alliancesURL = 'https://emcstats.bot.nu/nostra/alliances'
 const server = localStorage['emcdynmapplus-terra-nova-archive'] == 'true' ? 'nova' : 'aurora'
 
 let alliances = null
