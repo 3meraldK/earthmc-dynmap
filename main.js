@@ -12,9 +12,9 @@ const htmlCode = {
 
 const server = localStorage['emcdynmapplus-terra-nova-archive'] == 'true' ? 'nova' : 'aurora'
 const alliancesURL = 'https://emcstats.bot.nu/aurora/alliances'
-const apiURL = 'https://api.earthmc.net/v4/aurora'
+const apiURL = 'https://api.earthmc.net/v4'
 const proxyURL = 'https://proxy.killcors.com/?url='
-const isNostra = location.href.includes('nostra')
+const isNostra = true
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
