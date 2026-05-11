@@ -694,6 +694,9 @@ function getNationAlliances(nation) {
 	for (const alliance of alliances) {
 		if (!alliance.nations.includes(nation)) continue
 		if (alliance.type != currentMapMode) continue
+		if (alliance.colours.fill == '#undefined' || alliance.colours.outline == '#undefined') {
+			alliance.colours.fill = alliance.colours.outline = '#3fb4ff'
+		}
 		nationAlliances.push({name: alliance.name, colours: alliance.colours})
 	}
 	return nationAlliances
