@@ -172,18 +172,23 @@ function modifyDescription(marker) {
 
 		}
 	}
-
-	// Create clickable resident lists
-	const residentList = (currentMapMode == 'archive') ? residents :
+	// Resident lists
+	const residentList = (currentMapMode == 'archive' || !isNostra) ? residents :
 		residents.split(', ').map(resident => htmlCode.residentClickable.replaceAll('{player}', resident)).join(', ')
-	const councillorList = (currentMapMode == 'archive') ? councillors :
+	const councillorList = (currentMapMode == 'archive' || !isNostra) ? councillors :
 		councillors.map(councillor => htmlCode.residentClickable.replaceAll('{player}', councillor)).join(', ')
 
-	// Modify description
+	// Modify resident list
 	if (residentNum > 50) {
 		marker.popup = marker.popup.replace(residents, htmlCode.scrollableResidentList.replace('{list}', residentList))
 	} else {
 		marker.popup = marker.popup.replace(residents + '\n', htmlCode.residentList.replace('{list}', residentList) + '\n')
+	}
+
+	if (currentMapMode != 'archive' && isNostra) {
+		marker.popup = marker.popup
+		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`)
+		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
 	}
 
 	// Names wrapped in angle brackets
@@ -204,11 +209,6 @@ function modifyDescription(marker) {
 		.replace('Size: <b>0 chunks</b><br/>', '')
 		.replaceAll('<b>false</b>', '<b><span style="color: red">No</span></b>')
 		.replaceAll('<b>true</b>', '<b><span style="color: green">Yes</span></b>')
-	if (currentMapMode != 'archive') {
-		marker.popup = marker.popup
-		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`)
-		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
-	}
 	if (isCapital) marker.popup = marker.popup
 		.replace('<span style="font-size:120%;">', '<span style="font-size: 120%">★ ')
 
