@@ -778,13 +778,15 @@ async function main(data) {
 	}
 
 	if (currentMapMode == 'archive') {
-		data = await getArchive(data)
+		const archiveData = await getArchive(data)
+		if (!archiveData.ok) return null
+		data = archiveData.data
 	}
 
 	if (!isNostra) data = addChunksLayer(data)
 	data = await addCountryLayer(data)
 
-	if (!data?.[0]?.markers?.length) {
+	if (!data?.[0]?.markers?.length && !isNostra) {
 		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
 		return data
 	}
@@ -1047,17 +1049,6 @@ async function getArchive(data) {
 	let cached = ''
 	let cache = await getArchiveSnapshot()
 
-	// Create town layer if there isn't
-	if (!data.some(layer => layer.name == 'Territory')) {
-		data.unshift({
-			hide: true,
-			name: 'Territory',
-			control: true,
-			id: 'towny',
-			markers: null
-		})
-	}
-
 	if (cache) {
 		data[0] = cache.data
 		timestamp = cache.timestamp
@@ -1067,7 +1058,16 @@ async function getArchive(data) {
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
 		markersURL = getArchiveURL()
 		let archive = await fetchJSON(proxyURL + markersURL)
-		if (!archive.ok || !archive.data) return sendMessage('Archive service is currently unavailable, please try later.')
+		if (archive.code == 429) {
+			sendMessage('You have been rate-limited, try again in 30 seconds.')
+			prompt.remove()
+			return {data: data, ok: false}
+		}
+		if (!archive.ok || !archive.data) {
+			sendMessage('You are either being rate-limited or archive service is currently unavailable, please try later or refresh website a few times. It might be also that the snapshot is too big to be loaded (usual for Terra Aurora snapshots) and nothing can be done in this situation.')
+			prompt.remove()
+			return {data: data, ok: false}
+		}
 		prompt.remove()
 
 		// Convert old JSON to new
@@ -1098,14 +1098,7 @@ async function getArchive(data) {
 		sendMessage(`The closest archive to your query comes from ${readableDate}.`)
 	}
 
-	// Star icons on Nostra map don't display
-	if (isNostra) {
-		data[0].markers.forEach(marker => {
-			if (marker.type == 'icon') marker.type = null
-		})
-	}
-
-	return data
+	return {data: data, ok: true}
 }
 
 let preventMapUpdate = false
