@@ -283,8 +283,7 @@ function toggleDarkMode(isChecked) {
 }
 
 function locate(selectValue, inputValue) {
-	// TODO: Remove in future
-	if (isNostra) return sendMessage(`Can't locate because EarthMC API for this world doesn't work yet.`)
+	if (!isNostra) return sendMessage(`Can't locate in this world.`)
 	switch (selectValue) {
 		case 'Town': locateTown(inputValue); break
 		case 'Nation': locateNation(inputValue); break
