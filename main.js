@@ -649,6 +649,24 @@ async function getArchiveSnapshot() {
 	}
 }
 
+function getArchiveURL() {
+	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
+	let date = chosenArchiveDate
+	if (date < 20180708) {
+		markersURL = 'https://map.earthmc.xyz/tiles/_markers_/marker_earth.json'
+	} else if (date < 20220428) {
+		markersURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json'
+	} else if (date < 20230212) {
+		markersURL = `https://earthmc.net/map/${server}/tiles/_markers_/marker_earth.json`
+	} else if (date < 20240623) {
+		markersURL = `https://earthmc.net/map/${server}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`
+	} else if (date < 20240704) {
+		date = 20240704 // Skip frequent changes that week
+	}
+	const archiveWebsite = `https://web.archive.org/web/${date}id_/`
+	return archiveWebsite + markersURL
+}
+
 async function getArchive(data) {
 
 	let timestamp
