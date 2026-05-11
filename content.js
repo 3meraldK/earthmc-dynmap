@@ -147,6 +147,8 @@ function init() {
 
 	addPlayerList()
 
+	waitForHTMLelement('#sidebar').then(element => element.remove())
+
 	firstTimeMessage()
 
     tick()
