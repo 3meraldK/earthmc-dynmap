@@ -421,7 +421,7 @@ function millerProjection(z) {
 async function addCountryLayer(data) {
 
 	// Download & cache
-	if (!localStorage['emcdynmapplus-borders']) {
+	if (!await getOPFS('emcdynmapplus-borders')) {
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Downloading country borders...'), '#prompt-box')
 		const markersURL = 'https://web.archive.org/web/2024id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
 		const fetch = await fetchJSON(proxyURL + markersURL)
@@ -430,13 +430,13 @@ async function addCountryLayer(data) {
 			sendMessage('Could not download optional country borders layer, you could try again later.')
 			return data
 		}
-		localStorage['emcdynmapplus-borders'] = JSON.stringify(fetch.data.sets['borders.Country Borders'].lines)
+		await saveToOPFS('emcdynmapplus-borders', JSON.stringify(fetch.data.sets['borders.Country Borders'].lines))
 	}
 
 	try {
 		// Assemble
 		const points = []
-		const countries = JSON.parse(localStorage['emcdynmapplus-borders'])
+		const countries = JSON.parse(await getOPFS('emcdynmapplus-borders'))
 		for (const line of Object.values(countries)) {
 			const linePoints = []
 			for (const x in line.x) {
@@ -609,32 +609,30 @@ async function getAlliances() {
 	return finalArray
 }
 
-function getArchiveURL() {
-	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
-	let date = chosenArchiveDate
-	if (date < 20220428) {
-		markersURL = 'https://earthmc.net/map/tiles/_markers_/marker_earth.json'
-	} else if (date < 20230212) {
-		markersURL = `https://earthmc.net/map/${server}/tiles/_markers_/marker_earth.json`
-	} else if (date < 20240623) {
-		markersURL = `https://earthmc.net/map/${server}/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json`
-	} else if (date < 20240704) {
-		date = 20240704 // skip frequent changes that week
+async function saveToOPFS(file, text) {
+	const fileSystem = await navigator.storage.getDirectory()
+	let fileHandle = await fileSystem.getFileHandle(file, {create: true})
+	const writable = await fileHandle.createWritable()
+	await writable.write(text)
+	await writable.close()
+}
+
+async function getOPFS(filename) {
+	try {
+		const fileSystem = await navigator.storage.getDirectory()
+		let fileHandle = await fileSystem.getFileHandle(filename)
+		const file = await fileHandle.getFile()
+		return await file.text()
+	} catch (e) {
+		return null
 	}
-	const archiveWebsite = `https://web.archive.org/web/${date}id_/`
-	return archiveWebsite + markersURL
 }
 
 async function cacheArchiveSnapshot(data, timestamp) {
 	try {
-		const fileSystem = await navigator.storage.getDirectory()
-		let fileHandle
-		try { fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`) }
-		catch (e) {fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`, {create: true}) }
-		const writable = await fileHandle.createWritable()
-		await writable.write(JSON.stringify({data: data, timestamp: timestamp}))
-		await writable.close()
-		return true
+		const filename = `emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`
+		const text = JSON.stringify({data: data, timestamp: timestamp})
+		await saveToOPFS(filename, text)
 	} catch (e) {
 		sendMessage("Couldn't cache archive snapshot.")
 		return null
@@ -644,10 +642,7 @@ async function cacheArchiveSnapshot(data, timestamp) {
 // Returns {data:.., timestamp:..}
 async function getArchiveSnapshot() {
 	try {
-		const fileSystem = await navigator.storage.getDirectory()
-		let fileHandle = await fileSystem.getFileHandle(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`)
-		const file = await fileHandle.getFile()
-		const text = await file.text()
+		const text = await getOPFS(`emcdynmapplus-archive-cache-${server}-${chosenArchiveDate}`)
 		return JSON.parse(text)
 	} catch (e) {
 		return null
