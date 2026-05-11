@@ -766,6 +766,17 @@ function addChunksLayer(data) {
 
 async function main(data) {
 
+	// Create town layer if there isn't
+	if (!data.some(layer => layer.name == 'Territory')) {
+		data.unshift({
+			hide: true,
+			name: 'Territory',
+			control: true,
+			id: 'towny',
+			markers: []
+		})
+	}
+
 	if (currentMapMode == 'archive') {
 		data = await getArchive(data)
 	}
