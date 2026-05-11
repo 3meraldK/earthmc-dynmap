@@ -165,7 +165,12 @@ function addMainMenu(parent) {
 	addOptions(sidebar)
 
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
-	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
+	currentMapModeLabel.style.display = 'block'
+	let currentMapModeText = currentMapMode
+	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
+		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance here">ℹ️</abbr></a>`
+	}
+	currentMapModeLabel.innerHTML = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapModeText)
 }
 
 function decreaseBrightness(isChecked) {

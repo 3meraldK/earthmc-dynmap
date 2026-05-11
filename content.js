@@ -91,21 +91,18 @@ function addMainMenu(parent) {
 	addOptions(sidebar)
 
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
-	currentMapModeLabel.textContent = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapMode)
+	currentMapModeLabel.style.display = 'block'
+	let currentMapModeText = currentMapMode
+	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
+		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance here">ℹ️</abbr></a>`
+	}
+	currentMapModeLabel.innerHTML = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapModeText)
 }
 
 function decreaseBrightness(isChecked) {
 	const element = document.querySelector('.leaflet-tile-pane')
 	localStorage['emcdynmapplus-darkened'] = isChecked
 	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
-}
-
-function toggleTerraNovaArchives(isChecked) {
-	const element = document.querySelector('#archive-input')
-	element.value = ''
-	localStorage['emcdynmapplus-terra-nova-archive'] = isChecked
-	element.min = (isChecked) ? '2018-12-17' : '2022-05-01'
-	element.max = (isChecked) ? '2024-06-17' : new Date().toLocaleDateString('en-ca')
 }
 
 function toggleCacheArchives(isChecked) {
