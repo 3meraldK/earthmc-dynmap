@@ -26,7 +26,7 @@ const htmlCode = {
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const isNostra = !location.href.includes('aurora')
 const apiURL = 'https://api.earthmc.net/v4'
-const proxyURL = 'https://api.codetabs.com/v1/proxy/?quest='
+const proxies = ['https://emerald-k-cors.fly.dev/', 'https://emcstats.bot.nu/proxy?target=']
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 init()
@@ -391,7 +391,15 @@ async function getTownSpawn(town) {
 	// Archive mode works with towns only
 	if (currentMapMode == 'archive') {
 		markersURL = getArchiveURL()
-		let archive = await fetchJSON(proxyURL + markersURL)
+
+		let archive = {ok: false, code: null, data: null}
+		for (const proxyURL of proxies) {
+			let fetchAttempt = await fetchJSON(proxyURL + markersURL)
+			if (fetchAttempt.ok && fetchAttempt.data) {
+				archive = fetchAttempt 
+				break
+			}
+		}
 
 		if (!archive.ok) return null
 		if (!archive.data) return false

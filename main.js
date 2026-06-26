@@ -12,7 +12,7 @@ const htmlCode = {
 
 const isNostra = !location.href.includes('aurora')
 const apiURL = 'https://api.earthmc.net/v4'
-const proxyURL = 'https://api.codetabs.com/v1/proxy/?quest='
+const proxies = ['https://emerald-k-cors.fly.dev/', 'https://emcstats.bot.nu/proxy?target=']
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 const alliancesURLworld = isNostra? 'nostra' : 'aurora'
@@ -424,7 +424,16 @@ async function addCountryLayer(data) {
 	if (!await getOPFS('emcdynmapplus-borders')) {
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Downloading country borders...'), '#prompt-box')
 		const markersURL = 'https://web.archive.org/web/2024id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
-		const fetch = await fetchJSON(proxyURL + markersURL)
+		
+		let fetch = {ok: false, code: null, data: null}
+		for (const proxyURL of proxies) {
+			let fetchAttempt = await fetchJSON(proxyURL + markersURL)
+			if (fetchAttempt.ok && fetchAttempt.data) {
+				fetch = fetchAttempt 
+				break
+			}
+		}
+		
 		prompt.remove()
 		if (!fetch.ok || !fetch.data) {
 			sendMessage('Could not download optional country borders layer, you could try again later.')
@@ -681,14 +690,23 @@ async function getArchive(data) {
 		// Download snapshot
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
 		markersURL = getArchiveURL()
-		let archive = await fetchJSON(proxyURL + markersURL)
+
+		let archive = {ok: false, code: null, data: null}
+		for (const proxyURL of proxies) {
+			let fetchAttempt = await fetchJSON(proxyURL + markersURL)
+			if (fetchAttempt.ok && fetchAttempt.data) {
+				archive = fetchAttempt 
+				break
+			}
+		}
+
 		if (archive.code == 429) {
 			sendMessage('You have been rate-limited, try again in 30 seconds.')
 			prompt.remove()
 			return {data: data, ok: false}
 		}
 		if (!archive.ok || !archive.data) {
-			sendMessage('You are either being rate-limited or archive service is currently unavailable, please try later or refresh website a few times. It might be also that the snapshot is too big to be loaded (usual for Terra Aurora snapshots) and nothing can be done in this situation.')
+			sendMessage(`The snapshot can't be fetched right now, please try in a minute.`)
 			prompt.remove()
 			return {data: data, ok: false}
 		}
