@@ -1,0 +1,12 @@
+.leaflet-tooltip {
+    pointer-events: unset !important;
+}
+
+.leaflet-tooltip:hover {
+    background-color: rgba(127, 127, 127, 0.5);
+    cursor: pointer;
+}
+
+#player-lookup-loading {
+    width: auto;
+}

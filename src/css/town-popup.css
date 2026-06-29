@@ -1,0 +1,24 @@
+#scrollable-list {
+    overflow: auto;
+    max-height: 200px;
+}
+
+#clamped-board {
+    max-width: 400px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.resident-list {
+    white-space: pre-wrap;
+}
+
+#part-of-label {
+    font-size: 85%;
+}
+
+.resident-clickable:hover {
+    background-color: rgba(127, 127, 125, 0.5);
+    cursor: pointer;
+}

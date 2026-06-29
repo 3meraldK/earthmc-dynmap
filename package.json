@@ -1,0 +1,16 @@
+{
+  "name": "earthmc-dynmap",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "scripts": {
+    "build-userscript": "bun buildfiles/userscript.js",
+    "build-extension": "bun buildfiles/extension.js",
+    "build-all": "bun build-userscript && bun build-extension"
+  },
+  "type": "module"
+}
