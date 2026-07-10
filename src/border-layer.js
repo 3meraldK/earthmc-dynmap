@@ -1,4 +1,4 @@
-function millerProjection(z) {
+function millerProjection(z, northHemisphereFactor = 0.994) {
 	// -16640 and 16508 are vertical bounds of old map (Plate Carree projection)
 	// Assume old map covers every latitude
 	// Convert old (Aurora) map's Z-coord to latitude
@@ -11,7 +11,6 @@ function millerProjection(z) {
 
 	// project from Plate Carree to Miller Cylindrical
 	// Adjust projection of north hemisphere
-	const northHemisphereFactor = 0.994
 	let millerOldZ = 5/4 * Math.asinh(Math.tan(4/5 * latRad)) * multiplier
 	if (millerOldZ < 0) millerOldZ *= northHemisphereFactor
 
@@ -56,13 +55,13 @@ async function addCountryLayer(data) {
 				let newCoords
 				if (isNostra) {
 					newCoords = {
-						x: line.x[x] * 1.94133 + 382.5,
-						z: millerProjection(line.z[x]) + 8175
+						x: Math.round(line.x[x] * 1.94133 + 382.5),
+						z: Math.round(millerProjection(line.z[x]) + 8175)
 					}
 				} else {
 					newCoords = {
-						x: line.x[x] * 1.0015,
-						z: line.z[x]
+						x: Math.round(line.x[x] * 1.0015),
+						z: Math.round(line.z[x])
 					}
 				}
 				linePoints.push(newCoords)
@@ -87,6 +86,93 @@ async function addCountryLayer(data) {
 		return data
 	} catch (error) {
 		sendMessage(`Could not set up a layer of country borders. You may need to clear this website's data.`)
+		return data
+	}
+}
+
+async function addProvinceLayer(data) {
+
+	// Download & cache
+	if (!await getOPFS('emcdynmapplus-borders-provinces')) {
+		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Downloading province borders...'), '#prompt-box')
+		const downloadURL = 'https://web.archive.org/web/2id_/https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/restructure/province-borders.geojson.gz'
+
+		const json = {
+			url: downloadURL,
+			method: 'GET',
+			responseType: 'blob'
+		}
+		const response = await GM.xmlHttpRequest(json)
+		let borders = null
+		let ok = false
+		try { borders = await response.response }
+		finally { ok = `${response.status}`.startsWith('2') }
+
+		const blobAsStream = borders.stream().pipeThrough(new DecompressionStream('gzip'))
+    	const blob = await new Response(blobAsStream).blob()
+		borders = JSON.parse(await blob.text())
+		let features = borders.features
+
+		prompt.remove()
+		if (!ok || !features) {
+			sendMessage('Could not download province borders layer, try again later.')
+			return data
+		}
+
+		features = features.filter(feature => feature.type == 'Feature')
+		let geometries = features.map(feature => feature.geometry)
+		geometries = geometries.filter(geometry => geometry.type == 'Polygon' || geometry.type == 'MultiPolygon')
+		await saveToOPFS('emcdynmapplus-borders-provinces', JSON.stringify(geometries))
+	}
+
+	try {
+		// Create
+
+		const points = []
+		let geometries = JSON.parse(await getOPFS('emcdynmapplus-borders-provinces'))
+		
+		let newGeometries = []
+		for (const geometry of geometries) {
+			if (geometry.type == 'Polygon') {
+				newGeometries.push(geometry.coordinates.flat())
+			} else {
+				for (const splitGeometry of geometry.coordinates.flat())
+				newGeometries.push(splitGeometry)
+			}
+		}
+
+		let theMap = []
+		for (const geometry of newGeometries) {
+			let smth = []
+			for (const coords of geometry) {
+				let x = coords[0] * 1
+				let z = coords[1] * -1
+				x = ((x - -180) * (64512 - -64512) / (180 - -180) + -64512)
+				z = ((z - -90) * (16512 - -16640) / (90 - -90) + -16640)
+				z = millerProjection(z, 0.9976) + 8175 - 200
+				let obj = {x: Math.round(x), z: Math.round(z)}
+				smth.push(obj)
+			}
+			theMap.push(smth)
+		}
+
+		data.push({
+			hide: true,
+			name: 'Province Borders',
+			control: true,
+			id: 'province-borders',
+			order: 998,
+			markers: [{
+				weight: 1,
+				color: '#ffffff',
+				type: 'polyline',
+				points: theMap
+			}]
+		})
+		return data
+	} catch (error) {
+		sendMessage(`Could not set up a layer of province borders. You may need to clear this website's data.`)
+		console.error(error)
 		return data
 	}
 }
