@@ -6,14 +6,15 @@ function addOptions(sidebar) {
 		optionsMenu.style.display = (optionsMenu.style.display == 'none') ? 'unset' : 'none'
 	})
 
+	let i = 0 // option index
 	const checkbox = {
-		decreaseBrightness: addOption(0, 'decrease-brightness', 'Decrease brightness', 'darkened'),
-		darkMode: addOption(1, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
-		cacheArchives: addOption(2, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives')
+		decreaseBrightness: addOption(i++, 'decrease-brightness', 'Decrease brightness', 'darkened'),
+		darkMode: addOption(i++, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
+		cacheArchives: addOption(i++, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives'),
 	}
 
 	// Archive mode world
-	const archiveModeWorld = addElement(optionsMenu, htmlCode.options.option, '.option', true)[3]
+	const archiveModeWorld = addElement(optionsMenu, htmlCode.options.option, '.option', true)[i++]
 	archiveModeWorld.insertAdjacentHTML('beforeend', htmlCode.options.label
 		.replace('{option}', 'archive-mode-world')
 		.replace('{optionName}', '<abbr title="Load archived townchunks snapshots from the selected world. Towns will only be properly overlayed in Terra Nostra snapshots.">Archive mode world</abbr>'))
