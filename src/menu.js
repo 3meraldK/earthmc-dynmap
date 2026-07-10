@@ -69,6 +69,18 @@ function toggleDarkMode(isChecked) {
 	else document.querySelector('#dark-mode')?.remove()
 }
 
+function toggleCapitalStars(isChecked) {
+	localStorage['emcdynmapplus-capital-stars'] = isChecked
+	if (!isChecked) {
+		document.head.insertAdjacentHTML('beforeend',
+			`<style id="toggle-capital-stars">
+			img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
+			</style>`
+		)
+	}
+	else document.querySelector('#toggle-capital-stars')?.remove()
+}
+
 function addOptions(sidebar) {
 	const optionsButton = addElement(sidebar, htmlCode.buttons.options, '#options-button')
 	const optionsMenu = addElement(sidebar, htmlCode.options.menu, '#options-menu')
@@ -82,6 +94,7 @@ function addOptions(sidebar) {
 		decreaseBrightness: addOption(i++, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(i++, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
 		cacheArchives: addOption(i++, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives'),
+		capitalStars: addOption(i++, 'toggle-capital-stars', 'Toggle capital stars', 'capital-stars'),
 	}
 
 	// Archive mode world
@@ -99,6 +112,7 @@ function addOptions(sidebar) {
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
 	checkbox.darkMode.addEventListener('change', event => toggleDarkMode(event.target.checked))
 	checkbox.cacheArchives.addEventListener('change', event => toggleCacheArchives(event.target.checked))
+	checkbox.capitalStars.addEventListener('change', event => toggleCapitalStars(event.target.checked))
 
 	updateArchiveInput()
 }

@@ -116,6 +116,7 @@ function init() {
 	// Initialize some variables
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
+	localStorage['emcdynmapplus-capital-stars'] = localStorage['emcdynmapplus-capital-stars'] ?? true
 
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
@@ -128,6 +129,7 @@ function init() {
 	})
 
 	toggleDarkMode(localStorage['emcdynmapplus-darkmode'] == 'true')
+	toggleCapitalStars(localStorage['emcdynmapplus-capital-stars'] == 'true')
 
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
