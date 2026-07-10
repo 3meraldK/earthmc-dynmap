@@ -49,6 +49,23 @@ async function main(data) {
 
 	if (!isNostra) data = addChunksLayer(data)
 	data = await addCountryLayer(data)
+	data = await addProvinceLayer(data)
+	
+	waitForHTMLelement('.leaflet-control-layers-selector').then((elements) => {
+		setTimeout(() => {
+			document.querySelectorAll('.leaflet-control-layers-selector')[5]
+				.addEventListener('change', event => {
+					if (event.target.checked && document.querySelectorAll('.leaflet-control-layers-selector')[4].checked)
+						document.querySelectorAll('.leaflet-control-layers-selector')[4].click()
+				})
+			document.querySelectorAll('.leaflet-control-layers-selector')[4]
+				.addEventListener('change', event => {
+					if (event.target.checked && document.querySelectorAll('.leaflet-control-layers-selector')[5].checked)
+						document.querySelectorAll('.leaflet-control-layers-selector')[5].click()
+				})
+		}, 1000)	
+	})
+	
 
 	if (!data?.[0]?.markers?.length && !isNostra) {
 		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
