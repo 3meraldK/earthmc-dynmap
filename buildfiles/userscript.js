@@ -12,10 +12,15 @@ const headerVariables = await variables.text()
 writer.write(headerText + '\n\n')
 writer.write(headerVariables + '\n\n')
 
+// Get dark-mode.css before anything else
+const darkMode = Bun.file('src/css/dark-mode.css')
+const darkModeText = await darkMode.text()
+
 // Insert css files
 const cssFiles = await readdir('src/css/')
 writer.write('const css = `')
 for (const i in cssFiles) {
+    if (cssFiles[i] == 'dark-mode.css') continue // ignore dark-mode.css, will inject to JS
     const file = Bun.file('src/css/' + cssFiles[i])
     if (file.type == 'application/octet-stream') continue
     const content = await file.text()
@@ -45,7 +50,8 @@ for (const i in sourceFiles) {
     const file = Bun.file('src/' + sourceFiles[i])
     if (file.type == 'application/octet-stream') continue
     if (file.name == 'src/variables.js') continue
-    const content = await file.text()
+    let content = await file.text()
+    content = content.replace('{dark-mode.css}', darkModeText)
     writer.write(content)
     if (i != sourceFiles.length-1) writer.write('\n\n')
 }

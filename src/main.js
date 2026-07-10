@@ -84,21 +84,11 @@ function modifySettings(data) {
 	return data
 }
 
-// TODO: This should be removed and integrated within the css directory 
 function loadDarkMode() {
 	document.head.insertAdjacentHTML('beforeend',
 		`<style id="dark-mode">
-		.leaflet-control, #message-box, #prompt-box, .sidebar-input,
-		.sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top,
-		.leaflet-popup-content-wrapper, .leaflet-popup-tip,
-		.leaflet-bar > a.leaflet-disabled {
-			background: #111;
-			color: #bbb;
-			box-shadow: 0 0 2px 1px #bbb;
-		}
-		div.leaflet-control-layers.link img {
-			filter: invert(1);
-		}</style>`
+		{dark-mode.css}
+		</style>`
 	)
 }
 
