@@ -51,18 +51,16 @@ async function main(data) {
 	data = await addCountryLayer(data)
 	data = await addProvinceLayer(data)
 	
-	waitForHTMLelement('.leaflet-control-layers-selector').then((elements) => {
+	waitForHTMLelement('.leaflet-control-layers-selector').then(() => {
 		setTimeout(() => {
-			document.querySelectorAll('.leaflet-control-layers-selector')[5]
-				.addEventListener('change', event => {
-					if (event.target.checked && document.querySelectorAll('.leaflet-control-layers-selector')[4].checked)
-						document.querySelectorAll('.leaflet-control-layers-selector')[4].click()
-				})
-			document.querySelectorAll('.leaflet-control-layers-selector')[4]
-				.addEventListener('change', event => {
-					if (event.target.checked && document.querySelectorAll('.leaflet-control-layers-selector')[5].checked)
-						document.querySelectorAll('.leaflet-control-layers-selector')[5].click()
-				})
+			const checkboxes = document.querySelectorAll('.leaflet-control-layers-selector')
+			if (checkboxes.length < 6) return
+			checkboxes[5].addEventListener('change', event => {
+				if (event.target.checked && checkboxes[4].checked) checkboxes[4].click()
+			})
+			checkboxes[4].addEventListener('change', event => {
+				if (event.target.checked && checkboxes[5].checked) checkboxes[5].click()
+			})
 		}, 1000)	
 	})
 	
