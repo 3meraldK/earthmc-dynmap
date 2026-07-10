@@ -1,6 +1,6 @@
 import { readdir } from "node:fs/promises"
 
-const output = Bun.file('dist/userscript.js')
+const output = Bun.file('dist/userscript.user.js')
 output.write('')
 const writer = output.writer()
 
