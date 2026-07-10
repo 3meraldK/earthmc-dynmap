@@ -68,8 +68,8 @@ async function getArchive(data) {
 	} else {
 		// Download snapshot
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
-		markersURL = getArchiveURL()
-		
+		const markersURL = getArchiveURL()
+
 		let archive = await fetchJSON(markersURL)
 
 		if (archive.code == 429) {
@@ -103,8 +103,8 @@ async function getArchive(data) {
 		}
 	}
 
-	readableDate = new Date(parseInt(timestamp)).toLocaleDateString('en-ca')
-	actualArchiveDate = parseInt(readableDate.replaceAll('-', ''))
+	const readableDate = new Date(parseInt(timestamp)).toLocaleDateString('en-ca')
+	const actualArchiveDate = parseInt(readableDate.replaceAll('-', ''))
 
 	document.querySelector('#current-map-mode-label').textContent += ` (${readableDate}${cached})`
 

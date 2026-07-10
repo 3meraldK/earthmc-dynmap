@@ -1,8 +1,8 @@
 async function getTownSpawn(town) {
 	// Archive mode works with towns only
 	if (currentMapMode == 'archive') {
-		markersURL = getArchiveURL()
-		
+		const markersURL = getArchiveURL()
+
 		let archive = await fetchJSON(markersURL)
 
 		if (!archive.ok) return null

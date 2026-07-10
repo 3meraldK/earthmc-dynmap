@@ -22,7 +22,7 @@ writer.write('const css = `')
 for (const i in cssFiles) {
     if (cssFiles[i] == 'dark-mode.css') continue // ignore dark-mode.css, will inject to JS
     const file = Bun.file('src/css/' + cssFiles[i])
-    if (file.type == 'application/octet-stream') continue
+    if (file.type == 'application/octet-stream') continue // non-css file
     const content = await file.text()
     writer.write(content)
     if (i != cssFiles.length-1) writer.write('\n\n')
@@ -58,7 +58,7 @@ for (const i in sourceFiles) {
 
 writer.write('\n\n')
 
-// Insert cors bypass
+// Insert userscript's cors bypass
 const file = Bun.file('src/cors-bypass/userscript.js')
 const content = await file.text()
 writer.write(content)

@@ -28,12 +28,12 @@ async function addCountryLayer(data) {
 	if (!await getOPFS('emcdynmapplus-borders')) {
 		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Downloading country borders...'), '#prompt-box')
 		const markersURL = 'https://web.archive.org/web/2024id_/https://earthmc.net/map/aurora/standalone/MySQL_markers.php?marker=_markers_/marker_earth.json'
-		
+
 		let fetch = await fetchJSON(markersURL)
 
 		prompt.remove()
 		if (!fetch.ok || !fetch.data) {
-			sendMessage('Could not download optional country borders layer, you could try again later.')
+			sendMessage('Could not download country borders layer, try again later.')
 			return data
 		}
 		await saveToOPFS('emcdynmapplus-borders', JSON.stringify(fetch.data.sets['borders.Country Borders'].lines))

@@ -1,4 +1,4 @@
-`// ==UserScript==
+// ==UserScript==
 // @name         EarthMC Dynmap+
 // @version      26.3
 // @description  Enrich the EarthMC map exploration's experience
@@ -11,4 +11,4 @@
 // @connect      earthmc.net
 // @connect      githubusercontent.com
 // @connect      emcstats.bot.nu
-// ==/UserScript==`
+// ==/UserScript==
