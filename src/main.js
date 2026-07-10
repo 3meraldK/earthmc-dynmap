@@ -99,26 +99,6 @@ function modifySettings(data) {
 	return data
 }
 
-function loadDarkMode() {
-	document.head.insertAdjacentHTML('beforeend',
-		`<style id="dark-mode">
-		{dark-mode.css}
-		</style>`
-	)
-}
-
-function toggleDarkMode(isChecked) {
-	if (isChecked) {
-		localStorage['emcdynmapplus-darkmode'] = true
-		loadDarkMode()
-	}
-	else {
-		localStorage['emcdynmapplus-darkmode'] = false
-		document.querySelector('#dark-mode').remove()
-		waitForHTMLelement('.leaflet-map-pane').then(element => element.style.filter = '')
-	}
-}
-
 function firstTimeMessage() {
 	if (!localStorage['emcdynmapplus-first-time']) {
 		const threadURL = 'https://discord.com/channels/219863747248914433/1047061595861286912'
@@ -146,7 +126,7 @@ function init() {
 		checkForUpdateUserscript(element) // For userscript
 	})
 
-	if (localStorage['emcdynmapplus-darkmode'] == 'true') loadDarkMode()
+	toggleDarkMode(localStorage['emcdynmapplus-darkmode'] == 'true')
 
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
