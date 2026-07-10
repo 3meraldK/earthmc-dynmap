@@ -1,3 +1,74 @@
+function addMainMenu(parent) {
+	const sidebar = addElement(parent, htmlCode.sidebar, '#emcdynmapplus-sidebar')
+
+	addLocateMenu(sidebar)
+
+	const archiveContainer = addElement(sidebar, htmlCode.sidebarOption, '.sidebar-option', true)[2]
+	const archiveButton = addElement(archiveContainer, htmlCode.buttons.searchArchive, '#archive-button')
+	const archiveInput = addElement(archiveContainer, htmlCode.archiveInput, '#archive-input')
+	archiveButton.addEventListener('click', () => searchArchive(archiveInput.value))
+	archiveInput.addEventListener('keyup', event => {
+		if (event.key == 'Enter') searchArchive(archiveInput.value)
+	})
+
+	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
+	switchMapModeButton.addEventListener('click', () => switchMapMode())
+
+	const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')
+	togglePlayerListButton.addEventListener('click', () => {
+		if (currentMapMode == 'archive') return sendMessage(`Can't view player list in archive mode.`)
+        const playerList = document.getElementById('players')
+        const isVisible = playerList.style.display == 'grid'
+        playerList.style.display = isVisible ? 'none' : 'grid'
+		if (!isVisible && !localStorage['emcdynmapplus-first-time-player-list']) {
+			localStorage['emcdynmapplus-first-time-player-list'] = 'false'
+			sendMessage('If tracking players functionality breaks, refresh the website. You will see this message once.')
+		}
+    })
+
+	addOptions(sidebar)
+
+	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
+	currentMapModeLabel.style.display = 'block'
+	let currentMapModeText = currentMapMode
+	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
+		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance by clicking here">ℹ️</abbr></a>`
+	}
+	currentMapModeLabel.innerHTML = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapModeText)
+}
+
+function decreaseBrightness(isChecked) {
+	const element = document.querySelector('.leaflet-tile-pane')
+	localStorage['emcdynmapplus-darkened'] = isChecked
+	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
+}
+
+function toggleCacheArchives(isChecked) {
+	localStorage['emcdynmapplus-cache-archives'] = isChecked
+}
+
+function switchMapMode() {
+	const nextMapMode = {
+		meganations: 'alliances',
+		alliances: 'default',
+		default: 'meganations'
+	}
+	localStorage['emcdynmapplus-mapmode'] = nextMapMode[currentMapMode] ?? 'meganations'
+	location.reload()
+}
+
+function toggleDarkMode(isChecked) {
+	localStorage['emcdynmapplus-darkmode'] = isChecked
+	if (isChecked) {
+		document.head.insertAdjacentHTML('beforeend',
+			`<style id="dark-mode">
+			{dark-mode.css}
+			</style>`
+		)
+	}
+	else document.querySelector('#dark-mode')?.remove()
+}
+
 function addOptions(sidebar) {
 	const optionsButton = addElement(sidebar, htmlCode.buttons.options, '#options-button')
 	const optionsMenu = addElement(sidebar, htmlCode.options.menu, '#options-menu')
