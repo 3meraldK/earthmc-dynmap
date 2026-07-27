@@ -30,6 +30,8 @@ function colorTowns(marker) {
 
 async function main(data) {
 
+	overrideZoomLimit()
+
 	// Create town layer if there isn't
 	if (!data.some(layer => layer.name == 'Territory')) {
 		data.unshift({
