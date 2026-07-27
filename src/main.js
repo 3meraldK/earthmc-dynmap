@@ -48,9 +48,9 @@ async function main(data) {
 	}
 
 	if (!isNostra) data = addChunksLayer(data)
-	data = await addCountryLayer(data)
-	data = await addProvinceLayer(data)
+	data = await addBordersLayer(data)
 	
+	// Checkboxes for province and country layers are mutually exclusive
 	waitForHTMLelement('.leaflet-control-layers-selector').then(() => {
 		setTimeout(() => {
 			const checkboxes = document.querySelectorAll('.leaflet-control-layers-selector')
