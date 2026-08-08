@@ -12,5 +12,8 @@
     "build-extension": "bun buildfiles/extension.js",
     "build-all": "bun build-userscript && bun build-extension"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "adm-zip": "^0.6.0"
+  }
 }
