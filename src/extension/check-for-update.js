@@ -1,7 +1,7 @@
 function checkForUpdate() {
 	const version = {
-		cached: localStorage['emcdynmapplus-version'],
-		latest: chrome.runtime.getManifest().version
+		cached: localStorage['emcdynmapplus-version-old'],
+		latest: localStorage['emcdynmapplus-version']
 	}
 	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
 	if (version.cached != version.latest) {
