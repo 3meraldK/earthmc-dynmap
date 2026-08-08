@@ -1,66 +1,32 @@
 import { readdir } from "node:fs/promises"
 
-const output = Bun.file('dist/userscript.user.js')
-output.write('')
-const writer = output.writer()
+const userscript = Bun.file('dist/userscript.user.js')
+userscript.write('')
+const writer = userscript.writer()
 
-// Insert header and variables first
-const header = Bun.file('src/userscript/header.js')
-const variables = Bun.file('src/variables.js')
-const headerText = await header.text()
-const headerVariables = await variables.text()
-writer.write(headerText + '\n\n')
-writer.write(headerVariables + '\n\n')
+// write the header and variables first in
+const header = await Bun.file('src/userscript/header.js').text()
+const variables = await Bun.file('src/variables.js').text()
+writer.write(header + '\n\n')
+writer.write(variables + '\n\n')
 
-// Get dark-mode.css before anything else
-const darkMode = Bun.file('src/css/dark-mode.css')
-const darkModeText = await darkMode.text()
-
-// Insert css files
-const cssFiles = await readdir('src/css/')
+// write styles in
+const styles = (await readdir('src/css')).filter(file => !file.match(/dark-mode/))
 writer.write('const css = `')
-for (const i in cssFiles) {
-    if (cssFiles[i] == 'dark-mode.css') continue // ignore dark-mode.css, will inject to JS
-    const file = Bun.file('src/css/' + cssFiles[i])
-    if (file.type == 'application/octet-stream') continue // non-css file
-    const content = await file.text()
-    writer.write(content)
-    if (i != cssFiles.length-1) writer.write('\n\n')
+for (const path of styles) {
+    const text = await Bun.file('src/css/' + path).text()
+    writer.write(text + '\n\n')
 }
-writer.write('`')
+writer.write('`\n\n')
 
-writer.write('\n\n')
-
-// Insert userscript-exclusive files
-const userscriptFiles = await readdir('src/userscript/')
-for (const i in userscriptFiles) {
-    const file = Bun.file('src/userscript/' + userscriptFiles[i])
-    if (file.type == 'application/octet-stream') continue
-    if (file.name == 'src/userscript/header.js') continue
-    const content = await file.text()
-    writer.write(content)
-    if (i != userscriptFiles.length-1) writer.write('\n\n')
+// write code in
+const code = (await readdir('src', {recursive: true}))
+    .filter(file => !file.match(/\.css|extension|borders|variables|header/) && file.includes('.'))
+const darkMode = await Bun.file('src/css/dark-mode.css').text()
+for (const path of code) {
+    let text = await Bun.file('src/' + path).text()
+    text = text.replace('{dark-mode.css}', darkMode)
+    writer.write(text + '\n\n')
 }
-
-writer.write('\n\n')
-
-// Insert mutual source files
-const sourceFiles = await readdir('src/')
-for (const i in sourceFiles) {
-    const file = Bun.file('src/' + sourceFiles[i])
-    if (file.type == 'application/octet-stream') continue
-    if (file.name == 'src/variables.js') continue
-    let content = await file.text()
-    content = content.replace('{dark-mode.css}', darkModeText)
-    writer.write(content)
-    if (i != sourceFiles.length-1) writer.write('\n\n')
-}
-
-writer.write('\n\n')
-
-// Insert userscript's cors bypass
-const file = Bun.file('src/cors-bypass/userscript.js')
-const content = await file.text()
-writer.write(content)
 
 writer.end()
