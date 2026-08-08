@@ -51,7 +51,7 @@ async function main(data) {
 
 	if (!isNostra) data = addChunksLayer(data)
 	data = await addBordersLayer(data)
-	
+
 	// Checkboxes for province and country layers are mutually exclusive
 	waitForHTMLelement('.leaflet-control-layers-selector').then(() => {
 		setTimeout(() => {
@@ -63,9 +63,9 @@ async function main(data) {
 			checkboxes[4].addEventListener('change', event => {
 				if (event.target.checked && checkboxes[5].checked) checkboxes[5].click()
 			})
-		}, 1000)	
+		}, 1000)
 	})
-	
+
 
 	if (!data?.[0]?.markers?.length && !isNostra) {
 		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
@@ -114,7 +114,6 @@ function firstTimeMessage() {
 }
 
 function init() {
-	// injectMainScript() - for extension only
 	// Initialize some variables
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
