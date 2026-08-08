@@ -103,7 +103,8 @@ function addOptions(sidebar) {
 		.replace('{option}', 'archive-mode-world')
 		.replace('{optionName}', '<abbr title="Load archived townchunks snapshots from the selected world. Towns will only be properly overlayed in Terra Nostra snapshots.">Archive mode world</abbr>'))
 	archiveModeWorld.style.display = 'unset'
-	const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode, '#archive-mode-world')
+	const currentArchiveWorld = localStorage['emcdynmapplus-archive-mode-world'] ?? 'Choose here'
+	const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld), '#archive-mode-world')
 	select.addEventListener('change', event => {
 		localStorage['emcdynmapplus-archive-mode-world'] = select.value
 		updateArchiveInput()
