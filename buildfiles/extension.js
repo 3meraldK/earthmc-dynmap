@@ -1,3 +1,43 @@
-console.log('WIP')
+import AdmZip from 'adm-zip'
+import { readdir } from 'node:fs/promises'
 
-// for main.js, append injectMainScript() to line 112 dynamically
+// write styles into style.css
+const styles = (await readdir('src/css'))
+    .filter(file => !file.match(/dark-mode/))
+const style = Bun.file('dist/extension/style.css')
+style.write('')
+let writer = style.writer()
+for (const path of styles) {
+    const text = await Bun.file('src/css/' + path).text()
+    writer.write(text + '\n\n')
+}
+writer.end()
+
+// write code into main.js
+const code = (await readdir('src', {recursive: true}))
+    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check/) && file.includes('.'))
+const darkMode = await Bun.file('src/css/dark-mode.css').text()
+const main = Bun.file('dist/extension/main.js')
+main.write('')
+writer = main.writer()
+for (const path of code) {
+    let text = await Bun.file('src/' + path).text()
+    text = text.replace('{dark-mode.css}', darkMode) // inject dark mode style into code
+    text = text.replace('onclick="lookupPlayerFunc', 'onclick="lookupPlayer') // call valid function
+    writer.write(text + '\n\n')
+}
+writer.end()
+
+// save other files
+const icon = Bun.file('src/extension/icon.png')
+const worker = Bun.file('src/cors-bypass/extension-worker.js')
+const manifest = Bun.file('src/extension/manifest.json')
+const versionCheck = Bun.file('src/extension/version-check.js')
+await Bun.write('dist/extension/worker.js', worker)
+await Bun.write('dist/extension/manifest.json', manifest)
+await Bun.write('dist/extension/version-check.js', versionCheck)
+await Bun.write('dist/extension/icon.png', icon)
+
+let archive = new AdmZip()
+archive.addLocalFolder('dist/extension')
+archive.writeZip('dist/extension.zip')
