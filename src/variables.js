@@ -5,9 +5,11 @@ const isNostra = !location.href.includes('aurora')
 const apiURL = 'https://api.earthmc.net/v4'
 const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
+const { fetch: originalFetch } = typeof(unsafeWindow) != 'undefined' ? unsafeWindow : window
 // Make this function work in userscript
-const { fetch: originalFetch } = unsafeWindow
-unsafeWindow.lookupPlayerFunc = lookupPlayer
+if (typeof(unsafeWindow) != 'undefined') {
+	unsafeWindow.lookupPlayerFunc = lookupPlayer
+}
 const alliancesURLworld = isNostra? 'nostra' : 'aurora'
 const alliancesURL = `https://emcstats.bot.nu/${alliancesURLworld}/alliances`
 const serverMap = {
