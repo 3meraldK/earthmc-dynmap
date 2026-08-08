@@ -29,9 +29,15 @@ async function addBordersLayer(data) {
 
 async function fetchLayer(url) {
 	try {
-		const options = { url: url, method: 'GET', responseType: 'arraybuffer' }
-		const response = await GM.xmlHttpRequest(options)
-		const gzip = response.response
+		let gzip = null
+		if (typeof(unsafeWindow) != 'undefined') {
+			const options = { url: url, method: 'GET', responseType: 'arraybuffer' }
+			const response = await GM.xmlHttpRequest(options)
+			gzip = response.response
+		} else {
+			const req = await corsFetch(url)
+			gzip = await req.arrayBuffer()
+		}
 		const stream = new Response(gzip).body.pipeThrough(new DecompressionStream('gzip'))
 		const text = await new Response(stream).text()
 		const layer = JSON.parse(text)
