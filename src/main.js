@@ -118,6 +118,10 @@ function init() {
 	localStorage['emcdynmapplus-mapmode'] = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 	localStorage['emcdynmapplus-darkened'] = localStorage['emcdynmapplus-darkened'] ?? true
 	localStorage['emcdynmapplus-capital-stars'] = localStorage['emcdynmapplus-capital-stars'] ?? true
+	localStorage['emcdynmapplus-archive-mode-world'] = localStorage['emcdynmapplus-archive-mode-world'] ?? 'Terra Nostra'
+	if (!isNostra && localStorage['emcdynmapplus-archive-mode-world'] == 'Terra Nostra') {
+		localStorage['emcdynmapplus-archive-mode-world'] = 'Terra Aurora'
+	}
 
 	waitForHTMLelement('.leaflet-tile-pane').then(() => {
 		if (localStorage['emcdynmapplus-darkened'] == 'true') decreaseBrightness(true)
