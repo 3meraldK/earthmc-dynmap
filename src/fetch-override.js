@@ -1,5 +1,7 @@
+// Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
-unsafeWindow.fetch = async (...args) => { // unsafeWindow in userscript
+const actualWindow = isExtension ? window : unsafeWindow
+actualWindow.fetch = async (...args) => {
 	const response = await originalFetch(...args)
 
 	const playerList = document.querySelector('fieldset#players')

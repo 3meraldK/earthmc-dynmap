@@ -21,12 +21,16 @@ writer.write('`\n\n')
 
 // write code in
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension|borders|variables|header/) && file.includes('.'))
+    .filter(file => !file.match(/\.css|extension|borders|variables|header|fetch-override/) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()
     text = text.replace('{dark-mode.css}', darkMode)
     writer.write(text + '\n\n')
 }
+
+// write fetch-override.js in as last
+writer.write(await Bun.file('src/fetch-override.js').text())
+writer.end()
 
 writer.end()

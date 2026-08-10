@@ -15,7 +15,7 @@ writer.end()
 
 // write code into main.js
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check/) && file.includes('.'))
+    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check|fetch-override/) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 const main = Bun.file('dist/extension/main.js')
 main.write('')
@@ -26,6 +26,9 @@ for (const path of code) {
     text = text.replace('onclick="lookupPlayerFunc', 'onclick="lookupPlayer') // call valid function
     writer.write(text + '\n\n')
 }
+
+// write fetch-override.js into main.js as last
+writer.write(await Bun.file('src/fetch-override.js').text())
 writer.end()
 
 // save other files

@@ -64,7 +64,7 @@ function toggleDarkMode(isChecked) {
 			`<style id="dark-mode">
 			{dark-mode.css}
 			</style>`
-		)
+		) // {dark-mode.css} is dynamically injected during build
 	}
 	else document.querySelector('#dark-mode')?.remove()
 }
