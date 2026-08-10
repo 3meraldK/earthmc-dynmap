@@ -14,12 +14,18 @@ for (const path of styles) {
 writer.end()
 
 // write code into main.js
-const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check|fetch-override/) && file.includes('.'))
-const darkMode = await Bun.file('src/css/dark-mode.css').text()
 const main = Bun.file('dist/extension/main.js')
 main.write('')
 writer = main.writer()
+
+// write variables.js first
+const variables = await Bun.file('src/variables.js').text()
+writer.write(variables + '\n\n')
+
+// rest of code
+const code = (await readdir('src', {recursive: true}))
+    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check|fetch-override|variables/) && file.includes('.'))
+const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()
     text = text.replace('{dark-mode.css}', darkMode) // inject dark mode style into code
@@ -27,7 +33,7 @@ for (const path of code) {
     writer.write(text + '\n\n')
 }
 
-// write fetch-override.js into main.js as last
+// write fetch-override.js last
 writer.write(await Bun.file('src/fetch-override.js').text())
 writer.end()
 
