@@ -30,11 +30,13 @@ async function addBordersLayer(data) {
 async function fetchLayer(url) {
 	try {
 		let gzip = null
-		if (typeof(unsafeWindow) != 'undefined') {
+		if (!isExtension) {
+			// userscript fetch
 			const options = { url: url, method: 'GET', responseType: 'arraybuffer' }
 			const response = await GM.xmlHttpRequest(options)
 			gzip = response.response
 		} else {
+			// extension fetch
 			const req = await corsFetch(url)
 			gzip = await req.arrayBuffer()
 		}

@@ -1,5 +1,5 @@
 function overrideZoomLimit() {
-	const Leaflet = (typeof(unsafeWindow) != 'undefined') ? unsafeWindow.L : window.L
+	const Leaflet = !isExtension ? unsafeWindow.L : window.L
 	Leaflet.Map.prototype.getMinZoom = function () { return -2 }
 
     const native_clampZoom = Leaflet.GridLayer.prototype._clampZoom
