@@ -49,6 +49,7 @@ async function fetchLayer(url) {
 	}
 }
 
+// deprecated:
 function addChunksLayer(data) {
 	const chunkLines = []
 	for (let x = -33280; x <= 33088; x += 16) {

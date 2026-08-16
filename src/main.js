@@ -49,7 +49,8 @@ async function main(data) {
 		data = archiveData.data
 	}
 
-	if (!isNostra) data = addChunksLayer(data)
+	// deprecated:
+	// data = addChunksLayer(data
 	data = await addBordersLayer(data)
 
 	// Checkboxes for province and country layers are mutually exclusive
