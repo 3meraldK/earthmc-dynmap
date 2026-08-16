@@ -14,7 +14,6 @@ async function getCurrentURL() {
 /* Main function */
 async function update() {
 	const url = await getCurrentURL()
-	console.log(url)
 	if (url != 'https://aurora.earthmc.net' && url != 'https://map.earthmc.net') {
 		return chrome.declarativeNetRequest.updateDynamicRules({
 			removeRuleIds: [1],
@@ -34,7 +33,7 @@ async function update() {
                     { header: 'Access-Control-Allow-Headers', operation: 'set', value: '*' }
                 ]
             },
-			"condition": { "resourceTypes": ["xmlhttprequest"] }
+			condition: { resourceTypes: ["xmlhttprequest"], initiatorDomains: ["earthmc.net"] }
         }]
     })
 }
