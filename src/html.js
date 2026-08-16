@@ -7,7 +7,7 @@ const htmlCode = {
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading">Loading...</button>',
 	promptBox: '<div id="prompt-box"><p id="message">{message}</p></div>',
 	buttons: {
-		locate: '<button class="sidebar-button" id="locate-button">Locate</button>',
+		locate: '<button class="sidebar-button" id="locate-button">{locate-text}</button>',
 		searchArchive: '<button class="sidebar-button" id="archive-button">Search archive</button>',
 		options: '<button class="sidebar-button" id="options-button">Options</button>',
 		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
