@@ -148,7 +148,8 @@ function searchArchive(date) {
 function addLocateMenu(sidebar) {
 	const locateMenu = addElement(sidebar, htmlCode.sidebarOption, '.sidebar-option', true)[0]
 	locateMenu.id = 'locate-menu'
-	const locateButton = addElement(locateMenu, htmlCode.buttons.locate, '#locate-button')
+	const locateText = currentMapMode == 'archive' ? 'Locate (archive)' : 'Locate'
+	const locateButton = addElement(locateMenu, htmlCode.buttons.locate.replace('{locate-text}', locateText), '#locate-button')
 	const locateSubmenu = addElement(locateMenu, htmlCode.sidebarOption, '.sidebar-option')
 	const locateSelect = addElement(locateSubmenu, htmlCode.locateSelect, '#locate-select')
 	const locateInput = addElement(locateSubmenu, htmlCode.locateInput, '#locate-input')
