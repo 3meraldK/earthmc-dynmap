@@ -14,17 +14,18 @@ function addMainMenu(parent) {
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
-	const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')
-	togglePlayerListButton.addEventListener('click', () => {
-		if (currentMapMode == 'archive') return sendMessage(`Can't view player list in archive mode.`)
-        const playerList = document.getElementById('players')
-        const isVisible = playerList.style.display == 'grid'
-        playerList.style.display = isVisible ? 'none' : 'grid'
-		if (!isVisible && !localStorage['emcdynmapplus-first-time-player-list']) {
-			localStorage['emcdynmapplus-first-time-player-list'] = 'false'
-			sendMessage('If tracking players functionality breaks, refresh the website. You will see this message once.')
-		}
-    })
+	if (currentMapMode != 'archive') {
+		const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')
+		togglePlayerListButton.addEventListener('click', () => {
+			const playerList = document.getElementById('players')
+			const isVisible = playerList.style.display == 'grid'
+			playerList.style.display = isVisible ? 'none' : 'grid'
+			if (!isVisible && !localStorage['emcdynmapplus-first-time-player-list']) {
+				localStorage['emcdynmapplus-first-time-player-list'] = 'false'
+				sendMessage('If tracking players functionality breaks, refresh the website. You will see this message once.')
+			}
+		})
+	}
 
 	addOptions(sidebar)
 
