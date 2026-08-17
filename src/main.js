@@ -127,7 +127,7 @@ function init() {
 
 	// deprecated:
 	// addPlayerList()
-	// waitForHTMLelement('#sidebar').then(element => element.remove())
+	if (currentMapMode == 'archive' || !isNostra) waitForHTMLelement('#sidebar').then(element => element.style.display = 'none')
 
 	firstTimeMessage()
 
