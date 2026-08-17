@@ -7,7 +7,11 @@ actualWindow.fetch = async (...args) => {
 	const playerList = document.querySelector('fieldset#players')
 	if (response.url.includes('players.json') && playerList) {
 		const scroll = playerList.scrollTop
-		setTimeout(() => playerList.scrollTop = scroll, 1)
+		const observer = new MutationObserver(() => {
+			playerList.scrollTop = scroll
+			observer.disconnect()
+		})
+    	observer.observe(playerList, { childList: true, subtree: true })
 	}
 
 	if (response.url.includes('web.archive.org')) return response
