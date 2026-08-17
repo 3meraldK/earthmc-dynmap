@@ -3,7 +3,7 @@ async function addBordersLayer(data) {
 		// Download & cache
 		if (!await getOPFS('emcdynmapplus-borders-' + type)) {
 			const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', `Downloading ${type} borders...`), '#prompt-box')
-			const url = `https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/restructure/src/borders/${type}.json.gz`
+			const url = `https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/restructure/src/assets/borders-${type}.json.gz`
 			const layer = await fetchLayer(url)
 
 			prompt.remove()
