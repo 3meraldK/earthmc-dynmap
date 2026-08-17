@@ -4,7 +4,7 @@ const isExtension = typeof(unsafeWindow) == 'undefined' // unsafeWindow is only 
 const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const isNostra = !location.href.includes('aurora')
 const apiURL = 'https://api.earthmc.net/v4'
-const chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
+let chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
 
 const { fetch: originalFetch } = window
 // Make this function work in userscript
