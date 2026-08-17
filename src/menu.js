@@ -42,8 +42,10 @@ function addMainMenu(parent) {
 
 function decreaseBrightness(isChecked) {
 	const element = document.querySelector('.leaflet-tile-pane')
+	const imageOverlay = document.querySelector('.leaflet-image-layer')
 	localStorage['emcdynmapplus-darkened'] = isChecked
 	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
+	if (imageOverlay) imageOverlay.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
 
 function toggleCacheArchives(isChecked) {
@@ -96,7 +98,7 @@ function addOptions(sidebar) {
 	const checkbox = {
 		decreaseBrightness: addOption(i++, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(i++, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
-		cacheArchives: addOption(i++, 'cache-archives', `<abbr title="Save archive mode snapshots in your browser's Origin Private File System for its instant load upon next time. One cache weighs a few MBs.">Cache archives</abbr>`, 'cache-archives'),
+		cacheArchives: addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots from specific dates in your browser to load them faster next time. One save file weighs a few megabytes.">Save archives</abbr>`, 'cache-archives'),
 		capitalStars: addOption(i++, 'toggle-capital-stars', 'Toggle capital stars', 'capital-stars'),
 	}
 
@@ -104,7 +106,7 @@ function addOptions(sidebar) {
 	const archiveModeWorld = addElement(optionsMenu, htmlCode.options.option, '.option', true)[i++]
 	archiveModeWorld.insertAdjacentHTML('beforeend', htmlCode.options.label
 		.replace('{option}', 'archive-mode-world')
-		.replace('{optionName}', '<abbr title="Load archived townchunks snapshots from the selected world. Towns will only be properly overlayed in Terra Nostra snapshots.">Archive mode world</abbr>'))
+		.replace('{optionName}', `<abbr title="Choose a world to load archive mode's snapshots from.">Archive mode world</abbr>`))
 	archiveModeWorld.style.display = 'unset'
 	const currentArchiveWorld = localStorage['emcdynmapplus-archive-mode-world']
 	const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld), '#archive-mode-world')
@@ -153,6 +155,7 @@ function updateArchiveInput() {
 }
 
 function searchArchive(date) {
+	if (!isNostra) return sendMessage('This functionality is disabled on this website, try doing this <a href="https://map.earthmc.net">here</a>.')
 	if (date == '') return
 	const URLDate = date.replaceAll('-', '')
 	localStorage['emcdynmapplus-archive-date'] = URLDate

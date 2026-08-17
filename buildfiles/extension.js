@@ -24,7 +24,7 @@ writer.write(variables + '\n\n')
 
 // rest of code
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check|fetch-override|variables/) && file.includes('.'))
+    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check|fetch-override|variables|archive-mode-overlay/) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()
@@ -38,14 +38,12 @@ writer.write(await Bun.file('src/fetch-override.js').text())
 writer.end()
 
 // save other files
-const icon = Bun.file('src/extension/icon.png')
+for (const name of ['icon.png', 'manifest.json', 'version-check.js', 'archive-mode-overlay.js']) {
+    const file = Bun.file('src/extension/' + name)
+    await Bun.write('dist/extension/' + name, file)
+}
 const worker = Bun.file('src/cors-bypass/extension-worker.js')
-const manifest = Bun.file('src/extension/manifest.json')
-const versionCheck = Bun.file('src/extension/version-check.js')
 await Bun.write('dist/extension/worker.js', worker)
-await Bun.write('dist/extension/manifest.json', manifest)
-await Bun.write('dist/extension/version-check.js', versionCheck)
-await Bun.write('dist/extension/icon.png', icon)
 
 let archive = new AdmZip()
 archive.addLocalFolder('dist/extension')
