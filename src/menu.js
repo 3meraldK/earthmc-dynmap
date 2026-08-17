@@ -14,6 +14,7 @@ function addMainMenu(parent) {
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
+	/* deprecated:
 	if (currentMapMode != 'archive' && isNostra) {
 		const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')
 		togglePlayerListButton.addEventListener('click', () => {
@@ -26,6 +27,7 @@ function addMainMenu(parent) {
 			}
 		})
 	}
+	*/
 
 	addOptions(sidebar)
 

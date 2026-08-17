@@ -10,8 +10,8 @@ const htmlCode = {
 		locate: '<button class="sidebar-button" id="locate-button">{locate-text}</button>',
 		searchArchive: '<button class="sidebar-button" id="archive-button">Search archive</button>',
 		options: '<button class="sidebar-button" id="options-button">Options</button>',
-		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
-		togglePlayerList: '<button class="sidebar-input" id="toggle-player-list">Toggle player list</button>'
+		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>'
+		// deprecated: togglePlayerList: '<button class="sidebar-input" id="toggle-player-list">Toggle player list</button>'
 	},
 	options: {
 		menu: '<div id="options-menu"></div>',

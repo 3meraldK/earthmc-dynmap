@@ -125,13 +125,14 @@ function init() {
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 
-	addPlayerList()
-
-	waitForHTMLelement('#sidebar').then(element => element.remove())
+	// deprecated:
+	// addPlayerList()
+	// waitForHTMLelement('#sidebar').then(element => element.remove())
 
 	firstTimeMessage()
 
-    tick()
+	addElement(document.body, htmlCode.followingPlayer, '#followingWarning')
+    doesFollowPlayerInterval()
 
 	try { checkForUpdate(element) } // For extension
 	catch (error) { /* Do nothing if it's userscript */ }

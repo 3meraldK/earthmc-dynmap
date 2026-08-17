@@ -1,4 +1,4 @@
-fieldset#players {
+/*fieldset#players {
     z-index: 999;
     position: fixed;
     background-color: rgba(0,0,0,.5);
@@ -31,7 +31,7 @@ fieldset#players > a:hover {
 
 .following {
     background-color: rgba(0, 255, 0, 0.5);
-}
+}*/
 
 #followingWarning {
     position: fixed;
