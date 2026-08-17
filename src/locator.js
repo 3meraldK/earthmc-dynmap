@@ -1,6 +1,6 @@
-async function getTownSpawn(townName) {
-	// Archive mode works with towns only
-	if (currentMapMode == 'archive') {
+async function getTownSpawn(searchedTownName) {
+	if (currentMapMode == 'archive' || !isNostra) {
+		if (!isNostra && currentMapMode != 'archive') chosenArchiveDate = 20260412
 		const markersURL = getArchiveURL()
 
 		let markers = await fetchJSON(markersURL)
@@ -17,13 +17,19 @@ async function getTownSpawn(townName) {
 			markers = markers.data[0].markers
 		}
 
-		let town = markers.find(marker => !marker.tooltip_anchor && marker.popup.toLowerCase().includes(`\">${townName} `))
-		if (!town) return false
-		let points = town.points.flat(Infinity)
+		let target = null
+		const dummy = document.createElement('div')
+		for (const marker of markers) {
+			dummy.innerHTML = marker.popup
+			const townName = dummy.textContent.replaceAll('\n', '').trim().split(' ')[0].toLowerCase()
+			if (townName == searchedTownName) target = marker
+		}
+		if (!target) return false
+		let points = target.points.flat(Infinity)
 		let coords = { x: points[0].x, z: points[0].z }
 		return coords
 	}
-	const query = { query: [townName], template: { coordinates: true } }
+	const query = { query: [searchedTownName], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
 	if (!data.ok) return null
 	try { return { x: Math.round(data.data[0].coordinates.spawn.x), z: Math.round(data.data[0].coordinates.spawn.z) } }
@@ -37,7 +43,7 @@ async function locateTown(town) {
 	const coords = await getTownSpawn(town)
 	if (coords == false) return sendMessage('Searched town has not been found.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
-	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+	location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
 
 }
 
@@ -45,7 +51,8 @@ async function locateNation(nation) {
 	nation = nation.trim().toLowerCase()
 	if (nation == '') return
 
-	if (currentMapMode == 'archive') {
+	if (currentMapMode == 'archive' || !isNostra) {
+		if (!isNostra && currentMapMode != 'archive') chosenArchiveDate = 20260412
 		const markersURL = getArchiveURL()
 
 		let markers = await fetchJSON(markersURL)
@@ -68,7 +75,7 @@ async function locateNation(nation) {
 			|| marker[popupProperty].toLowerCase().includes(nation + ')'))
 		if (!target) return sendMessage('Searched nation has not been found.')
 		const coords = (chosenArchiveDate < 20240623) ? {x: target.x, z: target.z } : {x: target.point.x, z: target.point.z }
-		location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+		location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
 	}
 
 	const query = { query: [nation], template: { capital: true } }
@@ -82,7 +89,7 @@ async function locateNation(nation) {
 	const coords = await getTownSpawn(capital)
 	if (coords == false) return sendMessage('Unexpected error occurred while searching for nation, please try later.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
-	location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+	location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
 }
 
 // https://codepen.io/seansean/pen/QxjqVp
@@ -95,11 +102,11 @@ async function locateResident(resident) {
 	resident = resident.trim().toLowerCase()
 	if (resident == '') return
 
-	if (currentMapMode == 'archive') {
+	if (currentMapMode == 'archive' || !isNostra) {
+		if (!isNostra && currentMapMode != 'archive') chosenArchiveDate = 20260412
 		const markersURL = getArchiveURL()
 
 		let markers = await fetchJSON(markersURL)
-		let popupProperty = chosenArchiveDate < 20240623 ? 'desc' : 'popup'
 
 		if (!markers.ok) return null
 		if (!markers.data) return false
@@ -141,14 +148,13 @@ async function locateResident(resident) {
 		const coords = await getTownSpawn(town)
 		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
 		if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
-		location.href = `https://map.earthmc.net/?zoom=4&x=${coords.x}&z=${coords.z}`
+		location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
 	} catch {
 		return sendMessage(`The searched resident is townless or they opted out of being looked up.`)
 	}
 }
 
 function locate(selectValue, inputValue) {
-	if (!isNostra) return sendMessage(`Can't locate in this world.`)
 	switch (selectValue) {
 		case 'Town': locateTown(inputValue); break
 		case 'Nation': locateNation(inputValue); break
