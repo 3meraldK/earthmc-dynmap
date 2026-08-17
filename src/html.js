@@ -18,7 +18,8 @@ const htmlCode = {
 		option: '<div class="option"></div>',
 		label: '<label for="{option}">{optionName}</label>',
 		checkbox: '<input id="{option}" type="checkbox" name="{option}">',
-		archiveWorldMode: '<select id="archive-mode-world"><option value="" selected disabled hidden>{current}</option><option>Classic</option><option>Terra Nova</option><option>Terra Aurora</option><option>Terra Nostra</option></select>'
+		archiveWorldMode: '<select id="archive-mode-world"><option value="" selected disabled hidden>{current}</option><option>Classic</option><option>Terra Nova</option><option>Terra Aurora</option><option>Terra Nostra</option></select>',
+		clearStorage: '<button class="sidebar-input" id="clear-storage" style="margin-top: 5px; display: block">Refresh site data</button>'
 	},
 	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
 	sidebarOption: '<div class="sidebar-option"></div>',

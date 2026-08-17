@@ -121,6 +121,18 @@ function addOptions(sidebar) {
 	checkbox.cacheArchives.addEventListener('change', event => toggleCacheArchives(event.target.checked))
 	checkbox.capitalStars.addEventListener('change', event => toggleCapitalStars(event.target.checked))
 
+	// Clear local storage & OPFS
+	const clearStorage = addElement(optionsMenu, htmlCode.options.option, '.option', true)[i++]
+	clearStorage.style.display = 'unset'
+	const clearStorageButton = addElement(clearStorage, htmlCode.options.clearStorage, '#clear-storage')
+	clearStorageButton.addEventListener('click', async () => {
+		if (!window.confirm('Use this to attempt to fix an issue or update something manually.')) return
+		localStorage.clear()
+		const opfs = await navigator.storage.getDirectory()
+		opfs.remove()
+		location.reload()
+	})
+
 	updateArchiveInput()
 }
 
