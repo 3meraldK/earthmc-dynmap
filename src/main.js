@@ -115,8 +115,6 @@ function init() {
 
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
 		addMainMenu(element)
-		try { checkForUpdateUserscript(element) } // For userscript
-		catch (error) { /* Do nothing if it's extension */ }
 	})
 
 	toggleDarkMode(localStorage['emcdynmapplus-darkmode'] == 'true')
@@ -134,8 +132,7 @@ function init() {
 	addElement(document.documentElement, htmlCode.followingPlayer, '#followingWarning')
     doesFollowPlayerInterval()
 
-	try { checkForUpdate(element) } // For extension
-	catch (error) { /* Do nothing if it's userscript */ }
+	checkForUpdate()
 }
 
 init()
