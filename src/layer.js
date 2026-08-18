@@ -17,7 +17,8 @@ async function addBordersLayer(data) {
 		// Add layer
 		try {
 			const layer = JSON.parse(await getOPFS('emcdynmapplus-borders-' + type))
-			data.push(layer)
+			const archiveWorld = localStorage['emcdynmapplus-archive-mode-world']
+			if (currentMapMode != 'archive' || archiveWorld == 'Terra Nostra') data.push(layer)
 			continue
 		} catch (error) {
 			sendMessage(`Could not set up a layer of ${type} borders. You may need to clear this website's data.`)
