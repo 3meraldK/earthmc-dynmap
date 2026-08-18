@@ -1,6 +1,6 @@
 function sendMessage(message) {
 	if (document.querySelector('#message-box') != null) document.querySelector('#message-box').remove()
-	document.body.insertAdjacentHTML('beforeend', htmlCode.messageBox.replace('{message}', message))
+	document.documentElement.insertAdjacentHTML('beforeend', htmlCode.messageBox.replace('{message}', message))
 	document.querySelector('#message-close').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
