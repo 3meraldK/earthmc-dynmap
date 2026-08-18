@@ -24,7 +24,7 @@ writer.write(variables + '\n\n')
 
 // rest of code
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension-worker|userscript|borders|icon|manifest|version-check|fetch-override|variables|archive-mode-overlay/) && file.includes('.'))
+    .filter(file => !file.match(/\.css|extension-worker|userscript|assets|icon|manifest|version-check|fetch-override|variables|archive-mode-overlay/) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()
