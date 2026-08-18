@@ -27,6 +27,7 @@ function hookLeaflet() {
         waitForHTMLelement('.leaflet-image-layer').then((element) => {
             element.style.filter = isDarkened ? 'brightness(50%)' : ''
         })
+		document.querySelector('.leaflet-tile-pane').remove()
         return squaremap
     }
 }
