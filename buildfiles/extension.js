@@ -23,8 +23,11 @@ const variables = await Bun.file('src/variables.js').text()
 writer.write(variables + '\n\n')
 
 // rest of code
+const excludeFiles = ['\\.css', 'extension-worker', 'userscript', 'assets', 'icon',
+    'manifest', 'version-check', 'fetch-override', 'variables']
+const regex = new RegExp(excludeFiles.join('|'))
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension-worker|userscript|assets|icon|manifest|version-check|fetch-override|variables/) && file.includes('.'))
+    .filter(file => !file.match(regex) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()

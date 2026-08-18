@@ -20,8 +20,11 @@ for (const path of styles) {
 writer.write('`\n\n')
 
 // write code in
+const excludeFiles = ['\\.css', 'extension', 'assets', 'variables',
+    'header', 'fetch-override']
+const regex = new RegExp(excludeFiles.join('|'))
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension|assets|variables|header|fetch-override/) && file.includes('.'))
+    .filter(file => !file.match(regex) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()
