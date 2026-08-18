@@ -310,21 +310,18 @@ function getNationAlliances(nation) {
 // if (currentMapMode != 'default' && currentMapMode != 'archive') getAlliances().then(result => alliances = result)
 
 let url, bounds
-const isAurora = location.href.includes('aurora')
-const SCALE = 0.03125
-const world = localStorage['emcdynmapplus-archive-mode-world']
-const mode = localStorage['emcdynmapplus-mapmode']
+const SCALE = 0.03125 // Number from L.map.options.scale
 const isDarkened = localStorage['emcdynmapplus-darkened'] == 'true'
 
-if (world == 'Terra Nova' || world == 'Terra Aurora') {
+if (server == 'nova' || server == 'aurora') {
 	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/basemap-aurora.png'
 	bounds = {down: -16508, left: -33280, up: 16640, right: 33080}
-} else if (world == 'Classic') {
+} else if (server == 'classic') {
 	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/basemap-classic.png'
 	bounds = {down: 1023, left: -1535, up: -14335, right: 19455}
 }
 
-if (mode == 'archive' && world != 'Terra Nostra' && !isAurora) hookLeaflet()
+if (currentMapMode == 'archive' && server != 'nostra' && isNostra) hookLeaflet()
 
 function hookLeaflet() {
     if (typeof(L) == 'undefined') return requestAnimationFrame(hookLeaflet)
@@ -499,6 +496,20 @@ function modifyOldDescription(marker) {
 	}
 
 	return marker
+}
+
+function checkForUpdate() {
+	const variableName = isExtension ? 'emcdynmapplus-version-old' : 'emcdynmapplus-version'
+	const version = {
+		cached: localStorage[variableName],
+		latest: isExtension ? localStorage['emcdynmapplus-version'] : GM_info.script.version
+	}
+	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
+	if (version.cached != version.latest) {
+		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
+		sendMessage(`Extension has been automatically updated from ${version.cached} to ${version.latest}. Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
+	}
+	localStorage['emcdynmapplus-version'] = version.latest
 }
 
 async function fetchJSON(url, options = null) {
@@ -1440,19 +1451,6 @@ function overrideZoomLimit() {
         coords.z = Math.max(0, coords.z)
         return native_getTileUrl.call(this, coords)
     }
-}
-
-function checkForUpdate() {
-	const version = {
-		cached: localStorage['emcdynmapplus-version'],
-		latest: GM_info.script.version
-	}
-	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
-	if (version.cached != version.latest) {
-		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
-		sendMessage(`Extension has been automatically updated from ${version.cached} to ${version.latest}. Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
-	}
-	localStorage['emcdynmapplus-version'] = version.latest
 }
 
 function appendStyle() {
