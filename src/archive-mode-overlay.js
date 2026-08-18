@@ -6,10 +6,10 @@ const mode = localStorage['emcdynmapplus-mapmode']
 const isDarkened = localStorage['emcdynmapplus-darkened'] == 'true'
 
 if (world == 'Terra Nova' || world == 'Terra Aurora') {
-	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/restructure/src/assets/basemap-aurora.png'
+	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/basemap-aurora.png'
 	bounds = {down: -16508, left: -33280, up: 16640, right: 33080}
 } else if (world == 'Classic') {
-	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/restructure/src/assets/basemap-classic.png'
+	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/basemap-classic.png'
 	bounds = {down: 1023, left: -1535, up: -14335, right: 19455}
 }
 
