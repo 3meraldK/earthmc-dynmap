@@ -1,7 +1,8 @@
 function checkForUpdate() {
+	const variableName = isExtension ? 'emcdynmapplus-version-old' : 'emcdynmapplus-version'
 	const version = {
-		cached: localStorage['emcdynmapplus-version-old'],
-		latest: localStorage['emcdynmapplus-version']
+		cached: localStorage[variableName],
+		latest: isExtension ? localStorage['emcdynmapplus-version'] : GM_info.script.version
 	}
 	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
 	if (version.cached != version.latest) {
