@@ -1,0 +1,41 @@
+.sidebar-option {
+    width: 150px;
+    display: flex;
+}
+
+.sidebar-input {
+    width: 100%;
+}
+
+.sidebar-button {
+    min-width: 75px;
+}
+
+#current-map-mode-label {
+    font-size: larger;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#emcdynmapplus-sidebar {
+    padding: 3px;
+}
+
+#locate-menu {
+    padding-bottom: 5px;
+    display: block;
+}
+
+#locate-button, #options-button, #options-menu {
+    width: 150px;
+}
+
+.option {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+#archive-input {
+    width: 70px;
+}

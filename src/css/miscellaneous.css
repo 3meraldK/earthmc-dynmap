@@ -1,0 +1,21 @@
+.left-container {
+    width: 150px;
+    text-align: justify;
+    font-size: larger;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.close-container {
+    position: relative;
+    left: 120px;
+    cursor: pointer;
+    font: 16px/24px Tahoma, Verdana, sans-serif;
+}
+
+/* Update notification - for userscript */
+
+#update-download-link {
+    font-weight: bold;
+    text-decoration: none;
+}

@@ -1,0 +1,21 @@
+#message-box, #prompt-box {
+    position: absolute;
+    width: 300px;
+    font-family: 'Arial';
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: white;
+    color: black;
+    font-size: large;
+    box-sizing: border-box;
+    padding: 8px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#message {
+    margin-block: 0;
+    text-align: justify;
+}

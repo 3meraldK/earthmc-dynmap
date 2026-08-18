@@ -1,0 +1,13 @@
+.leaflet-control, #message-box, #prompt-box, .sidebar-input,
+.sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top,
+.leaflet-popup-content-wrapper, .leaflet-popup-tip,
+.leaflet-bar > a.leaflet-disabled, #archive-mode-world {
+    background: #111;
+    color: #bbb;
+    box-shadow: 0 0 2px 1px #bbb;
+}
+
+.leaflet-control-layers.link > a > img,
+input[type="checkbox"] {
+    filter: invert();
+}
