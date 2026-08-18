@@ -139,16 +139,15 @@ function addOptions(sidebar) {
 
 	updateArchiveInput()
 }
-
-const worldDates = {
-	'Classic': { min: '2017-09-06', max: '2018-07-07' },
-	'Terra Nova': { min: '2018-12-17', max: '2024-06-17' },
-	'Terra Aurora': { min: '2022-05-01', max: '2026-04-12' },
-	'Terra Nostra': { min: '2026-04-17', max: new Date().toLocaleDateString('en-ca') }
-}
 function updateArchiveInput() {
 	const archiveModeWorldVariable = localStorage['emcdynmapplus-archive-mode-world'] ?? 'Terra Nostra'
 	const archiveInput = document.querySelector('#archive-input')
+	const worldDates = {
+		'Classic': { min: '2017-09-06', max: '2018-07-07' },
+		'Terra Nova': { min: '2018-12-17', max: '2024-06-17' },
+		'Terra Aurora': { min: '2022-05-01', max: '2026-04-12' },
+		'Terra Nostra': { min: '2026-04-17', max: new Date().toLocaleDateString('en-ca') }
+	}
 	const config = worldDates[archiveModeWorldVariable]
 	archiveInput.min = config.min
 	archiveInput.max = config.max

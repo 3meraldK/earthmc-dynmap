@@ -24,7 +24,7 @@ writer.write(variables + '\n\n')
 
 // rest of code
 const code = (await readdir('src', {recursive: true}))
-    .filter(file => !file.match(/\.css|extension-worker|userscript|assets|icon|manifest|version-check|fetch-override|variables|archive-mode-overlay/) && file.includes('.'))
+    .filter(file => !file.match(/\.css|extension-worker|userscript|assets|icon|manifest|version-check|fetch-override|variables/) && file.includes('.'))
 const darkMode = await Bun.file('src/css/dark-mode.css').text()
 for (const path of code) {
     let text = await Bun.file('src/' + path).text()
@@ -38,7 +38,7 @@ writer.write(await Bun.file('src/fetch-override.js').text())
 writer.end()
 
 // save other files
-for (const name of ['icon.png', 'manifest.json', 'version-check.js', 'archive-mode-overlay.js']) {
+for (const name of ['icon.png', 'manifest.json', 'version-check.js']) {
     const file = Bun.file('src/extension/' + name)
     await Bun.write('dist/extension/' + name, file)
 }

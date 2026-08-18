@@ -11,4 +11,5 @@
 // @connect      earthmc.net
 // @connect      githubusercontent.com
 // @connect      emcstats.bot.nu
+// @run-at       document-start
 // ==/UserScript==

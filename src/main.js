@@ -131,7 +131,7 @@ function init() {
 
 	firstTimeMessage()
 
-	addElement(document.body, htmlCode.followingPlayer, '#followingWarning')
+	addElement(document.documentElement, htmlCode.followingPlayer, '#followingWarning')
     doesFollowPlayerInterval()
 
 	try { checkForUpdate(element) } // For extension

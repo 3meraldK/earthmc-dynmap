@@ -67,7 +67,7 @@ async function getArchive(data) {
 		cached = ', cached'
 	} else {
 		// Download snapshot
-		const prompt = addElement(document.body, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
+		const prompt = addElement(document.documentElement, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
 		const markersURL = getArchiveURL()
 
 		let archive = await fetchJSON(markersURL)

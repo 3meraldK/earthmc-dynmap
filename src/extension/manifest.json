@@ -18,11 +18,6 @@
 			"js": ["main.js"],
 			"css": ["style.css"],
 			"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"],
-			"world": "MAIN"
-		},
-		{
-			"js": ["archive-mode-overlay.js"],
-			"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"],
 			"world": "MAIN",
 			"run_at": "document_start"
 		}
