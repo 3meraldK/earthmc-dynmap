@@ -907,6 +907,9 @@ function firstTimeMessage() {
 			or third-party updates. If that was the case, the maintainers would address potential problems
 			sooner or later likely through the communications channel on
 			<a target="_blank" href="${threadURL}">EarthMC Discord thread</a>.`)
+		document.querySelector('#message-close').addEventListener('click', event => {
+			sendMessage(`Archive mode is disabled on this world. Try this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
+		})
 		localStorage['emcdynmapplus-first-time'] = 'false'
 	}
 }
@@ -962,11 +965,6 @@ function addMainMenu(parent) {
 		archiveInput.addEventListener('keyup', event => {
 			if (event.key == 'Enter') searchArchive(archiveInput.value)
 		})
-	} else {
-		const html = htmlCode.currentMapModeLabel.replace('current-map-mode-label', 'archive-not-available')
-			.replace('Current map mode: {currentMapMode}', 'Archive feature is not available on this website. Do this <a href="https://map.earthmc.net/">here</a> instead.')
-		const archiveNotAvailable = addElement(sidebar, html, '#archive-not-available')
-		archiveNotAvailable.style.display = 'block'
 	}
 
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')

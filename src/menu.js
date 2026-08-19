@@ -11,11 +11,6 @@ function addMainMenu(parent) {
 		archiveInput.addEventListener('keyup', event => {
 			if (event.key == 'Enter') searchArchive(archiveInput.value)
 		})
-	} else {
-		const html = htmlCode.currentMapModeLabel.replace('current-map-mode-label', 'archive-not-available')
-			.replace('Current map mode: {currentMapMode}', 'Archive feature is not available on this website. Do this <a href="https://map.earthmc.net/">here</a> instead.')
-		const archiveNotAvailable = addElement(sidebar, html, '#archive-not-available')
-		archiveNotAvailable.style.display = 'block'
 	}
 
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')

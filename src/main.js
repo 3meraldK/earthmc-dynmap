@@ -95,6 +95,9 @@ function firstTimeMessage() {
 			or third-party updates. If that was the case, the maintainers would address potential problems
 			sooner or later likely through the communications channel on
 			<a target="_blank" href="${threadURL}">EarthMC Discord thread</a>.`)
+		document.querySelector('#message-close').addEventListener('click', event => {
+			sendMessage(`Archive mode is disabled on this world. Try this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
+		})
 		localStorage['emcdynmapplus-first-time'] = 'false'
 	}
 }
