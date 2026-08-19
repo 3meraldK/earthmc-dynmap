@@ -32,7 +32,6 @@ function addMainMenu(parent) {
 	addOptions(sidebar)
 
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
-	currentMapModeLabel.style.display = 'block'
 	let currentMapModeText = currentMapMode
 	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
 		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance by clicking here">ℹ️</abbr></a>`
@@ -44,7 +43,7 @@ function decreaseBrightness(isChecked) {
 	const element = document.querySelector('.leaflet-tile-pane')
 	const imageOverlay = document.querySelector('.leaflet-image-layer')
 	localStorage['emcdynmapplus-darkened'] = isChecked
-	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
+	if (element) element.style.filter = (isChecked) ? 'brightness(50%)' : ''
 	if (imageOverlay) imageOverlay.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
 
