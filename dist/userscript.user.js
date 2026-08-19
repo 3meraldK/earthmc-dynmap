@@ -954,13 +954,20 @@ function addMainMenu(parent) {
 
 	addLocateMenu(sidebar)
 
-	const archiveContainer = addElement(sidebar, htmlCode.sidebarOption, '.sidebar-option', true)[2]
-	const archiveButton = addElement(archiveContainer, htmlCode.buttons.searchArchive, '#archive-button')
-	const archiveInput = addElement(archiveContainer, htmlCode.archiveInput, '#archive-input')
-	archiveButton.addEventListener('click', () => searchArchive(archiveInput.value))
-	archiveInput.addEventListener('keyup', event => {
-		if (event.key == 'Enter') searchArchive(archiveInput.value)
-	})
+	if (isNostra) {
+		const archiveContainer = addElement(sidebar, htmlCode.sidebarOption, '.sidebar-option', true)[2]
+		const archiveButton = addElement(archiveContainer, htmlCode.buttons.searchArchive, '#archive-button')
+		const archiveInput = addElement(archiveContainer, htmlCode.archiveInput, '#archive-input')
+		archiveButton.addEventListener('click', () => searchArchive(archiveInput.value))
+		archiveInput.addEventListener('keyup', event => {
+			if (event.key == 'Enter') searchArchive(archiveInput.value)
+		})
+	} else {
+		const html = htmlCode.currentMapModeLabel.replace('current-map-mode-label', 'archive-not-available')
+			.replace('Current map mode: {currentMapMode}', 'Archive feature is not available on this website. Do this <a href="https://map.earthmc.net/">here</a> instead.')
+		const archiveNotAvailable = addElement(sidebar, html, '#archive-not-available')
+		archiveNotAvailable.style.display = 'block'
+	}
 
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
@@ -983,7 +990,6 @@ function addMainMenu(parent) {
 	addOptions(sidebar)
 
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
-	currentMapModeLabel.style.display = 'block'
 	let currentMapModeText = currentMapMode
 	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
 		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance by clicking here">ℹ️</abbr></a>`
@@ -995,7 +1001,7 @@ function decreaseBrightness(isChecked) {
 	const element = document.querySelector('.leaflet-tile-pane')
 	const imageOverlay = document.querySelector('.leaflet-image-layer')
 	localStorage['emcdynmapplus-darkened'] = isChecked
-	element.style.filter = (isChecked) ? 'brightness(50%)' : ''
+	if (element) element.style.filter = (isChecked) ? 'brightness(50%)' : ''
 	if (imageOverlay) imageOverlay.style.filter = (isChecked) ? 'brightness(50%)' : ''
 }
 
@@ -1061,31 +1067,28 @@ function addOptions(sidebar) {
 	const checkbox = {
 		decreaseBrightness: addOption(i++, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(i++, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
-		cacheArchives: addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots from specific dates in your browser to load them faster next time. One save file weighs a few megabytes.">Save archives</abbr>`, 'cache-archives'),
+		cacheArchives: isNostra ? addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots from specific dates in your browser to load them faster next time. One save file weighs a few megabytes.">Save archives</abbr>`, 'cache-archives') : null,
 		capitalStars: addOption(i++, 'toggle-capital-stars', 'Toggle capital stars', 'capital-stars'),
 	}
 
 	// Archive mode world
-	const archiveModeWorld = addElement(optionsMenu, htmlCode.options.option, '.option', true)[i++]
-	archiveModeWorld.insertAdjacentHTML('beforeend', htmlCode.options.label
-		.replace('{option}', 'archive-mode-world')
-		.replace('{optionName}', `<abbr title="Choose a world to load archive mode's snapshots from.">Archive mode world</abbr>`))
-	archiveModeWorld.style.display = 'unset'
-	const currentArchiveWorld = localStorage['emcdynmapplus-archive-mode-world']
-	const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld), '#archive-mode-world')
-	select.addEventListener('change', event => {
-		if (select.value == 'Terra Nostra' && !isNostra) {
-			sendMessage(`You can't choose this world on this website.`)
-			select.value = localStorage['emcdynmapplus-archive-mode-world']
-			return
-		}
-		localStorage['emcdynmapplus-archive-mode-world'] = select.value
-		updateArchiveInput()
-	})
+	if (isNostra) {
+		const archiveModeWorld = addElement(optionsMenu, htmlCode.options.option, '.option', true)[i++]
+		archiveModeWorld.insertAdjacentHTML('beforeend', htmlCode.options.label
+			.replace('{option}', 'archive-mode-world')
+			.replace('{optionName}', `<abbr title="Choose a world to load archive mode's snapshots from.">Archive mode world</abbr>`))
+		archiveModeWorld.style.display = 'unset'
+		const currentArchiveWorld = localStorage['emcdynmapplus-archive-mode-world']
+		const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld), '#archive-mode-world')
+		select.addEventListener('change', event => {
+			localStorage['emcdynmapplus-archive-mode-world'] = select.value
+			updateArchiveInput()
+		})
+	}
 
 	checkbox.decreaseBrightness.addEventListener('change', event => decreaseBrightness(event.target.checked))
 	checkbox.darkMode.addEventListener('change', event => toggleDarkMode(event.target.checked))
-	checkbox.cacheArchives.addEventListener('change', event => toggleCacheArchives(event.target.checked))
+	checkbox.cacheArchives?.addEventListener('change', event => toggleCacheArchives(event.target.checked))
 	checkbox.capitalStars.addEventListener('change', event => toggleCapitalStars(event.target.checked))
 
 	// Clear local storage & OPFS
@@ -1100,7 +1103,7 @@ function addOptions(sidebar) {
 		location.reload()
 	})
 
-	updateArchiveInput()
+	if (isNostra) updateArchiveInput()
 }
 function updateArchiveInput() {
 	const archiveModeWorldVariable = localStorage['emcdynmapplus-archive-mode-world'] ?? 'Terra Nostra'
@@ -1117,7 +1120,6 @@ function updateArchiveInput() {
 }
 
 function searchArchive(date) {
-	if (!isNostra) return sendMessage('This functionality is disabled on this website, try doing this <a href="https://map.earthmc.net">here</a>.')
 	if (date == '') return
 	const URLDate = date.replaceAll('-', '')
 	localStorage['emcdynmapplus-archive-date'] = URLDate
@@ -1453,15 +1455,6 @@ function overrideZoomLimit() {
     }
 }
 
-function appendStyle() {
-    const head = document.head || document.getElementsByTagName('head')[0]
-	const style = document.createElement('style')
-	head.appendChild(style)
-	style.appendChild(document.createTextNode(css))
-}
-
-appendStyle()
-
 // Include @grant GM.xmlHttpRequest in userscript description!
 
 async function corsFetch(url, options = null) {
@@ -1473,6 +1466,15 @@ async function corsFetch(url, options = null) {
     let test = await GM.xmlHttpRequest(json)
     return test
 }
+
+function appendStyle() {
+    const head = document.head || document.getElementsByTagName('head')[0]
+	const style = document.createElement('style')
+	head.appendChild(style)
+	style.appendChild(document.createTextNode(css))
+}
+
+appendStyle()
 
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
