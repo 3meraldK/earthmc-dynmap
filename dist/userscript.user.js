@@ -5,7 +5,7 @@
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
 // @match        https://aurora.earthmc.net/*
-// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/icon.png
+// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/src/extension/icon.png
 // @grant        GM.xmlHttpRequest
 // @connect      archive.org
 // @connect      earthmc.net
@@ -249,11 +249,11 @@ async function getAlliances() {
 		try {
 			const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 			if (response.code != 429) { // 429 = too many requests, ignore
-				sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
+				sendMessage('The live alliance registry is currently inaccessible - displaying the last version your browser saved.')
 			}
 			return cache
 		} catch (e) {
-			sendMessage('Service responsible for loading alliances will be available later.')
+			sendMessage('The live alliance registry is currently inaccessible, try again later.')
 			return []
 		}
 	}
@@ -409,7 +409,8 @@ async function getArchive(data) {
 		cached = ', cached'
 	} else {
 		// Download snapshot
-		const prompt = addElement(document.documentElement, htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
+		const prompt = addElement(document.documentElement,
+			htmlCode.promptBox.replace('{message}', 'Loading the snapshot, please wait...'), '#prompt-box')
 		const markersURL = getArchiveURL()
 
 		let archive = await fetchJSON(markersURL)
@@ -507,7 +508,8 @@ function checkForUpdate() {
 	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
 	if (version.cached != version.latest) {
 		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
-		sendMessage(`Extension has been automatically updated from ${version.cached} to ${version.latest}. Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
+		sendMessage(`Extension has been automatically updated from ${version.cached} to ${version.latest}.
+			Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
 	}
 	localStorage['emcdynmapplus-version'] = version.latest
 }
@@ -530,7 +532,8 @@ async function fetchJSON(url, options = null) {
 const htmlCode = {
 	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"></div>',
 	partOfLabel: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
-	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>', // Different onclick functions in userscript and extension
+	// residentClickable: Different onclick functions in userscript and extension
+	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>',
 	residentList: '<span class="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading">Loading...</button>',
@@ -547,7 +550,7 @@ const htmlCode = {
 		option: '<div class="option"></div>',
 		label: '<label for="{option}">{optionName}</label>',
 		checkbox: '<input id="{option}" type="checkbox" name="{option}">',
-		archiveWorldMode: '<select id="archive-mode-world"><option value="" selected disabled hidden>{current}</option><option>Classic</option><option>Terra Nova</option><option>Terra Aurora</option><option>Terra Nostra</option></select>',
+		archiveWorldMode: `<select id="archive-mode-world"><option value="" selected disabled hidden>{current}</option></select>`,
 		clearStorage: '<button class="sidebar-input" id="clear-storage" style="margin-top: 5px; display: block">Refresh site data</button>'
 	},
 	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
@@ -558,14 +561,17 @@ const htmlCode = {
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
     messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>',
-	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">{text}<br><span class="close-container">×</span></div>' // Exclusively for userscript
+	// Exclusively for userscript, deprecated
+	// updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
+	// 		id="update-notification">{text}<br><span class="close-container">×</span></div>'
 }
 
 async function addBordersLayer(data) {
 	for (const type of ['country', 'province']) {
 		// Download & cache
 		if (!await getOPFS('emcdynmapplus-borders-' + type)) {
-			const prompt = addElement(document.documentElement, htmlCode.promptBox.replace('{message}', `Downloading ${type} borders...`), '#prompt-box')
+			const prompt = addElement(document.documentElement,
+				htmlCode.promptBox.replace('{message}', `Downloading ${type} borders...`), '#prompt-box')
 			const url = `https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/borders-${type}.json.gz`
 			const layer = await fetchLayer(url)
 
@@ -901,14 +907,12 @@ function modifySettings(data) {
 
 function firstTimeMessage() {
 	if (!localStorage['emcdynmapplus-first-time']) {
-		const threadURL = 'https://discord.com/channels/219863747248914433/1047061595861286912'
-		sendMessage(`The extension's maintainers aren't affiliated with EarthMC and responsible for archiving maps.
-			Please keep in mind, that the extension may temporarily render unusable due to unexpected EarthMC
-			or third-party updates. If that was the case, the maintainers would address potential problems
-			sooner or later likely through the communications channel on
-			<a target="_blank" href="${threadURL}">EarthMC Discord thread</a>.`)
-		document.querySelector('#message-close').addEventListener('click', event => {
-			sendMessage(`Archive mode is disabled on this world. Try this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
+		sendMessage(`Unexpected updates to EarthMC may cause this extension to temporarily stop working.
+			We are neither affiliated with EarthMC nor responsible for archiving map snapshots.
+			Check for announcements or report bugs <a target="_blank" href="https://discord.gg/AVtgkcRgFs">here</a>.`)
+		if (!isNostra) document.querySelector('#message-close').addEventListener('click', event => {
+			sendMessage(`This is a deprecated website and the archive mode is disabled here.
+				Try doing this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
 		})
 		localStorage['emcdynmapplus-first-time'] = 'false'
 	}
@@ -990,7 +994,9 @@ function addMainMenu(parent) {
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
 	let currentMapModeText = currentMapMode
 	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
-		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance by clicking here">ℹ️</abbr></a>`
+		currentMapModeText += ` <a style="text-decoration: none" target="_blank"
+		href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none"
+		title="You can register a meganation or an alliance by clicking here">❓</abbr></a>`
 	}
 	currentMapModeLabel.innerHTML = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapModeText)
 }
@@ -1065,7 +1071,9 @@ function addOptions(sidebar) {
 	const checkbox = {
 		decreaseBrightness: addOption(i++, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(i++, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
-		cacheArchives: isNostra ? addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots from specific dates in your browser to load them faster next time. One save file weighs a few megabytes.">Save archives</abbr>`, 'cache-archives') : null,
+		cacheArchives: isNostra ? addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots
+			from specific dates in your browser to load them faster next time.
+			One save file weighs a few megabytes.">Save archives</abbr>`.replace(/\s+/g, ' '), 'cache-archives') : null,
 		capitalStars: addOption(i++, 'toggle-capital-stars', 'Toggle capital stars', 'capital-stars'),
 	}
 
@@ -1077,7 +1085,11 @@ function addOptions(sidebar) {
 			.replace('{optionName}', `<abbr title="Choose a world to load archive mode's snapshots from.">Archive mode world</abbr>`))
 		archiveModeWorld.style.display = 'unset'
 		const currentArchiveWorld = localStorage['emcdynmapplus-archive-mode-world']
-		const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld), '#archive-mode-world')
+		const selectHTML = htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld)
+		const select = addElement(archiveModeWorld, selectHTML, '#archive-mode-world')
+		for (const world of ['Classic', 'Terra Nova', 'Terra Aurora', 'Terra Nostra']) {
+			select.insertAdjacentHTML('beforeend', `<option>${world}</option>`)
+		}
 		select.addEventListener('change', event => {
 			localStorage['emcdynmapplus-archive-mode-world'] = select.value
 			updateArchiveInput()
@@ -1453,6 +1465,15 @@ function overrideZoomLimit() {
     }
 }
 
+function appendStyle() {
+    const head = document.head || document.getElementsByTagName('head')[0]
+	const style = document.createElement('style')
+	head.appendChild(style)
+	style.appendChild(document.createTextNode(css))
+}
+
+appendStyle()
+
 // Include @grant GM.xmlHttpRequest in userscript description!
 
 async function corsFetch(url, options = null) {
@@ -1464,15 +1485,6 @@ async function corsFetch(url, options = null) {
     let test = await GM.xmlHttpRequest(json)
     return test
 }
-
-function appendStyle() {
-    const head = document.head || document.getElementsByTagName('head')[0]
-	const style = document.createElement('style')
-	head.appendChild(style)
-	style.appendChild(document.createTextNode(css))
-}
-
-appendStyle()
 
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false

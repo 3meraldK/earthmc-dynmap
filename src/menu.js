@@ -36,7 +36,9 @@ function addMainMenu(parent) {
 	const currentMapModeLabel = addElement(sidebar, htmlCode.currentMapModeLabel, '#current-map-mode-label')
 	let currentMapModeText = currentMapMode
 	if ((currentMapMode == 'meganations' || currentMapMode == 'alliances') && isNostra) {
-		currentMapModeText += ` <a style="text-decoration: none" target="_blank" href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none" title="You can register a meganation or an alliance by clicking here">ℹ️</abbr></a>`
+		currentMapModeText += ` <a style="text-decoration: none" target="_blank"
+		href="https://discord.gg/AVtgkcRgFs"><abbr style="text-decoration: none"
+		title="You can register a meganation or an alliance by clicking here">❓</abbr></a>`
 	}
 	currentMapModeLabel.innerHTML = currentMapModeLabel.textContent.replace('{currentMapMode}', currentMapModeText)
 }
@@ -99,7 +101,9 @@ function addOptions(sidebar) {
 	const checkbox = {
 		decreaseBrightness: addOption(i++, 'decrease-brightness', 'Decrease brightness', 'darkened'),
 		darkMode: addOption(i++, 'toggle-darkmode', 'Toggle dark mode', 'darkmode'),
-		cacheArchives: isNostra ? addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots from specific dates in your browser to load them faster next time. One save file weighs a few megabytes.">Save archives</abbr>`, 'cache-archives') : null,
+		cacheArchives: isNostra ? addOption(i++, 'cache-archives', `<abbr title="Save archive mode's snapshots
+			from specific dates in your browser to load them faster next time.
+			One save file weighs a few megabytes.">Save archives</abbr>`.replace(/\s+/g, ' '), 'cache-archives') : null,
 		capitalStars: addOption(i++, 'toggle-capital-stars', 'Toggle capital stars', 'capital-stars'),
 	}
 
@@ -111,7 +115,11 @@ function addOptions(sidebar) {
 			.replace('{optionName}', `<abbr title="Choose a world to load archive mode's snapshots from.">Archive mode world</abbr>`))
 		archiveModeWorld.style.display = 'unset'
 		const currentArchiveWorld = localStorage['emcdynmapplus-archive-mode-world']
-		const select = addElement(archiveModeWorld, htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld), '#archive-mode-world')
+		const selectHTML = htmlCode.options.archiveWorldMode.replace('{current}', currentArchiveWorld)
+		const select = addElement(archiveModeWorld, selectHTML, '#archive-mode-world')
+		for (const world of ['Classic', 'Terra Nova', 'Terra Aurora', 'Terra Nostra']) {
+			select.insertAdjacentHTML('beforeend', `<option>${world}</option>`)
+		}
 		select.addEventListener('change', event => {
 			localStorage['emcdynmapplus-archive-mode-world'] = select.value
 			updateArchiveInput()

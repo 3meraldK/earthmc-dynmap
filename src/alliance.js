@@ -4,11 +4,11 @@ async function getAlliances() {
 		try {
 			const cache = JSON.parse(localStorage['emcdynmapplus-alliances'])
 			if (response.code != 429) { // 429 = too many requests, ignore
-				sendMessage('Service responsible for loading alliances is currently unavailable, but locally-cached data will be used.')
+				sendMessage('The live alliance registry is currently inaccessible - displaying the last version your browser saved.')
 			}
 			return cache
 		} catch (e) {
-			sendMessage('Service responsible for loading alliances will be available later.')
+			sendMessage('The live alliance registry is currently inaccessible, try again later.')
 			return []
 		}
 	}

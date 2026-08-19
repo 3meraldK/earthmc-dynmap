@@ -1,7 +1,8 @@
 const htmlCode = {
 	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"></div>',
 	partOfLabel: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
-	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>', // Different onclick functions in userscript and extension
+	// residentClickable: Different onclick functions in userscript and extension
+	residentClickable: '<span class="resident-clickable" onclick="lookupPlayerFunc(\'{player}\')">{player}</span>',
 	residentList: '<span class="resident-list">\t{list}</span>',
 	scrollableResidentList: '<div class="resident-list" id="scrollable-list">\t{list}</div>',
 	playerLookupLoading: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup-loading">Loading...</button>',
@@ -18,7 +19,7 @@ const htmlCode = {
 		option: '<div class="option"></div>',
 		label: '<label for="{option}">{optionName}</label>',
 		checkbox: '<input id="{option}" type="checkbox" name="{option}">',
-		archiveWorldMode: '<select id="archive-mode-world"><option value="" selected disabled hidden>{current}</option><option>Classic</option><option>Terra Nova</option><option>Terra Aurora</option><option>Terra Nostra</option></select>',
+		archiveWorldMode: `<select id="archive-mode-world"><option value="" selected disabled hidden>{current}</option></select>`,
 		clearStorage: '<button class="sidebar-input" id="clear-storage" style="margin-top: 5px; display: block">Refresh site data</button>'
 	},
 	sidebar: '<div class="leaflet-control-layers leaflet-control" id="emcdynmapplus-sidebar"></div>',
@@ -29,5 +30,7 @@ const htmlCode = {
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
     messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>',
-	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container" id="update-notification">{text}<br><span class="close-container">×</span></div>' // Exclusively for userscript
+	// Exclusively for userscript, deprecated
+	// updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
+	// 		id="update-notification">{text}<br><span class="close-container">×</span></div>'
 }

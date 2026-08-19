@@ -89,14 +89,12 @@ function modifySettings(data) {
 
 function firstTimeMessage() {
 	if (!localStorage['emcdynmapplus-first-time']) {
-		const threadURL = 'https://discord.com/channels/219863747248914433/1047061595861286912'
-		sendMessage(`The extension's maintainers aren't affiliated with EarthMC and responsible for archiving maps.
-			Please keep in mind, that the extension may temporarily render unusable due to unexpected EarthMC
-			or third-party updates. If that was the case, the maintainers would address potential problems
-			sooner or later likely through the communications channel on
-			<a target="_blank" href="${threadURL}">EarthMC Discord thread</a>.`)
-		document.querySelector('#message-close').addEventListener('click', event => {
-			sendMessage(`Archive mode is disabled on this world. Try this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
+		sendMessage(`Unexpected updates to EarthMC may cause this extension to temporarily stop working.
+			We are neither affiliated with EarthMC nor responsible for archiving map snapshots.
+			Check for announcements or report bugs <a target="_blank" href="https://discord.gg/AVtgkcRgFs">here</a>.`)
+		if (!isNostra) document.querySelector('#message-close').addEventListener('click', event => {
+			sendMessage(`This is a deprecated website and the archive mode is disabled here.
+				Try doing this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
 		})
 		localStorage['emcdynmapplus-first-time'] = 'false'
 	}
