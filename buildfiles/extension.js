@@ -1,5 +1,8 @@
 import AdmZip from 'adm-zip'
-import { readdir } from 'node:fs/promises'
+import { readdir, rm } from 'node:fs/promises'
+
+// Delete dist/extension
+await rm("dist/extension", { recursive: true, force: true })
 
 // write styles into style.css
 const styles = (await readdir('src/css'))
