@@ -24,7 +24,10 @@
 		}
 	],
 
-    "host_permissions": ["<all_urls>"],
+    "host_permissions": [
+		"https://web.archive.org/*",
+		"https://map.earthmc.net/*"
+	],
 	"permissions": ["declarativeNetRequest"],
 	"background": {
 		"service_worker": "cors-bypass.js"
