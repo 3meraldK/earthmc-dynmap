@@ -115,6 +115,7 @@ function init() {
 	})
 
 	waitForHTMLelement('.leaflet-top.leaflet-left').then(element => {
+		element.addEventListener('mousedown', (event) => event.stopPropagation())
 		addMainMenu(element)
 	})
 
