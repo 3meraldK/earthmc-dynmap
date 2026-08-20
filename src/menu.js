@@ -80,11 +80,13 @@ function toggleDarkMode(isChecked) {
 function toggleCapitalStars(isChecked) {
 	localStorage['emcdynmapplus-capital-stars'] = isChecked
 	if (!isChecked) {
-		document.head.insertAdjacentHTML('beforeend',
-			`<style id="toggle-capital-stars">
-			img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
-			</style>`
-		)
+		waitForHTMLelement('head').then(() => {
+			document.head.insertAdjacentHTML('beforeend',
+				`<style id="toggle-capital-stars">
+				img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
+				</style>`
+			)
+		})
 	}
 	else document.querySelector('#toggle-capital-stars')?.remove()
 }

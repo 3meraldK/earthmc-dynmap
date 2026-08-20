@@ -1050,11 +1050,13 @@ input[type="checkbox"] {
 function toggleCapitalStars(isChecked) {
 	localStorage['emcdynmapplus-capital-stars'] = isChecked
 	if (!isChecked) {
-		document.head.insertAdjacentHTML('beforeend',
-			`<style id="toggle-capital-stars">
-			img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
-			</style>`
-		)
+		waitForHTMLelement('head').then(() => {
+			document.head.insertAdjacentHTML('beforeend',
+				`<style id="toggle-capital-stars">
+				img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
+				</style>`
+			)
+		})
 	}
 	else document.querySelector('#toggle-capital-stars')?.remove()
 }
@@ -1465,6 +1467,15 @@ function overrideZoomLimit() {
     }
 }
 
+function appendStyle() {
+    const head = document.head || document.getElementsByTagName('head')[0]
+	const style = document.createElement('style')
+	head.appendChild(style)
+	style.appendChild(document.createTextNode(css))
+}
+
+appendStyle()
+
 // Include @grant GM.xmlHttpRequest in userscript description!
 
 async function corsFetch(url, options = null) {
@@ -1476,15 +1487,6 @@ async function corsFetch(url, options = null) {
     let test = await GM.xmlHttpRequest(json)
     return test
 }
-
-function appendStyle() {
-    const head = document.head || document.getElementsByTagName('head')[0]
-	const style = document.createElement('style')
-	head.appendChild(style)
-	style.appendChild(document.createTextNode(css))
-}
-
-appendStyle()
 
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false
