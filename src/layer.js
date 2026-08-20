@@ -39,7 +39,7 @@ async function fetchLayer(url) {
 			gzip = response.response
 		} else {
 			// extension fetch
-			const req = await corsFetch(url)
+			const req = await fetch(url)
 			gzip = await req.arrayBuffer()
 		}
 		const stream = new Response(gzip).body.pipeThrough(new DecompressionStream('gzip'))
@@ -51,7 +51,7 @@ async function fetchLayer(url) {
 	}
 }
 
-// deprecated:
+/* deprecated:
 function addChunksLayer(data) {
 	const chunkLines = []
 	for (let x = -33280; x <= 33088; x += 16) {
@@ -82,4 +82,4 @@ function addChunksLayer(data) {
 		}]
 	})
 	return data
-}
+}*/

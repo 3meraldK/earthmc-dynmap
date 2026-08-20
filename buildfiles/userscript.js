@@ -21,7 +21,7 @@ writer.write('`\n\n')
 
 // write code in
 const excludeFiles = ['\\.css', 'extension', 'assets', 'variables',
-    'header', 'fetch-override']
+    'header', 'interceptor']
 const regex = new RegExp(excludeFiles.join('|'))
 const code = (await readdir('src', {recursive: true}))
     .filter(file => !file.match(regex) && file.includes('.'))
@@ -32,8 +32,8 @@ for (const path of code) {
     writer.write(text + '\n\n')
 }
 
-// write fetch-override.js in as last
-writer.write(await Bun.file('src/fetch-override.js').text())
+// write interceptor.js in as last
+writer.write(await Bun.file('src/interceptor.js').text())
 writer.end()
 
 writer.end()

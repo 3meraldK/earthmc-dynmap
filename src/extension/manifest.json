@@ -27,6 +27,6 @@
     "host_permissions": ["<all_urls>"],
 	"permissions": ["declarativeNetRequest"],
 	"background": {
-		"service_worker": "worker.js"
+		"service_worker": "cors-bypass.js"
 	}
 }

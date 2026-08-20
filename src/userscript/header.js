@@ -5,7 +5,7 @@
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
 // @match        https://aurora.earthmc.net/*
-// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/src/extension/icon.png
+// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/src/assets/icon.png
 // @grant        GM.xmlHttpRequest
 // @connect      archive.org
 // @connect      earthmc.net

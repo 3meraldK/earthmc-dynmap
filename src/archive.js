@@ -1,3 +1,34 @@
+let url, bounds
+const SCALE = 0.03125 // Number from L.map.options.scale
+const isDarkened = localStorage['emcdynmapplus-darkened'] == 'true'
+
+if (server == 'nova' || server == 'aurora') {
+	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/basemap-aurora.png'
+	bounds = {down: -16508, left: -33280, up: 16640, right: 33080}
+} else if (server == 'classic') {
+	url = 'https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/basemap-classic.png'
+	bounds = {down: 1023, left: -1535, up: -14335, right: 19455}
+}
+
+if (currentMapMode == 'archive' && server != 'nostra' && isNostra) hookLeaflet()
+
+function hookLeaflet() {
+    if (typeof(L) == 'undefined') return requestAnimationFrame(hookLeaflet)
+    const originalMap = L.map
+    L.map = function (...args) {
+        const squaremap = originalMap.apply(this, args)
+        L.imageOverlay(url, [
+            [bounds.down * SCALE, bounds.left * SCALE],
+            [bounds.up * SCALE, bounds.right * SCALE],
+        ]).addTo(squaremap)
+        waitForHTMLelement('.leaflet-image-layer').then((element) => {
+            element.style.filter = isDarkened ? 'brightness(50%)' : ''
+        })
+		document.querySelector('.leaflet-tile-pane').remove()
+        return squaremap
+    }
+}
+
 function getArchiveURL() {
 	let markersURL = 'https://map.earthmc.net/tiles/minecraft_overworld/markers.json'
 	let date = chosenArchiveDate
@@ -120,6 +151,7 @@ async function getArchive(data) {
 function modifyOldDescription(marker) {
 	// Gather some information
 	let membersTitle = marker.popup.match(/Members <span/) ? 'Members' : 'Associates'
+	// TODO: Fix 0 res count in Classic archives
 	let residents = marker.popup.match(`${membersTitle} <span style="font-weight:bold">(.*)<\/span><br \/>Flags`)?.[1]
 	const residentNum = residents?.split(', ')?.length || 0
 	const isCapital = marker.popup.match(/capital: true/) != null

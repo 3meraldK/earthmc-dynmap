@@ -30,7 +30,30 @@ const htmlCode = {
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
     messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>',
-	// Exclusively for userscript, deprecated
-	// updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
-	// 		id="update-notification">{text}<br><span class="close-container">×</span></div>'
+	/* Exclusively for userscript, deprecated
+	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
+	 	id="update-notification">{text}<br><span class="close-container">×</span></div>'*/
+}
+
+
+
+function waitForHTMLelement(selector) {
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector))
+		}
+
+		const observer = new MutationObserver(() => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector))
+				observer.disconnect()
+			}
+		})
+		observer.observe(document.documentElement, { childList: true, subtree: true })
+	})
+}
+
+function addElement(parent, element, returnWhat, all = false) {
+	parent.insertAdjacentHTML('beforeend', element)
+	return (!all) ? parent.querySelector(returnWhat) : parent.querySelectorAll(returnWhat)
 }

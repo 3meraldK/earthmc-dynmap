@@ -5,7 +5,7 @@
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
 // @match        https://aurora.earthmc.net/*
-// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/src/extension/icon.png
+// @iconURL      https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/main/src/assets/icon.png
 // @grant        GM.xmlHttpRequest
 // @connect      archive.org
 // @connect      earthmc.net
@@ -462,6 +462,7 @@ async function getArchive(data) {
 function modifyOldDescription(marker) {
 	// Gather some information
 	let membersTitle = marker.popup.match(/Members <span/) ? 'Members' : 'Associates'
+	// TODO: Fix 0 res count in Classic archives
 	let residents = marker.popup.match(`${membersTitle} <span style="font-weight:bold">(.*)<\/span><br \/>Flags`)?.[1]
 	const residentNum = residents?.split(', ')?.length || 0
 	const isCapital = marker.popup.match(/capital: true/) != null
@@ -499,35 +500,6 @@ function modifyOldDescription(marker) {
 	return marker
 }
 
-function checkForUpdate() {
-	const version = {
-		cached: localStorage['emcdynmapplus-version'],
-		latest: isExtension ? localStorage['emcdynmapplus-manifest-version'] : GM_info.script.version
-	}
-	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
-	if (version.cached != version.latest) {
-		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
-		sendMessage(`The extension has been automatically updated from ${version.cached} to ${version.latest}.
-			Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
-	}
-	localStorage['emcdynmapplus-version'] = version.latest
-}
-
-async function fetchJSON(url, options = null) {
-	try {
-		const response = await corsFetch(url, options)
-		let data = null
-		try {
-			data = isExtension ? await response.json() : await JSON.parse(response.response)
-		} finally {
-			const isOK = isExtension ? response.ok : `${response.status}`.startsWith('2')
-			return {ok: isOK, code: response.status, data: data}
-		}
-	} catch {
-		return {ok: false, code: null, data: null}
-	}
-}
-
 const htmlCode = {
 	playerLookup: '<div class="leaflet-control-layers leaflet-control left-container" id="player-lookup"></div>',
 	partOfLabel: '<span id="part-of-label">Part of <b>{allianceList}</b></span>',
@@ -560,9 +532,32 @@ const htmlCode = {
 	currentMapModeLabel: '<div class="sidebar-option" id="current-map-mode-label">Current map mode: {currentMapMode}</div>',
 	followingPlayer: '<h1 id="followingWarning">Click on map to unfollow player</h1>',
     messageBox: '<div id="message-box"><p id="message">{message}</p><br><button id="message-close">OK</button></div>',
-	// Exclusively for userscript, deprecated
-	// updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
-	// 		id="update-notification">{text}<br><span class="close-container">×</span></div>'
+	/* Exclusively for userscript, deprecated
+	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
+	 	id="update-notification">{text}<br><span class="close-container">×</span></div>'*/
+}
+
+
+
+function waitForHTMLelement(selector) {
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector))
+		}
+
+		const observer = new MutationObserver(() => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector))
+				observer.disconnect()
+			}
+		})
+		observer.observe(document.documentElement, { childList: true, subtree: true })
+	})
+}
+
+function addElement(parent, element, returnWhat, all = false) {
+	parent.insertAdjacentHTML('beforeend', element)
+	return (!all) ? parent.querySelector(returnWhat) : parent.querySelectorAll(returnWhat)
 }
 
 async function addBordersLayer(data) {
@@ -606,7 +601,7 @@ async function fetchLayer(url) {
 			gzip = response.response
 		} else {
 			// extension fetch
-			const req = await corsFetch(url)
+			const req = await fetch(url)
 			gzip = await req.arrayBuffer()
 		}
 		const stream = new Response(gzip).body.pipeThrough(new DecompressionStream('gzip'))
@@ -618,7 +613,7 @@ async function fetchLayer(url) {
 	}
 }
 
-// deprecated:
+/* deprecated:
 function addChunksLayer(data) {
 	const chunkLines = []
 	for (let x = -33280; x <= 33088; x += 16) {
@@ -649,7 +644,7 @@ function addChunksLayer(data) {
 		}]
 	})
 	return data
-}
+}*/
 
 async function getTownSpawn(searchedTownName) {
 	if (currentMapMode == 'archive' || !isNostra) {
@@ -1026,9 +1021,10 @@ function switchMapMode() {
 function toggleDarkMode(isChecked) {
 	localStorage['emcdynmapplus-darkmode'] = isChecked
 	if (isChecked) {
-		document.head.insertAdjacentHTML('beforeend',
-			`<style id="dark-mode">
-			.leaflet-control, #message-box, #prompt-box, .sidebar-input,
+		waitForHTMLelement('head').then(() => {
+			document.head.insertAdjacentHTML('beforeend',
+				`<style id="dark-mode">
+				.leaflet-control, #message-box, #prompt-box, .sidebar-input,
 .sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top,
 .leaflet-popup-content-wrapper, .leaflet-popup-tip,
 .leaflet-bar > a.leaflet-disabled, #archive-mode-world {
@@ -1041,8 +1037,9 @@ function toggleDarkMode(isChecked) {
 input[type="checkbox"] {
     filter: invert();
 }
-			</style>`
-		) // {dark-mode.css} is dynamically injected during build
+				</style>`
+			) // {dark-mode.css} is dynamically injected during build
+		})
 	}
 	else document.querySelector('#dark-mode')?.remove()
 }
@@ -1117,6 +1114,7 @@ function addOptions(sidebar) {
 
 	if (isNostra) updateArchiveInput()
 }
+
 function updateArchiveInput() {
 	const archiveModeWorldVariable = localStorage['emcdynmapplus-archive-mode-world'] ?? 'Terra Nostra'
 	const archiveInput = document.querySelector('#archive-input')
@@ -1357,31 +1355,24 @@ function modifyDescription(marker) {
 	return marker
 }
 
+function checkForUpdate() {
+	const version = {
+		cached: localStorage['emcdynmapplus-version'],
+		latest: isExtension ? localStorage['emcdynmapplus-manifest-version'] : GM_info.script.version
+	}
+	if (!version.cached) return localStorage['emcdynmapplus-version'] = version.latest
+	if (version.cached != version.latest) {
+		const changelogURL = 'https://github.com/3meraldK/earthmc-dynmap/releases/latest'
+		sendMessage(`The extension has been automatically updated from ${version.cached} to ${version.latest}.
+			Read what has been changed <a href="${changelogURL}" target="_blank">here</a>.`)
+	}
+	localStorage['emcdynmapplus-version'] = version.latest
+}
+
 function sendMessage(message) {
 	if (document.querySelector('#message-box') != null) document.querySelector('#message-box').remove()
 	document.documentElement.insertAdjacentHTML('beforeend', htmlCode.messageBox.replace('{message}', message))
 	document.querySelector('#message-close').addEventListener('click', event => { event.target.parentElement.remove() })
-}
-
-function waitForHTMLelement(selector) {
-	return new Promise(resolve => {
-		if (document.querySelector(selector)) {
-			return resolve(document.querySelector(selector))
-		}
-
-		const observer = new MutationObserver(() => {
-			if (document.querySelector(selector)) {
-				resolve(document.querySelector(selector))
-				observer.disconnect()
-			}
-		})
-		observer.observe(document.documentElement, { childList: true, subtree: true })
-	})
-}
-
-function addElement(parent, element, returnWhat, all = false) {
-	parent.insertAdjacentHTML('beforeend', element)
-	return (!all) ? parent.querySelector(returnWhat) : parent.querySelectorAll(returnWhat)
 }
 
 async function saveToOPFS(file, text) {
@@ -1450,6 +1441,32 @@ function pointInPolygon(vertex, polygon) {
 	return inside
 }
 
+// Requires @grant GM.xmlHttpRequest in userscript header
+async function corsFetch(url, options = null) {
+    const json = {
+        url: url,
+        method: options?.method ?? 'GET',
+        data: options?.body ?? undefined
+    }
+    let test = await GM.xmlHttpRequest(json)
+    return test
+}
+
+async function fetchJSON(url, options = null) {
+	try {
+		const response = isExtension ? await fetch(url, options) : await corsFetch(url, options)
+		let data = null
+		try {
+			data = isExtension ? await response.json() : await JSON.parse(response.response)
+		} finally {
+			const isOK = isExtension ? response.ok : `${response.status}`.startsWith('2')
+			return {ok: isOK, code: response.status, data: data}
+		}
+	} catch {
+		return {ok: false, code: null, data: null}
+	}
+}
+
 function overrideZoomLimit() {
 	const Leaflet = !isExtension ? unsafeWindow.L : window.L
 	Leaflet.Map.prototype.getMinZoom = function () { return -2 }
@@ -1475,18 +1492,6 @@ function appendStyle() {
 }
 
 appendStyle()
-
-// Include @grant GM.xmlHttpRequest in userscript description!
-
-async function corsFetch(url, options = null) {
-    const json = {
-        url: url,
-        method: options?.method ?? 'GET',
-        data: options?.body ?? undefined
-    }
-    let test = await GM.xmlHttpRequest(json)
-    return test
-}
 
 // Replace the default fetch() with ours to intercept responses
 let preventMapUpdate = false

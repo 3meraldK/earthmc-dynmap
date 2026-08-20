@@ -23,8 +23,8 @@ const variables = await Bun.file('src/variables.js').text()
 writer.write(variables + '\n\n')
 
 // rest of code
-const excludeFiles = ['\\.css', 'extension-worker', 'userscript', 'assets', 'icon',
-    'manifest', 'version-helper', 'fetch-override', 'variables']
+const excludeFiles = ['\\.css', 'cors-bypass', 'userscript', 'assets', 'icon',
+    'manifest', 'version-helper', 'interceptor', 'variables']
 const regex = new RegExp(excludeFiles.join('|'))
 const code = (await readdir('src', {recursive: true}))
     .filter(file => !file.match(regex) && file.includes('.'))
@@ -36,17 +36,17 @@ for (const path of code) {
     writer.write(text + '\n\n')
 }
 
-// write fetch-override.js last
-writer.write(await Bun.file('src/fetch-override.js').text())
+// write interceptor.js last
+writer.write(await Bun.file('src/interceptor.js').text())
 writer.end()
 
 // save other files
-for (const name of ['icon.png', 'manifest.json', 'version-helper.js']) {
+for (const name of ['cors-bypass.js', 'manifest.json', 'version-helper.js']) {
     const file = Bun.file('src/extension/' + name)
     await Bun.write('dist/extension/' + name, file)
 }
-const worker = Bun.file('src/cors-bypass/extension-worker.js')
-await Bun.write('dist/extension/worker.js', worker)
+const icon = Bun.file('src/assets/icon.png')
+await Bun.write('dist/extension/icon.png', icon)
 
 let archive = new AdmZip()
 archive.addLocalFolder('dist/extension')

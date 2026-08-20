@@ -68,11 +68,13 @@ function switchMapMode() {
 function toggleDarkMode(isChecked) {
 	localStorage['emcdynmapplus-darkmode'] = isChecked
 	if (isChecked) {
-		document.head.insertAdjacentHTML('beforeend',
-			`<style id="dark-mode">
-			{dark-mode.css}
-			</style>`
-		) // {dark-mode.css} is dynamically injected during build
+		waitForHTMLelement('head').then(() => {
+			document.head.insertAdjacentHTML('beforeend',
+				`<style id="dark-mode">
+				{dark-mode.css}
+				</style>`
+			) // {dark-mode.css} is dynamically injected during build
+		})
 	}
 	else document.querySelector('#dark-mode')?.remove()
 }
@@ -147,6 +149,7 @@ function addOptions(sidebar) {
 
 	if (isNostra) updateArchiveInput()
 }
+
 function updateArchiveInput() {
 	const archiveModeWorldVariable = localStorage['emcdynmapplus-archive-mode-world'] ?? 'Terra Nostra'
 	const archiveInput = document.querySelector('#archive-input')

@@ -4,27 +4,6 @@ function sendMessage(message) {
 	document.querySelector('#message-close').addEventListener('click', event => { event.target.parentElement.remove() })
 }
 
-function waitForHTMLelement(selector) {
-	return new Promise(resolve => {
-		if (document.querySelector(selector)) {
-			return resolve(document.querySelector(selector))
-		}
-
-		const observer = new MutationObserver(() => {
-			if (document.querySelector(selector)) {
-				resolve(document.querySelector(selector))
-				observer.disconnect()
-			}
-		})
-		observer.observe(document.documentElement, { childList: true, subtree: true })
-	})
-}
-
-function addElement(parent, element, returnWhat, all = false) {
-	parent.insertAdjacentHTML('beforeend', element)
-	return (!all) ? parent.querySelector(returnWhat) : parent.querySelectorAll(returnWhat)
-}
-
 async function saveToOPFS(file, text) {
 	const fileSystem = await navigator.storage.getDirectory()
 	let fileHandle = await fileSystem.getFileHandle(file, {create: true})
@@ -89,4 +68,30 @@ function pointInPolygon(vertex, polygon) {
 		if (intersect) inside = !inside
 	}
 	return inside
+}
+
+// Requires @grant GM.xmlHttpRequest in userscript header
+async function corsFetch(url, options = null) {
+    const json = {
+        url: url,
+        method: options?.method ?? 'GET',
+        data: options?.body ?? undefined
+    }
+    let test = await GM.xmlHttpRequest(json)
+    return test
+}
+
+async function fetchJSON(url, options = null) {
+	try {
+		const response = isExtension ? await fetch(url, options) : await corsFetch(url, options)
+		let data = null
+		try {
+			data = isExtension ? await response.json() : await JSON.parse(response.response)
+		} finally {
+			const isOK = isExtension ? response.ok : `${response.status}`.startsWith('2')
+			return {ok: isOK, code: response.status, data: data}
+		}
+	} catch {
+		return {ok: false, code: null, data: null}
+	}
 }
