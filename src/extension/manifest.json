@@ -11,8 +11,9 @@
 
 	"content_scripts": [
 		{
-			"js": ["version-check.js"],
-			"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"]
+			"js": ["version-helper.js"],
+			"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"],
+			"run_at": "document_start"
 		},
 		{
 			"js": ["main.js"],

@@ -1,0 +1,1 @@
+localStorage['emcdynmapplus-manifest-version'] = chrome.runtime.getManifest().version

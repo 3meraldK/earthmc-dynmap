@@ -24,7 +24,7 @@ writer.write(variables + '\n\n')
 
 // rest of code
 const excludeFiles = ['\\.css', 'extension-worker', 'userscript', 'assets', 'icon',
-    'manifest', 'version-check', 'fetch-override', 'variables']
+    'manifest', 'version-helper', 'fetch-override', 'variables']
 const regex = new RegExp(excludeFiles.join('|'))
 const code = (await readdir('src', {recursive: true}))
     .filter(file => !file.match(regex) && file.includes('.'))
@@ -41,7 +41,7 @@ writer.write(await Bun.file('src/fetch-override.js').text())
 writer.end()
 
 // save other files
-for (const name of ['icon.png', 'manifest.json', 'version-check.js']) {
+for (const name of ['icon.png', 'manifest.json', 'version-helper.js']) {
     const file = Bun.file('src/extension/' + name)
     await Bun.write('dist/extension/' + name, file)
 }
