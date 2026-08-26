@@ -11,3 +11,7 @@
 input[type="checkbox"] {
     filter: invert();
 }
+
+#archive-input {
+    color-scheme: dark;
+}
