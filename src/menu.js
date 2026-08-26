@@ -69,7 +69,7 @@ function toggleDarkMode(isChecked) {
 	localStorage['emcdynmapplus-darkmode'] = isChecked
 	if (isChecked) {
 		waitForHTMLelement('head').then(() => {
-			document.head.insertAdjacentHTML('beforeend',
+			document.documentElement.insertAdjacentHTML('beforeend',
 				`<style id="dark-mode">
 				{dark-mode.css}
 				</style>`
@@ -83,7 +83,7 @@ function toggleCapitalStars(isChecked) {
 	localStorage['emcdynmapplus-capital-stars'] = isChecked
 	if (!isChecked) {
 		waitForHTMLelement('head').then(() => {
-			document.head.insertAdjacentHTML('beforeend',
+			document.documentElement.insertAdjacentHTML('beforeend',
 				`<style id="toggle-capital-stars">
 				img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
 				</style>`
