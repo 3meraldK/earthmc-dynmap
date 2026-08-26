@@ -12,6 +12,6 @@
 // @connect      githubusercontent.com
 // @connect      emcstats.bot.nu
 // @run-at       document-start
-// @updateURL    https://github.com/3meraldK/earthmc-dynmap/raw/refs/heads/main/dist/userscript.user.js
-// @downloadURL  https://github.com/3meraldK/earthmc-dynmap/raw/refs/heads/main/dist/userscript.user.js
+// @updateURL    https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/userscript.user.js
+// @downloadURL  https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/userscript.user.js
 // ==/UserScript==
