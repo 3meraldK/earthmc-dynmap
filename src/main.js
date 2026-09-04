@@ -29,7 +29,7 @@ function colorTowns(marker) {
 }
 
 let preventArchiveRetries = false
-async function main(data, isMoon = false) {
+async function main(data, isMoon) {
 
 	if (preventArchiveRetries) return null
 
@@ -82,7 +82,7 @@ async function main(data, isMoon = false) {
 	return data
 }
 
-function modifySettings(data, isMoon = false) {
+function modifySettings(data, isMoon) {
 	// deprecated: data['player_tracker'].nameplates['show_heads'] = true
 	// data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
 	// data.zoom.def = 0

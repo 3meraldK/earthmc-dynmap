@@ -16,21 +16,12 @@ actualWindow.fetch = async (...args) => {
 	if (response.url.includes('web.archive.org')) return response
 
 	if (response.url.match(/markers|(minecraft_overworld|earthmc_moon)\/settings/)) {
-
+		let isMoon = response.url.includes('earthmc_moon')
 		const modifiedJson = await response.clone().json().then(data => {
-
-			if (response.url.includes('markers.json')) {
-				let isMoon = !response.url.includes('minecraft_overworld')
-				return main(data, isMoon)
-			}
-
-			if (response.url.includes('settings.json')) {
-				let isMoon = !response.url.includes('minecraft_overworld')
-				return modifySettings(data, isMoon)
-			}
+			if (response.url.includes('markers.json')) return main(data, isMoon)
+			if (response.url.includes('settings.json')) return modifySettings(data, isMoon)
 		})
 		return new Response(JSON.stringify(modifiedJson))
-
 	}
 
 	return response
