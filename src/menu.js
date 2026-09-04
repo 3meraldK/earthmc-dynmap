@@ -165,6 +165,7 @@ function updateArchiveInput() {
 }
 
 function searchArchive(date) {
+	if (isMoon()) return sendMessage('Archive mode on the Moon is disabled.')
 	if (date == '') return
 	const URLDate = date.replaceAll('-', '')
 	localStorage['emcdynmapplus-archive-date'] = URLDate
