@@ -40,6 +40,6 @@
     width: 70px;
 }
 
-input, button {
+input[type="checkbox"], button {
     cursor: pointer;
 }
