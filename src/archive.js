@@ -150,9 +150,10 @@ async function getArchive(data) {
 // Modify town descriptions for archives
 function modifyOldDescription(marker) {
 	// Gather some information
+	const dummy = document.createElement('div')
+	dummy.innerHTML = marker.popup
 	let membersTitle = marker.popup.match(/Members <span/) ? 'Members' : 'Associates'
-	// TODO: Fix 0 res count in Classic archives
-	let residents = marker.popup.match(`${membersTitle} <span style="font-weight:bold">(.*)<\/span><br \/>Flags`)?.[1]
+	let residents = dummy.querySelectorAll('span')[2].textContent
 	const residentNum = residents?.split(', ')?.length || 0
 	const isCapital = marker.popup.match(/capital: true/) != null
 	const area = getArea(marker.points)
