@@ -54,8 +54,8 @@ async function main(data, isMoon = false) {
 	}
 
 	// deprecated:
-	// data = addChunksLayer(data
-	if (isNostra) data = await addBordersLayer(data)
+	// data = addChunksLayer(data)
+	if (isNostra && !isMoon) data = await addBordersLayer(data)
 
 	if (!data?.[0]?.markers?.length && !isNostra) {
 		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
