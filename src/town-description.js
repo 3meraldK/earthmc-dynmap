@@ -48,7 +48,9 @@ function modifyDescription(marker) {
 	if (currentMapMode != 'archive' && isNostra) {
 		marker.popup = marker.popup
 		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`)
-		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
+		if (councillors.length > 0) {
+			marker.popup = marker.popup.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
+		}
 	}
 
 	// Names wrapped in angle brackets
