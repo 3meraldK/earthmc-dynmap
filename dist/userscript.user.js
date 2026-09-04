@@ -23,6 +23,7 @@ const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const isNostra = !location.href.includes('aurora')
 const apiURL = 'https://api.earthmc.net/v4'
 let chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
+const isMoon = () => document.title.includes('Moon')
 
 const { fetch: originalFetch } = window
 // Make this function work in userscript
@@ -83,7 +84,7 @@ const css = `.sidebar-option {
     width: 70px;
 }
 
-input, button {
+input[type="checkbox"], button {
     cursor: pointer;
 }
 
@@ -696,7 +697,8 @@ async function locateTown(town) {
 	const coords = await getTownSpawn(town)
 	if (coords == false) return sendMessage('Searched town has not been found.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
-	location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
+	const world = isMoon() ? 'earthmc_moon' : 'minecraft_overworld'
+	location.search = `zoom=4&x=${coords.x}&z=${coords.z}&world=${world}`
 
 }
 
@@ -808,6 +810,7 @@ async function locateResident(resident) {
 }
 
 function locate(selectValue, inputValue) {
+	if (isMoon()) return sendMessage('Locating on the Moon is disabled.')
 	switch (selectValue) {
 		case 'Town': locateTown(inputValue); break
 		case 'Nation': locateNation(inputValue); break
@@ -846,7 +849,7 @@ function colorTowns(marker) {
 }
 
 let preventArchiveRetries = false
-async function main(data, isMoon = false) {
+async function main(data, isMoon) {
 
 	if (preventArchiveRetries) return null
 
@@ -899,7 +902,7 @@ async function main(data, isMoon = false) {
 	return data
 }
 
-function modifySettings(data, isMoon = false) {
+function modifySettings(data, isMoon) {
 	// deprecated: data['player_tracker'].nameplates['show_heads'] = true
 	// data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
 	// data.zoom.def = 0
@@ -1165,6 +1168,7 @@ function updateArchiveInput() {
 }
 
 function searchArchive(date) {
+	if (isMoon()) return sendMessage('Archive mode on the Moon is disabled.')
 	if (date == '') return
 	const URLDate = date.replaceAll('-', '')
 	localStorage['emcdynmapplus-archive-date'] = URLDate
@@ -1554,21 +1558,12 @@ actualWindow.fetch = async (...args) => {
 	if (response.url.includes('web.archive.org')) return response
 
 	if (response.url.match(/markers|(minecraft_overworld|earthmc_moon)\/settings/)) {
-
+		let isMoon = response.url.includes('earthmc_moon')
 		const modifiedJson = await response.clone().json().then(data => {
-
-			if (response.url.includes('markers.json')) {
-				let isMoon = !response.url.includes('minecraft_overworld')
-				return main(data, isMoon)
-			}
-
-			if (response.url.includes('settings.json')) {
-				let isMoon = !response.url.includes('minecraft_overworld')
-				return modifySettings(data, isMoon)
-			}
+			if (response.url.includes('markers.json')) return main(data, isMoon)
+			if (response.url.includes('settings.json')) return modifySettings(data, isMoon)
 		})
 		return new Response(JSON.stringify(modifiedJson))
-
 	}
 
 	return response
