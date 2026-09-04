@@ -39,5 +39,12 @@ Install the extension from the Chrome Web Store by [clicking here](https://chrom
 ## Maintainability
 Unexpected updates to EarthMC may cause this extension to temporarily stop working. We are neither affiliated with EarthMC nor responsible for archiving map snapshots. Check for announcements or report bugs [here](https://discord.gg/AVtgkcRgFs).
 
+## FAQ
+### The extension asks me to grant "cross-origin" or "blocking" permissions.
+- Both permissions relate to bypassing strict browser security policies to download resources from the internet, such as archive snapshots - it's safe to grant them.
+
+### My extension seems to be broken.
+- Users often accidentally have multiple instances of the extension enabled (be it a userscript, an extension, or both); make sure to keep only one enabled.
+
 ## Screenshot
 ![image](https://github.com/user-attachments/assets/72adb19a-637c-4d82-b374-28c17b87d3ec)
