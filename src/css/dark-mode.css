@@ -15,3 +15,8 @@ input[type="checkbox"] {
 #archive-input {
     color-scheme: dark;
 }
+
+.leaflet-bar a:hover, .leaflet-bar a:focus {
+    background: #333;
+    color: #bbb;
+}
