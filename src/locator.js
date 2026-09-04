@@ -55,9 +55,10 @@ async function getTownSpawn(searchedTownName) {
 	// api call
 	const query = { query: [searchedTownName], template: { coordinates: true } }
 	const data = await fetchJSON(apiURL + '/towns', {method: 'POST', body: JSON.stringify(query)})
+	if (data.code == 404) return false
 	if (!data.ok) return null
 	try { return { x: Math.round(data.data[0].coordinates.spawn.x), z: Math.round(data.data[0].coordinates.spawn.z) } }
-	catch { return false }
+	catch { return null }
 }
 
 async function locateTown(town) {
@@ -129,8 +130,8 @@ async function locateNation(nation) {
 	// api call
 	const query = { query: [nation], template: { capital: true } }
 	const data = await fetchJSON(apiURL + '/nations', {method: 'POST', body: JSON.stringify(query)})
+	if (!data.data || data.code == 404) return sendMessage('Searched nation has not been found.')
 	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
-	if (!data.data) return sendMessage('Searched nation has not been found.')
 
 	let capital
 	try { capital = data.data[0].capital.name.toLowerCase() }
@@ -215,9 +216,10 @@ async function locateResident(resident) {
 	// api call
 	const query = { query: [resident], template: { town: true } }
 	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
-	if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 
 	try {
+		if (data.code == 404) throw Error()
+		if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
 		const town = data.data[0].town.name.toLowerCase()
 		const coords = await getTownSpawn(town)
 		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
