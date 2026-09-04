@@ -82,11 +82,11 @@ async function main(data, isMoon = false) {
 	return data
 }
 
-function modifySettings(data) {
-	data['player_tracker'].nameplates['show_heads'] = true
-	data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
-	data.zoom.def = 0
-	data.spawn = { x: 2000, z: -10000 } // Set camera on Europe
+function modifySettings(data, isMoon = false) {
+	// deprecated: data['player_tracker'].nameplates['show_heads'] = true
+	// data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
+	// data.zoom.def = 0
+	if (!isMoon) data.spawn = { x: 2000, z: -10000 } // Set camera on Europe
 	if (currentMapMode == 'archive') data['player_tracker'].enabled = false
 	return data
 }
