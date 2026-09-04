@@ -28,7 +28,10 @@ function colorTowns(marker) {
 	return marker
 }
 
-async function main(data) {
+let preventArchiveRetries = false
+async function main(data, isMoon = false) {
+
+	if (preventArchiveRetries) return null
 
 	overrideZoomLimit()
 
@@ -44,6 +47,7 @@ async function main(data) {
 	}
 
 	if (currentMapMode == 'archive') {
+		preventArchiveRetries = true
 		const archiveData = await getArchive(data)
 		if (!archiveData.ok) return null
 		data = archiveData.data

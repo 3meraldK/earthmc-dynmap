@@ -1,5 +1,4 @@
 // Replace the default fetch() with ours to intercept responses
-let preventMapUpdate = false
 const actualWindow = isExtension ? window : unsafeWindow
 actualWindow.fetch = async (...args) => {
 	const response = await originalFetch(...args)
@@ -16,19 +15,19 @@ actualWindow.fetch = async (...args) => {
 
 	if (response.url.includes('web.archive.org')) return response
 
-	if (response.url.includes('markers.json') || response.url.includes('minecraft_overworld/settings.json')) {
+	if (response.url.match(/markers|(minecraft_overworld|earthmc_moon)\/settings/)) {
 
 		const modifiedJson = await response.clone().json().then(data => {
 
 			if (response.url.includes('markers.json')) {
-				if (preventMapUpdate == false) {
-					preventMapUpdate = true
-					return main(data)
-				}
-				else return null
+				let isMoon = !response.url.includes('minecraft_overworld')
+				return main(data, isMoon)
 			}
 
-			if (response.url.includes('minecraft_overworld/settings.json')) return modifySettings(data)
+			if (response.url.includes('settings.json')) {
+				let isMoon = !response.url.includes('minecraft_overworld')
+				return modifySettings(data, isMoon)
+			}
 		})
 		return new Response(JSON.stringify(modifiedJson))
 
