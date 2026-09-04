@@ -39,3 +39,7 @@
 #archive-input {
     width: 70px;
 }
+
+input, button {
+    cursor: pointer;
+}
