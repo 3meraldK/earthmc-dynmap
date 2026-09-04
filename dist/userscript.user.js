@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         EarthMC Dynmap+
-// @version      26.3
+// @version      26.3.1
 // @description  Enrich the EarthMC map exploration's experience
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
@@ -12,8 +12,8 @@
 // @connect      githubusercontent.com
 // @connect      emcstats.bot.nu
 // @run-at       document-start
-// @updateURL    https://github.com/3meraldK/earthmc-dynmap/raw/refs/heads/main/dist/userscript.user.js
-// @downloadURL  https://github.com/3meraldK/earthmc-dynmap/raw/refs/heads/main/dist/userscript.user.js
+// @updateURL    https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/userscript.user.js
+// @downloadURL  https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/userscript.user.js
 // ==/UserScript==
 
 /* variables.js - for variables that occur in almost every part of code */
@@ -81,6 +81,10 @@ const css = `.sidebar-option {
 
 #archive-input {
     width: 70px;
+}
+
+input, button {
+    cursor: pointer;
 }
 
 #message-box, #prompt-box {
@@ -461,9 +465,10 @@ async function getArchive(data) {
 // Modify town descriptions for archives
 function modifyOldDescription(marker) {
 	// Gather some information
+	const dummy = document.createElement('div')
+	dummy.innerHTML = marker.popup
 	let membersTitle = marker.popup.match(/Members <span/) ? 'Members' : 'Associates'
-	// TODO: Fix 0 res count in Classic archives
-	let residents = marker.popup.match(`${membersTitle} <span style="font-weight:bold">(.*)<\/span><br \/>Flags`)?.[1]
+	let residents = dummy.querySelectorAll('span')[2].textContent
 	const residentNum = residents?.split(', ')?.length || 0
 	const isCapital = marker.popup.match(/capital: true/) != null
 	const area = getArea(marker.points)
@@ -840,7 +845,10 @@ function colorTowns(marker) {
 	return marker
 }
 
-async function main(data) {
+let preventArchiveRetries = false
+async function main(data, isMoon = false) {
+
+	if (preventArchiveRetries) return null
 
 	overrideZoomLimit()
 
@@ -856,14 +864,15 @@ async function main(data) {
 	}
 
 	if (currentMapMode == 'archive') {
+		preventArchiveRetries = true
 		const archiveData = await getArchive(data)
 		if (!archiveData.ok) return null
 		data = archiveData.data
 	}
 
 	// deprecated:
-	// data = addChunksLayer(data
-	if (isNostra) data = await addBordersLayer(data)
+	// data = addChunksLayer(data)
+	if (isNostra && !isMoon) data = await addBordersLayer(data)
 
 	if (!data?.[0]?.markers?.length && !isNostra) {
 		sendMessage('Unexpected error occurred while loading the map, maybe EarthMC is down? Try again later.')
@@ -890,11 +899,11 @@ async function main(data) {
 	return data
 }
 
-function modifySettings(data) {
-	data['player_tracker'].nameplates['show_heads'] = true
-	data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
-	data.zoom.def = 0
-	data.spawn = { x: 2000, z: -10000 } // Set camera on Europe
+function modifySettings(data, isMoon = false) {
+	// deprecated: data['player_tracker'].nameplates['show_heads'] = true
+	// data['player_tracker'].nameplates['heads_url'] = 'https://mc-heads.net/avatar/{uuid}/16'
+	// data.zoom.def = 0
+	if (!isMoon) data.spawn = { x: 2000, z: -10000 } // Set camera on Europe
 	if (currentMapMode == 'archive') data['player_tracker'].enabled = false
 	return data
 }
@@ -936,6 +945,23 @@ function init() {
 
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
+
+	waitForHTMLelement('.leaflet-control-layers.link.leaflet-control').then(element => {
+		element.onclick = (e) => {
+			e.preventDefault()
+			let url = e.target.parentElement.href
+			history.replaceState(null, '', url)
+			navigator.clipboard.writeText(url)
+			sendNotification(`Website link updated with your current location and copied
+				to clipboard! Right click the same button to copy coordinates.`, 3000)
+		}
+		element.oncontextmenu = (e) => {
+			e.preventDefault()
+			let coords = document.querySelector('.coordinates').textContent.replace('Coordinates', '')
+			navigator.clipboard.writeText(coords)
+			sendNotification('Current location copied to clipboard!', 1500)
+		}
+	})
 
 	// deprecated:
 	// addPlayerList()
@@ -1022,7 +1048,7 @@ function toggleDarkMode(isChecked) {
 	localStorage['emcdynmapplus-darkmode'] = isChecked
 	if (isChecked) {
 		waitForHTMLelement('head').then(() => {
-			document.head.insertAdjacentHTML('beforeend',
+			document.documentElement.insertAdjacentHTML('beforeend',
 				`<style id="dark-mode">
 				.leaflet-control, #message-box, #prompt-box, .sidebar-input,
 .sidebar-button, .leaflet-bar > a, .leaflet-tooltip-top,
@@ -1037,6 +1063,15 @@ function toggleDarkMode(isChecked) {
 input[type="checkbox"] {
     filter: invert();
 }
+
+#archive-input {
+    color-scheme: dark;
+}
+
+.leaflet-bar a:hover, .leaflet-bar a:focus {
+    background: #333;
+    color: #bbb;
+}
 				</style>`
 			) // {dark-mode.css} is dynamically injected during build
 		})
@@ -1048,14 +1083,14 @@ function toggleCapitalStars(isChecked) {
 	localStorage['emcdynmapplus-capital-stars'] = isChecked
 	if (!isChecked) {
 		waitForHTMLelement('head').then(() => {
-			document.head.insertAdjacentHTML('beforeend',
-				`<style id="toggle-capital-stars">
+			document.documentElement.insertAdjacentHTML('beforeend',
+				`<style id="toggle-capital-stars-style">
 				img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
 				</style>`
 			)
 		})
 	}
-	else document.querySelector('#toggle-capital-stars')?.remove()
+	else document.querySelector('#toggle-capital-stars-style')?.remove()
 }
 
 function addOptions(sidebar) {
@@ -1311,7 +1346,9 @@ function modifyDescription(marker) {
 	if (currentMapMode != 'archive' && isNostra) {
 		marker.popup = marker.popup
 		.replace(/Mayor: <b>(.*)<\/b>/, `Mayor: <b>${htmlCode.residentClickable.replaceAll('{player}', mayor)}</b>`)
-		.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
+		if (councillors.length > 0) {
+			marker.popup = marker.popup.replace(/Councillors: <b>(.*)<\/b>/, `Councillors: <b>${councillorList}</b>`)
+		}
 	}
 
 	// Names wrapped in angle brackets
@@ -1467,6 +1504,12 @@ async function fetchJSON(url, options = null) {
 	}
 }
 
+function sendNotification(message, timeout) {
+	document.querySelector('#prompt-box')?.remove()
+	let prompt = addElement(document.documentElement, htmlCode.promptBox.replace('{message}', message), '#prompt-box')
+	setTimeout(() => {prompt.remove()}, timeout)
+}
+
 function overrideZoomLimit() {
 	const Leaflet = !isExtension ? unsafeWindow.L : window.L
 	Leaflet.Map.prototype.getMinZoom = function () { return -2 }
@@ -1494,7 +1537,6 @@ function appendStyle() {
 appendStyle()
 
 // Replace the default fetch() with ours to intercept responses
-let preventMapUpdate = false
 const actualWindow = isExtension ? window : unsafeWindow
 actualWindow.fetch = async (...args) => {
 	const response = await originalFetch(...args)
@@ -1511,19 +1553,19 @@ actualWindow.fetch = async (...args) => {
 
 	if (response.url.includes('web.archive.org')) return response
 
-	if (response.url.includes('markers.json') || response.url.includes('minecraft_overworld/settings.json')) {
+	if (response.url.match(/markers|(minecraft_overworld|earthmc_moon)\/settings/)) {
 
 		const modifiedJson = await response.clone().json().then(data => {
 
 			if (response.url.includes('markers.json')) {
-				if (preventMapUpdate == false) {
-					preventMapUpdate = true
-					return main(data)
-				}
-				else return null
+				let isMoon = !response.url.includes('minecraft_overworld')
+				return main(data, isMoon)
 			}
 
-			if (response.url.includes('minecraft_overworld/settings.json')) return modifySettings(data)
+			if (response.url.includes('settings.json')) {
+				let isMoon = !response.url.includes('minecraft_overworld')
+				return modifySettings(data, isMoon)
+			}
 		})
 		return new Response(JSON.stringify(modifiedJson))
 

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         EarthMC Dynmap+
-// @version      26.3
+// @version      26.3.1
 // @description  Enrich the EarthMC map exploration's experience
 // @author       3meraldK
 // @match        https://map.earthmc.net/*
