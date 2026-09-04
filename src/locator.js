@@ -43,7 +43,8 @@ async function locateTown(town) {
 	const coords = await getTownSpawn(town)
 	if (coords == false) return sendMessage('Searched town has not been found.')
 	if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
-	location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
+	const world = isMoon() ? 'earthmc_moon' : 'minecraft_overworld'
+	location.search = `zoom=4&x=${coords.x}&z=${coords.z}&world=${world}`
 
 }
 
@@ -155,6 +156,7 @@ async function locateResident(resident) {
 }
 
 function locate(selectValue, inputValue) {
+	if (isMoon()) return sendMessage('Locating on the Moon is disabled.')
 	switch (selectValue) {
 		case 'Town': locateTown(inputValue); break
 		case 'Nation': locateNation(inputValue); break

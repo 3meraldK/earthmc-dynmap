@@ -5,6 +5,7 @@ const currentMapMode = localStorage['emcdynmapplus-mapmode'] ?? 'meganations'
 const isNostra = !location.href.includes('aurora')
 const apiURL = 'https://api.earthmc.net/v4'
 let chosenArchiveDate = parseInt(localStorage['emcdynmapplus-archive-date'])
+const isMoon = () => document.title.includes('Moon')
 
 const { fetch: originalFetch } = window
 // Make this function work in userscript
