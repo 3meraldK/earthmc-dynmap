@@ -84,13 +84,13 @@ function toggleCapitalStars(isChecked) {
 	if (!isChecked) {
 		waitForHTMLelement('head').then(() => {
 			document.documentElement.insertAdjacentHTML('beforeend',
-				`<style id="toggle-capital-stars">
+				`<style id="toggle-capital-stars-style">
 				img[src='images/icon/registered/towny_capital_icon.png'] { display: none; }
 				</style>`
 			)
 		})
 	}
-	else document.querySelector('#toggle-capital-stars')?.remove()
+	else document.querySelector('#toggle-capital-stars-style')?.remove()
 }
 
 function addOptions(sidebar) {
