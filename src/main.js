@@ -129,6 +129,23 @@ function init() {
 	// Fix nameplates appearing over popups
 	waitForHTMLelement('.leaflet-nameplate-pane').then(element => element.style = '')
 
+	waitForHTMLelement('.leaflet-control-layers.link.leaflet-control').then(element => {
+		element.onclick = (e) => {
+			e.preventDefault()
+			let url = e.target.parentElement.href
+			history.replaceState(null, '', url)
+			navigator.clipboard.writeText(url)
+			sendNotification(`Website link updated with your current location and copied
+				to clipboard! Right click the same button to copy coordinates.`, 3000)
+		}
+		element.oncontextmenu = (e) => {
+			e.preventDefault()
+			let coords = document.querySelector('.coordinates').textContent.replace('Coordinates', '')
+			navigator.clipboard.writeText(coords)
+			sendNotification('Current location copied to clipboard!', 1500)
+		}
+	})
+
 	// deprecated:
 	// addPlayerList()
 	if (currentMapMode == 'archive' || !isNostra) waitForHTMLelement('#sidebar').then(element => element.style.display = 'none')

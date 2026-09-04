@@ -95,3 +95,9 @@ async function fetchJSON(url, options = null) {
 		return {ok: false, code: null, data: null}
 	}
 }
+
+function sendNotification(message, timeout) {
+	document.querySelector('#prompt-box')?.remove()
+	let prompt = addElement(document.documentElement, htmlCode.promptBox.replace('{message}', message), '#prompt-box')
+	setTimeout(() => {prompt.remove()}, timeout)
+}
