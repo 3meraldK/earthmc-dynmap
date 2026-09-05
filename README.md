@@ -1,4 +1,4 @@
-![Release](https://img.shields.io/github/v/release/3meraldK/earthmc-dynmapcolor) ![Repo size](https://img.shields.io/github/repo-size/3meraldK/earthmc-dynmapcolor) ![Downloads](https://img.shields.io/github/downloads/3meraldK/earthmc-dynmapcolor/total)
+![Release](https://img.shields.io/github/v/release/3meraldK/earthmc-dynmapcolor) ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/hgfdjfdkneceljokdelhiikgnndpmcgh?label=chrome%20users&color=e4770f) ![Downloads](https://img.shields.io/github/downloads/3meraldK/earthmc-dynmapcolor/total) ![GitHub Created At](https://img.shields.io/github/created-at/3meraldK/earthmc-dynmap?color=8a00f7)
 
 # earthmc-dynmap+
 A web extension for all browsers. Designed specifically for EarthMC's dynamic map, coming with a great multitude of useful and cosmetic features.
