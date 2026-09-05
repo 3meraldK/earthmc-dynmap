@@ -46,5 +46,8 @@ Unexpected updates to EarthMC may cause this extension to temporarily stop worki
 ### My extension seems to be broken.
 - Users often accidentally have multiple instances of the extension enabled (be it a userscript, an extension, or both); make sure to keep only one enabled.
 
+## How to compile code from source
+Download this repository as a folder, open a terminal and type `bun package` in it. Files will be ready in `dist/` folder.
+
 ## Screenshot
 ![image](https://github.com/user-attachments/assets/72adb19a-637c-4d82-b374-28c17b87d3ec)
