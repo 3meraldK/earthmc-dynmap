@@ -140,7 +140,8 @@ function init() {
 		}
 		element.oncontextmenu = (e) => {
 			e.preventDefault()
-			let coords = document.querySelector('.coordinates').textContent.replace('Coordinates', '')
+			let url = e.target.parentElement.href
+			let coords = url.match('&x=(.*)')[1].split('&z=').join(', ')
 			navigator.clipboard.writeText(coords)
 			sendNotification('Current location copied to clipboard!', 1500)
 		}
