@@ -214,19 +214,35 @@ async function locateResident(resident) {
 	}
 
 	// api call
-	const query = { query: [resident], template: { town: true } }
-	const data = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify(query)})
-
 	try {
-		if (data.code == 404) throw Error()
-		if (!data.ok) return sendMessage('Service is currently unavailable, please try later.')
-		const town = data.data[0].town.name.toLowerCase()
-		const coords = await getTownSpawn(town)
+
+		let allReq = await fetchJSON(apiURL + '/players')
+		if (!allReq.ok) {
+			return sendMessage('Info can not be retrieved right now, try later.')
+		}
+		let req = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify({query: [resident], template: { town: true, status: true }})})
+		let exists = allReq.data.map(it => it.name.toLowerCase()).includes(resident.toLowerCase())
+		if (!exists && !req.ok) {
+			return sendMessage('This player does not exist.')
+		}
+		if (!req.ok) {
+			return sendMessage('This player opted out of being searched.')
+		}
+		let data = req.data[0]
+		if (data.status.isNPC) {
+			return sendMessage('This player is an NPC.')
+		}
+
+		const town = data.town.name
+		if (!town) {
+			return sendMessage('This player is townless.')
+		}
+		const coords = await getTownSpawn(town.toLowerCase())
 		if (coords == false) return sendMessage('Unexpected error occurred while searching for resident, please try later.')
 		if (coords == null) return sendMessage('Service is currently unavailable, please try later.')
 		location.search = `zoom=4&x=${coords.x}&z=${coords.z}`
 	} catch {
-		return sendMessage(`The searched resident is townless or they opted out of being looked up.`)
+		return sendMessage(`Info can not be retrieved right now, try later.`)
 	}
 }
 

@@ -4,15 +4,25 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	if (document.querySelector('#player-lookup-loading') != null) document.querySelector('#player-lookup-loading').remove()
 	const loading = addElement(document.querySelector('.leaflet-top.leaflet-left'), htmlCode.playerLookupLoading, '#player-lookup-loading')
 
-	const query = { query: [player] }
-	const data = await fetchJSON(apiURL + '/players', { method: 'POST', body: JSON.stringify(query) })
-	if (!data.ok) {
-		document.querySelector('#player-lookup-loading').remove()
-		return sendMessage('Service is currently unavailable, please try later.')
+	let allReq = await fetchJSON(apiURL + '/players')
+    if (!allReq.ok) {
+		loading.remove()
+		return sendMessage('Info can not be retrieved right now, try later.')
 	}
-	if (!data.data[0]) {
-		document.querySelector('#player-lookup-loading').remove()
-		return sendMessage(`This player opted out of being looked up.`)
+    let req = await fetchJSON(apiURL + '/players', {method: 'POST', body: JSON.stringify({query: [player]})})
+    let exists = allReq.data.map(it => it.name).includes(player)
+    if (!exists && !req.ok) {
+		loading.remove()
+		return sendMessage('This player does not exist.') // shouldn't happen
+	}
+    if (!req.ok) {
+		loading.remove()
+		return sendMessage('This player opted out of being searched.')
+	}
+    let data = req.data[0]
+    if (data.status.isNPC) {
+		loading.remove()
+		return sendMessage('This player is an NPC.')
 	}
 
 	loading.remove()
@@ -29,22 +39,22 @@ async function lookupPlayer(player, showOnlineStatus = true) {
 	lookup.insertAdjacentHTML('beforeend', '<span class="close-container">×</span>')
 
 	// Gather data
-	const isOnline = data.data[0].status.isOnline
-	const balance = data.data[0].stats.balance
-	const town = data.data[0].town.name
-	const nation = data.data[0].nation.name
-	const lastOnline = new Date(data.data[0].timestamps.lastOnline).toLocaleDateString('fr')
+	const isOnline = data.status.isOnline
+	const balance = data.stats.balance
+	const town = data.town.name
+	const nation = data.nation.name
+	const lastOnline = new Date(data.timestamps.lastOnline).toLocaleDateString('fr')
 	let onlineStatus = '<span id="player-lookup-online" style="color: {online-color}">{online}</span>'
-	const about = (!data.data[0].about || data.data[0].about == '/res set about [msg]') ? '' : `<br><i>${data.data[0].about}</i>`
+	const about = (!data.about || data.about == '/res set about [msg]') ? '' : `<br><i>${data.about}</i>`
 	let rank = 'Townless'
-	if (data.data[0].status.hasTown) rank = 'Resident'
-	if (data.data[0].ranks.townRanks.includes('Councillor')) rank = 'Councillor'
-	if (data.data[0].status.isMayor) rank = 'Mayor'
-	if (data.data[0].ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
-	if (data.data[0].status.isKing) rank = 'Leader'
+	if (data.status.hasTown) rank = 'Resident'
+	if (data.ranks.townRanks.includes('Councillor')) rank = 'Councillor'
+	if (data.status.isMayor) rank = 'Mayor'
+	if (data.ranks.nationRanks.includes('Chancellor')) rank = 'Chancellor'
+	if (data.status.isKing) rank = 'Leader'
 
 	// Modify HTML
-	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data.data[0].uuid.replaceAll('-', '')
+	const playerAvatarURL = 'https://mc-heads.net/avatar/' + data.uuid.replaceAll('-', '')
 	document.querySelector('#player-lookup-avatar').setAttribute('src', playerAvatarURL)
 	lookup.innerHTML = lookup.innerHTML
 		.replace('{player}', player)
