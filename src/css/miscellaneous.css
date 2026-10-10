@@ -39,3 +39,16 @@
 #show-menu:hover {
     background: #ffffff44
 }
+
+#legacy-redirect {
+    background: #2051a0;
+    border: 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 200px;
+    transition: background-color 0.5s;
+}
+
+#legacy-redirect:hover {
+    background: #4b7ccb;
+}
