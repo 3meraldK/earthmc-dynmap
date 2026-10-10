@@ -19,3 +19,23 @@
     font-weight: bold;
     text-decoration: none;
 }
+
+#show-menu {
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    display: flex;
+    z-index: 1001;
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+    align-items: center;
+    transition: 0.4s;
+    left: -50px;
+    cursor: pointer;
+    justify-content: center;
+}
+
+#show-menu:hover {
+    background: #ffffff44
+}

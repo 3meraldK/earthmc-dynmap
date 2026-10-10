@@ -16,6 +16,20 @@ function addMainMenu(parent) {
 	const switchMapModeButton = addElement(sidebar, htmlCode.buttons.switchMapMode + '<br>', '#switch-map-mode')
 	switchMapModeButton.addEventListener('click', () => switchMapMode())
 
+	const hideMenuButton = addElement(sidebar, htmlCode.buttons.hideMenu + '<br>', '#hide-menu')
+	hideMenuButton.addEventListener('click', () => {
+		document.querySelector('#sidebar').style.display = 'none'
+		document.querySelectorAll('.leaflet-left').forEach(it => it.hidden = true)
+		sendNotification('To show menu again, click the folding bar on the left.', 1500)
+		let showMenu = addElement(document.querySelector('.leaflet-control-container'), htmlCode.showMenu, '#show-menu')
+		window.onpointermove = (e) => showMenu.style.left = e.clientX < 50 ? '0' : '-50px'
+		showMenu.onclick = (e) => {
+			e.target.remove()
+			document.querySelector('#sidebar').style.display = 'flex'
+			document.querySelectorAll('.leaflet-left').forEach(it => it.hidden = false)
+		}
+	})
+
 	/* deprecated:
 	if (currentMapMode != 'archive' && isNostra) {
 		const togglePlayerListButton = addElement(sidebar, htmlCode.buttons.togglePlayerList + '<br>', '#toggle-player-list')

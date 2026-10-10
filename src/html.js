@@ -11,7 +11,8 @@ const htmlCode = {
 		locate: '<button class="sidebar-button" id="locate-button">{locate-text}</button>',
 		searchArchive: '<button class="sidebar-button" id="archive-button">Search archive</button>',
 		options: '<button class="sidebar-button" id="options-button">Options</button>',
-		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>'
+		switchMapMode: '<button class="sidebar-input" id="switch-map-mode">Switch map mode</button>',
+		hideMenu: '<button class="sidebar-input" id="hide-menu">Hide menu</button>'
 		// deprecated: togglePlayerList: '<button class="sidebar-input" id="toggle-player-list">Toggle player list</button>'
 	},
 	options: {
@@ -33,6 +34,7 @@ const htmlCode = {
 	/* Exclusively for userscript, deprecated
 	updateNotification: '<div class="leaflet-control-layers leaflet-control left-container"
 	 	id="update-notification">{text}<br><span class="close-container">×</span></div>'*/
+	showMenu: '<div id="show-menu">◀</div>'
 }
 
 
