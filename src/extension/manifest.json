@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "EarthMC Dynmap+",
-	"version": "26.3.1",
+	"version": "26.3.2",
 	"author": "3meraldK",
 	"description": "Enrich the EarthMC map exploration's experience",
 
@@ -12,13 +12,13 @@
 	"content_scripts": [
 		{
 			"js": ["version-helper.js"],
-			"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"],
+			"matches": ["https://earthmc.net/map/*", "https://legacymap.earthmc.net/*", "https://aurora.earthmc.net/*"],
 			"run_at": "document_start"
 		},
 		{
 			"js": ["main.js"],
 			"css": ["style.css"],
-			"matches": ["https://map.earthmc.net/*", "https://aurora.earthmc.net/*"],
+			"matches": ["https://earthmc.net/map/*", "https://legacymap.earthmc.net/*", "https://aurora.earthmc.net/*"],
 			"world": "MAIN",
 			"run_at": "document_start"
 		}
@@ -26,7 +26,7 @@
 
     "host_permissions": [
 		"https://web.archive.org/*",
-		"https://map.earthmc.net/*"
+		"https://legacymap.earthmc.net/*"
 	],
 	"permissions": ["declarativeNetRequest"],
 	"background": {
