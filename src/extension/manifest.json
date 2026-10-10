@@ -12,13 +12,13 @@
 	"content_scripts": [
 		{
 			"js": ["version-helper.js"],
-			"matches": ["https://earthmc.net/map/*", "https://legacymap.earthmc.net/*", "https://aurora.earthmc.net/*"],
+			"matches": ["https://earthmc.net/map*", "https://legacymap.earthmc.net/*", "https://aurora.earthmc.net/*"],
 			"run_at": "document_start"
 		},
 		{
 			"js": ["main.js"],
 			"css": ["style.css"],
-			"matches": ["https://earthmc.net/map/*", "https://legacymap.earthmc.net/*", "https://aurora.earthmc.net/*"],
+			"matches": ["https://earthmc.net/map*", "https://legacymap.earthmc.net/*", "https://aurora.earthmc.net/*"],
 			"world": "MAIN",
 			"run_at": "document_start"
 		}
@@ -26,7 +26,8 @@
 
     "host_permissions": [
 		"https://web.archive.org/*",
-		"https://legacymap.earthmc.net/*"
+		"https://legacymap.earthmc.net/*",
+		"https://earthmc.net/map*"
 	],
 	"permissions": ["declarativeNetRequest"],
 	"background": {

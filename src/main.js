@@ -98,7 +98,7 @@ function firstTimeMessage() {
 			Check for announcements or report bugs <a target="_blank" href="https://discord.gg/AVtgkcRgFs">here</a>.`)
 		if (!isNostra) document.querySelector('#message-close').addEventListener('click', event => {
 			sendMessage(`This is a deprecated website and the archive mode is disabled here.
-				Try doing this <a href="https://map.earthmc.net">here</a> instead. You will see this message only once.`)
+				Try doing this <a href="https://legacymap.earthmc.net">here</a> instead. You will see this message only once.`)
 		})
 		localStorage['emcdynmapplus-first-time'] = 'false'
 	}

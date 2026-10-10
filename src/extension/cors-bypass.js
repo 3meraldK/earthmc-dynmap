@@ -14,7 +14,7 @@ async function getCurrentURL() {
 /* Main function */
 async function update() {
 	const url = await getCurrentURL()
-	if (url != 'https://aurora.earthmc.net' && url != 'https://map.earthmc.net') {
+	if (url != 'https://aurora.earthmc.net' && url != 'https://legacymap.earthmc.net') {
 		return chrome.declarativeNetRequest.updateDynamicRules({
 			removeRuleIds: [1],
 			addRules: []
