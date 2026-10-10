@@ -92,7 +92,7 @@ function modifySettings(data, isMoon) {
 }
 
 function firstTimeMessage() {
-	if (!localStorage['emcdynmapplus-first-time']) {
+	if (!localStorage['emcdynmapplus-first-time'] && isLegacy) {
 		sendMessage(`Unexpected updates to EarthMC may cause this extension to temporarily stop working.
 			We are neither affiliated with EarthMC nor responsible for archiving map snapshots.
 			Check for announcements or report bugs <a target="_blank" href="https://discord.gg/AVtgkcRgFs">here</a>.`)
