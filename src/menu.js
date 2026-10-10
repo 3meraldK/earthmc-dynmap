@@ -20,7 +20,7 @@ function addMainMenu(parent) {
 	hideMenuButton.addEventListener('click', () => {
 		document.querySelector('#sidebar').style.display = 'none'
 		document.querySelectorAll('.leaflet-left').forEach(it => it.hidden = true)
-		sendNotification('To show menu again, click the folding bar on the left.', 1500)
+		sendNotification('To show menu again, reveal the folding bar on the left.', 1500)
 		let showMenu = addElement(document.querySelector('.leaflet-control-container'), htmlCode.showMenu, '#show-menu')
 		window.onpointermove = (e) => showMenu.style.left = e.clientX < 50 ? '0' : '-50px'
 		showMenu.onclick = (e) => {
