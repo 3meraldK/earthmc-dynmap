@@ -2,6 +2,7 @@ async function addBordersLayer(data) {
 	for (const type of ['country', 'province']) {
 		// Download & cache
 		if (!await getOPFS('emcdynmapplus-borders-' + type)) {
+			document.querySelector('#prompt-box')?.remove()
 			const prompt = addElement(document.documentElement,
 				htmlCode.promptBox.replace('{message}', `Downloading ${type} borders...`), '#prompt-box')
 			const url = `https://raw.githubusercontent.com/3meraldK/earthmc-dynmap/refs/heads/main/src/assets/borders-${type}.json.gz`
