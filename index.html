@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>EarthMC Dynmap+</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="A web extension for all browsers for the EarthMC map, coming with a great multitude of useful and cosmetic features.">
         <meta property="og:title" content="EarthMC Dynmap+">
         <meta property="og:description" content="A web extension for all browsers for the EarthMC map, coming with a great multitude of useful and cosmetic features.">
@@ -14,17 +15,21 @@
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
             body { color: white; background: #222; font-family: 'Geist'; margin: 0; }
+            @media screen and (max-width: 480px) {
+                #download-container { display: flex !important; flex-wrap: wrap; }
+                #download-title { margin-bottom: 0 !important; }
+                .download-img { width: 96 !important; margin-bottom: 40 !important; }
+            }
         </style>
     </head>
     <body>
         <div style="height: 150; background: linear-gradient(to top, transparent, #444);"></div>
-        <div style="height: 50;"></div>
-        <div style="width: 800; border: solid 6px; box-shadow: 0 0 20px; border-radius: 20px; position: relative; left: calc(50% - 400px)">
+        <center><div style="margin-top: 50; width: 90%; max-width: 800; border: solid 6px; box-shadow: 0 0 20px; border-radius: 20px; position: relative;">
             <h1 style="font-weight: 1000; text-align: center; font-size: 64;">EarthMC Dynmap+</h1>
             <i style="font-size: 24; display: block; width: calc(100% - 60px); margin: 30; text-align: center;">Enrich the EarthMC map exploration's experience</i>
-        </div>
+        </div></center>
         <div style="height: 50;"></div>
-        <div><img style="box-shadow: 0 0 20px; width: 800; position: relative; left: calc(50% - 400px); border-radius: 40px;" src="https://lh3.googleusercontent.com/kqc56D1BZ9RM9D-csXloWeTdWlZzu9IK_fyCvAcBZP0l5ky0law8iJ92to6J7Z5XATkAxu0bEKIMvjIa1r_qd4dm7A=s1280-w1280-h800" draggable="false"/></div>
+        <center><div><img style="box-shadow: 0 0 20px; width: 90%; max-width: 800; position: relative; border-radius: 40px;" src="https://lh3.googleusercontent.com/kqc56D1BZ9RM9D-csXloWeTdWlZzu9IK_fyCvAcBZP0l5ky0law8iJ92to6J7Z5XATkAxu0bEKIMvjIa1r_qd4dm7A=s1280-w1280-h800" draggable="false"/></div></center>
         <center><div style="margin-top: 30;">
             <img src="https://img.shields.io/github/release-date/3meraldK/earthmc-dynmap?color=ffa500" draggable="false"/>
             <img src="https://img.shields.io/github/v/release/3meraldK/earthmc-dynmap" draggable="false"/>
@@ -32,24 +37,24 @@
             <img src="https://img.shields.io/github/downloads/3meraldK/earthmc-dynmapcolor/total" draggable="false"/>
             <img src="https://img.shields.io/github/created-at/3meraldK/earthmc-dynmap?color=8a00f7" draggable="false"/>
         </div></center>
-        <h1 style="text-align: center; font-size: 48; margin: 30 0;">Download</h1>
-        <center><div style="display: grid; grid-auto-flow: column; width: 800;">
+        <h1 id="download-title" style="text-align: center; font-size: 48; margin: 30 0;">Download</h1>
+        <center><div id="download-container" style="display: grid; grid-auto-flow: column; width: 90%; max-width: 800;">
             <div style="width: 100%; display: grid;">
                 <h1 style="text-align: center; margin-bottom: 0;">Chromium</h1>
                 <i>Chrome, Brave, Opera, Edge, etc.</i>
                 <a target="_blank" style="margin-top: 20;" href="https://chromewebstore.google.com/detail/earthmc-dynmap+/hgfdjfdkneceljokdelhiikgnndpmcgh">
-                    <img style="width: 64;" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Chrome_Web_Store_logo_2012-2015.svg/330px-Chrome_Web_Store_logo_2012-2015.svg.png" draggable="false"/>
+                    <img class="download-img" style="width: 64;" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Chrome_Web_Store_logo_2012-2015.svg/330px-Chrome_Web_Store_logo_2012-2015.svg.png" draggable="false"/>
                 </a>
             </div>
             <div style="width: 100%; display: grid;">
                 <h1 style="text-align: center; margin-bottom: 0;">Firefox, Safari</h1>
                 <i>Or other browsers</i>
                 <a target="_blank" style="margin-top: 20;" href="https://www.tampermonkey.net/script_installation.php#url=https://github.com/3meraldK/earthmc-dynmap/releases/latest/download/userscript.user.js">
-                    <img style="width: 64; filter: invert(1);" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Tampermonkey_logo.svg/250px-Tampermonkey_logo.svg.png" draggable="false"/>
+                    <img class="download-img" style="width: 64; filter: invert(1);" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Tampermonkey_logo.svg/250px-Tampermonkey_logo.svg.png" draggable="false"/>
                 </a>
             </div>
         </div></center>
-        <center><div style="margin-top: 50; width: 800; margin-bottom: 25">
+        <center><div style="margin-top: 50; width: 90%; max-width: 800; margin-bottom: 25">
             <hr>
             <div style="display: flex; align-items: center; flex-direction: row-reverse;">
                 <a target="_blank" href="https://github.com/3meraldK/earthmc-dynmap/">
