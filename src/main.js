@@ -53,8 +53,7 @@ async function main(data, isMoon) {
 		data = archiveData.data
 	}
 
-	// deprecated:
-	// data = addChunksLayer(data)
+	data = addChunksLayer(data, isMoon)
 	if (isNostra && !isMoon) data = await addBordersLayer(data)
 
 	if (!data?.[0]?.markers?.length && !isNostra) {

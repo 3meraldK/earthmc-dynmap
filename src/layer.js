@@ -52,21 +52,24 @@ async function fetchLayer(url) {
 	}
 }
 
-/* deprecated:
-function addChunksLayer(data) {
+function addChunksLayer(data, isMoon) {
 	const chunkLines = []
-	for (let x = -33280; x <= 33088; x += 16) {
+	const bounds = {
+		x: !isMoon ? 64512 : 17504,
+		z: !isMoon ? 32256 : 8752
+	}
+	for (let x = -bounds.x; x <= bounds.x; x += 16) {
 		chunkLines.push([
-			{ x: x, z: -16640 },
-			{ x: x, z: +16512 },
-			{ x: x, z: -16640 }
+			{ x: x, z: -bounds.z },
+			{ x: x, z: +bounds.z },
+			{ x: x, z: -bounds.z }
 		])
 	}
-	for (let z = -16640; z <= 16512; z += 16) {
+	for (let z = -bounds.z; z <= bounds.z; z += 16) {
 		chunkLines.push([
-			{ x: -33280, z: z },
-			{ x: +33088, z: z },
-			{ x: -33280, z: z }
+			{ x: -bounds.x, z: z },
+			{ x: +bounds.x, z: z },
+			{ x: -bounds.x, z: z }
 		])
 	}
 
@@ -83,4 +86,4 @@ function addChunksLayer(data) {
 		}]
 	})
 	return data
-}*/
+}
